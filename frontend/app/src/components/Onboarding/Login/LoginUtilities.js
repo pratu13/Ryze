@@ -1,0 +1,6 @@
+// export enum LoginErrors {
+//     WRONGEMAIL = "WRONGEMAIL",
+//     WRONGEPASSWORD = "WRONGEPASSWORD",
+//     INVALIDEMAIL = "INVALIDEMAIL",
+//     NOERROR = "NOERROR"
+// }
