@@ -1,8 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
-from .models import db
 from .controllers.user import user_bp
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
