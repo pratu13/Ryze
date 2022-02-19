@@ -4,5 +4,7 @@ Flask-Cors==3.0.10
 itsdangerous==2.1.0
 Jinja2==3.0.3
 MarkupSafe==2.1.0
+pymongo==4.0.1
+python-dotenv==0.19.2
 six==1.16.0
 Werkzeug==2.0.3
