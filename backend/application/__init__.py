@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from .models import db
 from .controllers.user import user_bp
 
@@ -9,6 +10,7 @@ def create_app():
         app.production = not app.debug and not app.testing
     register_extensions(app)
     register_blueprint(app)
+    CORS(app)
     return app
 
 
