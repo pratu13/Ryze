@@ -24,6 +24,7 @@ VerifyRecoveryOptionsSchema = {
     },
     "required":["uid", "answer", "password"]
 }
+
 RegistrationSchema = {
     'type': 'object',
     'properties': {
