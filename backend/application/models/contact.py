@@ -2,7 +2,7 @@ from mongoengine import Document, EmailField, StringField, DateTimeField, UUIDFi
 
 class Contact(Document):
     uid = UUIDField()
-    email = EmailField()
+    email = EmailField(unique = True)
     phone = StringField()
     created_at = DateTimeField()
     updated_at = DateTimeField()
