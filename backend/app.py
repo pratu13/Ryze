@@ -4,8 +4,10 @@ from dotenv import load_dotenv
 from flask_mongoengine import MongoEngine
 import os
 from jsonschema import ValidationError
+import sys
 
-load_dotenv()
+if os.getenv("PRODUCTION") == None:
+    load_dotenv()
 
 app = create_app()
 app.config['MONGODB_SETTINGS'] = {
@@ -27,4 +29,10 @@ def validation_failure(error):
     return error
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=8000, debug=True)
+    host = "localhost"
+    port = 8000
+    if len(sys.argv) > 1:
+        host = sys.argv[1]
+    if os.getenv("PRODUCTION"):
+        port = int(os.getenv("PORT"))
+    app.run(host = host, port=8000, debug=True)
