@@ -23,7 +23,7 @@ def check():
 @app.errorhandler(400)
 def validation_failure(error):
     if isinstance(error.description, ValidationError):
-        return make_response(jsonify({'error': error.description.message}), 400)
+        return make_response(jsonify({'message': error.description.message}), 400)
     return error
 
 if __name__ == '__main__':

@@ -56,19 +56,19 @@ def login():
         password_hash = hasher.hexdigest()
         contact = Contact.objects.get(email= g.data["email"])
         user = User.objects.get(contact = contact)
-        if user.password == password_hash:
-            created_timestamp = datetime.now()
-            new_session = Session(uid = uuid4(), \
-                                token = str(uuid4()), \
-                                created_at = created_timestamp, \
-                                valid_until = created_timestamp + timedelta(seconds = VALIDITY))
-            new_session.save()
-            user.sessions.append(new_session)
-            user.update(add_to_set__sessions = [new_session])
-            return {
-                "token": new_session.token
-            }
-        abort(400, "Incorrect login/password.") 
+        if user.password != password_hash:
+            return {"message" : "Incorrect login/password."}, 400
+        created_timestamp = datetime.now()
+        new_session = Session(uid = uuid4(), \
+                            token = str(uuid4()), \
+                            created_at = created_timestamp, \
+                            valid_until = created_timestamp + timedelta(seconds = VALIDITY))
+        new_session.save()
+        user.sessions.append(new_session)
+        user.update(add_to_set__sessions = [new_session])
+        return {
+            "token": new_session.token
+        }
     except Exception as e:
         logging.exception(e)
         return { "message": "Invalid input"}, 400
