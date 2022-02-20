@@ -7,7 +7,9 @@ class RecoveryOptions(Document):
     created_at = DateTimeField()
     updated_at = DateTimeField()
 
-defaultQuestions = [ \
-    RecoveryOptions(question = "What is the name of your first pet?"), \
-    RecoveryOptions(question = "Which Agile methodology do you use?"), \
-]
+defaultQuestions = { \
+    "questions": [ \
+        "What is the name of your first pet?", \
+        "Which Agile methodology do you use?", \
+    ] \
+}

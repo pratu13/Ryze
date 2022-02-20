@@ -1,13 +1,12 @@
 from mongoengine import Document
-from mongoengine import DateTimeField, StringField, ListField, UUIDField
+from mongoengine import DateTimeField, StringField, ListField, UUIDField, ReferenceField
 
 
 class User(Document):
     uid = UUIDField()
-    recovery_options_ids = ListField(UUIDField(), default = list)
-    # TODO: Use GenericRefField
-    contacts_id = UUIDField()
-    sessions = ListField(UUIDField(), default = list)
+    recovery_options = ListField(ReferenceField('RecoveryOptions'), default = list)
+    contact = ReferenceField('Contact')
+    sessions = ListField(ReferenceField('Session'), default = list)
     password = StringField()
     created_at = DateTimeField()
     updated_at = DateTimeField()

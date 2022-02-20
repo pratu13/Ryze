@@ -1,5 +1,6 @@
 from mongoengine import *
 
+VALIDITY = 3600 * 1
 class Session(Document):
     uid = UUIDField()
     token = StringField()
