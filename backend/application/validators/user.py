@@ -1,7 +1,30 @@
-from .contact import ContactSchema
-from .recovery_options import RecoveryOptionsSchema
+ContactSchema = {
+    "type": "object",
+    "properties" : {
+        "email": {"type":"string", "format":"email"},
+    },
+    "required":["email"]
+}
 
-UserSchema = {
+RecoveryOptionsSchema = {
+    "type": "object",
+    "properties" : {
+        "question": {"type":"string"},
+        "answer":{"type":"string"}
+    },
+    "required":["question", "answer"]
+}
+
+VerifyRecoveryOptionsSchema = {
+    "type": "object",
+    "properties" : {
+        "uid": {"type":"string"},
+        "answer":{"type":"string"},
+        "password":{"type":"string", "minLength": 8}
+    },
+    "required":["uid", "answer", "password"]
+}
+RegistrationSchema = {
     'type': 'object',
     'properties': {
         "contact": ContactSchema,
@@ -14,4 +37,14 @@ UserSchema = {
         },
     },
     "required": ["contact", "password", "recovery_options"]
+}
+
+LoginRequestSchema = {
+    "type": "object",
+    "properties": {
+        "provider": {"type": "string"},
+        "email": {"type": "string", "format":"email"},
+        "password": {"type":"string"}
+    },
+    "required" : ["email"]
 }

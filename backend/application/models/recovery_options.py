@@ -10,6 +10,6 @@ class RecoveryOptions(Document):
 defaultQuestions = { \
     "questions": [ \
         "What is the name of your first pet?", \
-        "Which Agile methodology do you use?", \
+        "Why Agile is better than Waterfall?", \
     ] \
 }
