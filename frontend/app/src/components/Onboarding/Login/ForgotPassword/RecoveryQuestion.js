@@ -35,6 +35,7 @@ const RecoveryQuestion = ({updatePasswordFlow, email}) => {
                 if (response.ok) {
                     updatePasswordFlow(false)
                 }
+                
             });
             // .then(data => {
             //     console.log(data)

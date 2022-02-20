@@ -86,14 +86,23 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
             body: JSON.stringify(data)
           }
             fetch(`${API}/v1/user`, requestOptions)
-            .then(handleErrors)
             .then(response => {
-              console.log(response.json())
-              setSignUp(false);
-              setEmail("");
-              setPassword("");
-              setSecurityQuestionAnswer("");
-            })
+              if (response.status != 200) {
+                 return response.json()
+              } else {
+                setSignUp(false);
+                setEmail("");
+                setPassword("");
+                setSecurityQuestionAnswer("");
+                setErrorMessage("")
+             }
+           }) 
+           .then(data => {
+            setError(ENUM_LOGINERROR.EmailError)
+            setErrorMessage(data.message);
+            setPassword("");
+            setEmail("");
+          })
             .catch(error => console.log(error) );
             
         }
@@ -109,34 +118,28 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(data)
             };
-            fetch(`${API}/v1/user/login`, requestOptions) 
+            await fetch(`${API}/v1/user/login`, requestOptions) 
             // .then(handleErrors)
-            .then(response => response.json())  
-            .then(data => {
-                if (data.message === "Incorrect login/password.") {
-                  setError(ENUM_LOGINERROR.PasswordError)
-                  setErrorMessage("Wrong Password, Please try again");
-                  setPassword("");
-                } else if (data.message === "Invalid input") {
-                  setError(ENUM_LOGINERROR.EmailError)
-                  setErrorMessage("Email does not exist. Please create an account");
-                  setEmail("");
-                  setPassword("");
-                } else if (data.message.includes("is not a 'email'")) {
-                  setError(ENUM_LOGINERROR.EmailError)
-                  setErrorMessage("Please enter your email");
-                  setEmail("");
-                  setPassword("");
-                }else {
+              .then(response => {
+                 if (response.status != 200) {
+                    return response.json()
+                 } else {
                   setEmail(""); 
-                  setPassword("");
+                   setPassword("");
+                   setErrorMessage("")
                   navigate(`/main`, {
                       state: {
                           token: data.token,
                       }
                   });
-              }
-            })
+                }
+              }) 
+              .then(data => {
+                setError(ENUM_LOGINERROR.EmailError)
+                setErrorMessage(data.message);
+                setPassword("");
+                setEmail("");
+              })
             .catch(error => console.log(error) );
         }
     }
@@ -144,8 +147,6 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
 
   function handleErrors(response) {
     if (!response.ok) {
-      setError(ENUM_LOGINERROR.EmailError)
-      setErrorMessage(response.JSON().message)
       throw Error(response.statusText);
     }
     return response;
