@@ -6,7 +6,9 @@ load_dotenv()
 
 app = create_app()
 app.config['MONGODB_SETTINGS'] = {
-    'host': os.getenv('URI')
+    'host': os.getenv('URI'),
+    'DB': os.getenv('DATABASE_NAME'),
+    'alias': 'default'
 }
 db = MongoEngine(app)
 
