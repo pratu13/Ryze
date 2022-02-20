@@ -20,7 +20,8 @@ export const FormButton = styled.button`
 `
 
 export const Container = styled.div`
-    height: 70vh;  
+    height: auto;  
+    min-height: 60vh;
     max-width: 500px;
     width: 500px;
     display: flex;
@@ -42,9 +43,11 @@ export const FormInput = styled.input`
 `
 
 export const FormLabel = styled.label`
-    font-size: large;
+    font-size: ${({isError})  => isError ? 'small' : 'larger'};
     font-weight: bold;
-    color: ${({isError})  => isError ? 'red' : '#000'};
+    color: ${({ isError }) => isError ? 'red' : '#000'};
+    text-align: start;
+    width: 335px;
 `
 
 export const FormContent = styled.div`
@@ -66,7 +69,6 @@ export const FormInputWrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    font-size: large;
 `
 
 export const MainContentContainer = styled.div`

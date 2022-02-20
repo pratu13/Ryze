@@ -6,8 +6,9 @@ export const ForgotPasswordWrapper = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    margin-top: 40px;
 `
 
 export const BackButtonIcon = styled.img`
@@ -25,13 +26,16 @@ export const ForgotPasswordHeader = styled.div`
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 70%;
-    
+    width: 90%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    margin-left: 40px;
+    margin-bottom: 50px;
 `
 export const HeaderTitle= styled.h1`
     font-size: larger;
     font-weight: 500;
-    margin-left: 20%;
+    margin-left: 5%;
 `
 
 export const CenterImage = styled.img`

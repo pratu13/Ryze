@@ -13,6 +13,7 @@ export const LoginFormTitle = styled.p`
     font-size: 2.0em;
     margin-top: 10%;
     font-weight: bold;
+    margin-bottom: 40%;
 `
 
 export const FooterSection = styled.div`

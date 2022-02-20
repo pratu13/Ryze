@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {Animated} from "react-animated-css";
 import { useNavigate } from 'react-router';
 import { 
@@ -7,7 +7,6 @@ import {
   FormLabel, 
   FormInput,
   FormContent, 
-  Form,  
   FormInputWrapper
 } from '../../GenericStyledElements';
 
@@ -19,19 +18,14 @@ import {
   CreateAccountSection,
   FootP
 } from './LoginStyledElements'
+import { API, ENUM_LOGINERROR } from './LoginUtilities';
 
-const ENUM_LOGINERROR = {
-  EmailError: 'EmailError',
-  PasswordError: 'PasswordError',
-  UnknownError: 'UnknownError',
-  NameError: 'NameError',
-  NoError: 'NoError'
-}
-const Login = ({updatePasswordFlow}) => {
+const Login = ({updatePasswordFlow, updateEmail}) => {
   const [showSignUp, setSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [securityQuestion, setSecurityQuestion] = useState("");
+  const [securityQuestionAnswer, setSecurityQuestionAnswer] = useState("");
   const [error, setError] = useState(ENUM_LOGINERROR.NoError);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -42,52 +36,105 @@ const Login = ({updatePasswordFlow}) => {
     setSignUp(!showSignUp)
     setEmail(""); 
     setPassword("");
-    setName("");
+    setErrorMessage("")
+    setSecurityQuestionAnswer("");
+  }
+
+  useEffect(() => {
+    getQuestions()
+  }, []);
+
+  const getQuestions = async () => {
+      const requestOptions = {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+      };
+      console.log(requestOptions)
+      await fetch(`${API}/v1/user/recovery_options`, requestOptions)
+          .then(response => response.json())
+        .then(data => {
+              setSecurityQuestion(data.questions[0])
+      });
+  }
+
+  const handlePasswordReset = () => {
+    if (checkValidEmail()) {
+      updatePasswordFlow(true)
+      updateEmail(email)
+    } else {
+        setErrorMessage("Please enter your email to continue password recovery");
+        setError(ENUM_LOGINERROR.EmailError)
+    }
   }
 
   const handleLoginRoute = async() => {
     if (showSignUp) {
         if (isInputValid()) {
-            var details = name.split(' ');
-            fetch(``,  {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                }
-            })
+          const data = {
+            contact: {
+              email: email
+            },
+            password: password,
+            recovery_options: [{
+              question: securityQuestion,
+              answer: securityQuestionAnswer
+            }]
+          }
+          const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          }
+            fetch(`${API}/v1/user`, requestOptions)
             .then(handleErrors)
             .then(response => {
+                console.log(response.json())
                 setSignUp(false);
             })
             .catch(error => console.log(error) );
             setEmail("");
             setPassword("");
-            setName("");
+            setSecurityQuestionAnswer("");
         }
     }
     else {
         if (isInputValid()) {
-            fetch(``, {
-                method: 'GET'
-            })
-            .then(handleErrors)
-            .then(async response => {
-                const data = await response.json();
-                if (data.password !== password) {
-                    setError(ENUM_LOGINERROR.PasswordError)
-                    setErrorMessage("Wrong Password, Please try again");
-                    setPassword("");
-                } else {
-                    setEmail(""); 
-                    setPassword("");
-                    navigate(`/main`, {
-                        state: {
-                            userID: "1",
-                            name: "Carter"
-                        }
-                    });
-                }
+            const data = {
+              email: email,
+              password: password
+            }
+            const requestOptions = {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data)
+            };
+            fetch(`${API}/v1/user/login`, requestOptions) 
+            // .then(handleErrors)
+            .then(response => response.json())  
+            .then(data => {
+                if (data.message === "Incorrect login/password.") {
+                  setError(ENUM_LOGINERROR.PasswordError)
+                  setErrorMessage("Wrong Password, Please try again");
+                  setPassword("");
+                } else if (data.message === "Invalid input") {
+                  setError(ENUM_LOGINERROR.EmailError)
+                  setErrorMessage("Email does not exist. Please create an account");
+                  setEmail("");
+                  setPassword("");
+                } else if (data.message === "'' is not a 'email'") {
+                  setError(ENUM_LOGINERROR.EmailError)
+                  setErrorMessage("Please enter your email");
+                  setEmail("");
+                  setPassword("");
+                }else {
+                  setEmail(""); 
+                  setPassword("");
+                  navigate(`/main`, {
+                      state: {
+                          token: data.token,
+                      }
+                  });
+              }
             })
             .catch(error => console.log(error) );
         }
@@ -95,11 +142,11 @@ const Login = ({updatePasswordFlow}) => {
   }
 
   function handleErrors(response) {
-		if (!response.ok) {
-			throw Error(response.statusText);
-		}
-		return response;
-	}
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response;
+  }
 
   const checkValidEmail = () => {
       const regex = /^(([^<>()[\].,;:\s@"]+(.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+.)+[^<>()[\].,;:\s@"]{2,})$/i;
@@ -114,17 +161,18 @@ const Login = ({updatePasswordFlow}) => {
   const isInputValid = () => {
       if (checkValidEmail()) {
           if (showSignUp) {
-              if (!name) {
-                  setErrorMessage("Please enter your full name")
-                  setError(ENUM_LOGINERROR.NameError)
+              if (!securityQuestionAnswer) {
+                  setErrorMessage("Please answer for security purposes")
+                setError(ENUM_LOGINERROR.SecurityError)
+                console.log(error)
                   return false;
               } 
           }
           if (!password) {
-              setErrorMessage("Please enter a password");
+              setErrorMessage("Please enter your password");
               setError(ENUM_LOGINERROR.PasswordError)
               return false;
-          } else if (password.length <=4) {
+          } else if (password.length <8) {
               setErrorMessage("Password must be of 8 or more characters");
               setError(ENUM_LOGINERROR.PasswordError)
               return false;
@@ -134,7 +182,7 @@ const Login = ({updatePasswordFlow}) => {
           }
       } else {
         setError(ENUM_LOGINERROR.NoError)
-        return false;
+        return true;
       }
   }
   return (
@@ -148,40 +196,38 @@ const Login = ({updatePasswordFlow}) => {
               </Animated>
             } 
             <FormContent>
-              <Form>
-                {
-                  showSignUp &&
-                    <Animated animationIn="fadeInUp" animationOut="fadeInDown" isVisible={showSignUp}>
-                      <FormInputWrapper>
-                          <FormLabel isError={false} htmlFor="name">Your name</FormLabel>
-                          {
-                            error === "NameError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
-                          }
-                          <FormInput type="name" required/>
-                      </FormInputWrapper>
-                    </Animated>
-                }
                 <FormInputWrapper>
                     <FormLabel isError={false} htmlFor="email">Your email</FormLabel>
                     {
-                     error === "EmailError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
+                    error === "EmailError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
                     }
-                    <FormInput type="email" required/>
+                    <FormInput type="text" name="email" value={email} onChange={e=> setEmail(e.target.value)} required/>
                 </FormInputWrapper>
                 <FormInputWrapper>
                     <FormLabel isError={false} htmlFor="password">Your password</FormLabel>
                     {
-                     error === "PasswordError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
+                    error === "PasswordError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
                     }
-                    <FormInput type="password" required/>
-                </FormInputWrapper>
-                <FormButton onClick={handleLoginRoute}>
+                    <FormInput type="password" name='password' value={password} onChange={e=> setPassword(e.target.value)} required/>
+                  </FormInputWrapper>
+                {
+                  showSignUp &&
+                    <Animated animationIn="fadeInUp" animationOut="fadeInDown" isVisible={showSignUp}>
+                      <FormInputWrapper>
+                    <FormLabel isError={false} htmlFor="name">{ securityQuestion }</FormLabel>
+                          {
+                            error === "SecurityError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
+                          }
+                          <FormInput type="text" name="name" value={securityQuestionAnswer} onChange={e=> setSecurityQuestionAnswer(e.target.value)} required/>
+                      </FormInputWrapper>
+                    </Animated>
+                }
+                <FormButton onClick={e => { handleLoginRoute()}}>
                   { showSignUp && "Sign Up" }
                   { !showSignUp && "Login" }
-                  </FormButton>
-              </Form>
+                </FormButton>
               <FooterSection>
-                { !showSignUp &&  <PasswordResetSection onClick={e => updatePasswordFlow(true)}>Forgot Password ?</PasswordResetSection> }
+                { !showSignUp &&  <PasswordResetSection onClick={e => handlePasswordReset()}>Forgot Password ?</PasswordResetSection> }
                   <CreateAccountSection onClick={updateSignUp}>
                       <FootP>
                       { showSignUp &&  "Already a user?"} 

@@ -1,6 +1,10 @@
-// export enum LoginErrors {
-//     WRONGEMAIL = "WRONGEMAIL",
-//     WRONGEPASSWORD = "WRONGEPASSWORD",
-//     INVALIDEMAIL = "INVALIDEMAIL",
-//     NOERROR = "NOERROR"
-// }
+export const ENUM_LOGINERROR = {
+    EmailError: 'EmailError',
+    PasswordError: 'PasswordError',
+    UnknownError: 'UnknownError',
+    NameError: 'NameError',
+    NoError: 'NoError',
+    SecurityError: 'SecurityError'
+  }
+  
+ export const API = "https://ryze-lms.herokuapp.com"
