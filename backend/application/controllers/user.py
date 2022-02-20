@@ -105,14 +105,14 @@ def recovery_options_update_password():
         uid = g.data["uid"]
         answer = g.data["answer"]
         recovery_options = RecoveryOptions.objects.get(uid = uid)
-        if recovery_options.answer == answer:
-            user = User.objects.get(recovery_options = recovery_options)
-            hasher = hashlib.new('sha256')
-            hasher.update(g.data["password"].encode('ascii'))
-            password_hash = hasher.hexdigest()
-            user.update(set__password = password_hash)
-            return { "message": "Success" }
-        return { "message": "Invalid input"}, 400
+        if recovery_options.answer != answer:
+            return { "message": "Invalid input"}, 400
+        user = User.objects.get(recovery_options = recovery_options)
+        hasher = hashlib.new('sha256')
+        hasher.update(g.data["password"].encode('ascii'))
+        password_hash = hasher.hexdigest()
+        user.update(set__password = password_hash)
+        return { "message": "Success" }
     except Exception as e:
         logging.exception(e)
         return { "message": "Invalid input"}, 400
