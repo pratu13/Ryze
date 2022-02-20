@@ -1,1 +1,1 @@
-api: cd backend && pip install -r requirements.txt && python app.py 0.0.0.0
+web: cd backend && pip install -r requirements.txt && python app.py 0.0.0.0
