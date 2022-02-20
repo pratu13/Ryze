@@ -7,6 +7,7 @@ from jsonschema import ValidationError
 import sys
 
 if os.getenv("PRODUCTION") == None:
+    print("Not production")
     load_dotenv()
 
 app = create_app()
@@ -33,6 +34,5 @@ if __name__ == '__main__':
     port = 8000
     if len(sys.argv) > 1:
         host = sys.argv[1]
-    if os.getenv("PRODUCTION"):
-        port = int(os.getenv("PORT"))
-    app.run(host = host, port=8000, debug=True)
+    port = int(os.getenv("PORT", 8000))
+    app.run(host = host, port = port, debug=True)
