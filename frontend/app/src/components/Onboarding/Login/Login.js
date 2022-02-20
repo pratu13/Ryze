@@ -88,13 +88,14 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
             fetch(`${API}/v1/user`, requestOptions)
             .then(handleErrors)
             .then(response => {
-                console.log(response.json())
-                setSignUp(false);
+              console.log(response.json())
+              setSignUp(false);
+              setEmail("");
+              setPassword("");
+              setSecurityQuestionAnswer("");
             })
             .catch(error => console.log(error) );
-            setEmail("");
-            setPassword("");
-            setSecurityQuestionAnswer("");
+            
         }
     }
     else {
@@ -121,7 +122,7 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
                   setErrorMessage("Email does not exist. Please create an account");
                   setEmail("");
                   setPassword("");
-                } else if (data.message === "'' is not a 'email'") {
+                } else if (data.message.includes("is not a 'email'")) {
                   setError(ENUM_LOGINERROR.EmailError)
                   setErrorMessage("Please enter your email");
                   setEmail("");
@@ -143,6 +144,8 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
 
   function handleErrors(response) {
     if (!response.ok) {
+      setError(ENUM_LOGINERROR.EmailError)
+      setErrorMessage(response.JSON().message)
       throw Error(response.statusText);
     }
     return response;
