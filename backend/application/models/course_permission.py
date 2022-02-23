@@ -12,7 +12,7 @@ class Role(Enum):
 
 
 class CoursePermission(Document):
-    uid = UUIDField(default=uuid.uuid4(), required=True)
+    uid = UUIDField(default=uuid.uuid4, required=True)
     course_id = ReferenceField('Course')
     user_id = ReferenceField('User')
     role = EnumField(Role, default=Role.STUDENT)

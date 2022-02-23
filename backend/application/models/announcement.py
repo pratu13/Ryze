@@ -5,7 +5,7 @@ import uuid
 
 
 class Announcement(Document):
-    uid = UUIDField(default=uuid.uuid4(), required=True)
+    uid = UUIDField(default=uuid.uuid4, required=True)
     user_id = ReferenceField('User')
     course_id = ReferenceField('Course')
     text = StringField(max_length=200)

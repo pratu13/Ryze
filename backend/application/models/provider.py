@@ -9,7 +9,7 @@ class ProviderType(Enum):
 
 
 class Provider(Document):
-    uid = UUIDField(default=uuid.uuid4(), required=True)
+    uid = UUIDField(default=uuid.uuid4, required=True)
     name = StringField()
     api_key = StringField()
     provider_type = EnumField(ProviderType, default = ProviderType.INTERNAL)

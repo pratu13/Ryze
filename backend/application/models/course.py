@@ -5,7 +5,7 @@ import uuid
 
 
 class Course(Document):
-    uid = UUIDField(default=uuid.uuid4(), required=True)
+    uid = UUIDField(default=uuid.uuid4, required=True)
     color = StringField()
     user_id = ReferenceField('User')
     name = StringField(min_length=5)

@@ -5,7 +5,7 @@ import uuid
 
 
 class Assignment(Document):
-    uid = UUIDField(default=uuid.uuid4(), required=True)
+    uid = UUIDField(default=uuid.uuid4, required=True)
     user_id = ReferenceField('User')
     course_id = ReferenceField('Course')
     title = StringField(max_length=200)
