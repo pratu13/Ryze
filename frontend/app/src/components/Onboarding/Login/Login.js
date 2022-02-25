@@ -201,32 +201,32 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
             } 
             <FormContent>
                 <FormInputWrapper>
-                    <FormLabel isError={false} htmlFor="email">Your email</FormLabel>
+                    <FormLabel color='black' isError={false} htmlFor="email">Your email</FormLabel>
                     {
                     error === "EmailError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
                     }
-                    <FormInput type="text" name="email" value={email} onChange={e=> setEmail(e.target.value)} required/>
+                    <FormInput color="#EBF3F5" type="text" name="email" value={email} onChange={e=> setEmail(e.target.value)} required/>
                 </FormInputWrapper>
                 <FormInputWrapper>
-                    <FormLabel isError={false} htmlFor="password">Your password</FormLabel>
+                    <FormLabel color='black' isError={false} htmlFor="password">Your password</FormLabel>
                     {
                     error === "PasswordError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
                     }
-                    <FormInput type="password" name='password' value={password} onChange={e=> setPassword(e.target.value)} required/>
+                    <FormInput color="#EBF3F5" type="password" name='password' value={password} onChange={e=> setPassword(e.target.value)} required/>
                   </FormInputWrapper>
                 {
                   showSignUp &&
                     <Animated animationIn="fadeInUp" animationOut="fadeInDown" isVisible={showSignUp}>
                       <FormInputWrapper>
-                    <FormLabel isError={false} htmlFor="name">{ securityQuestion }</FormLabel>
+                    <FormLabel color='black' isError={false} htmlFor="name">{ securityQuestion }</FormLabel>
                           {
                             error === "SecurityError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
                           }
-                          <FormInput type="text" name="name" value={securityQuestionAnswer} onChange={e=> setSecurityQuestionAnswer(e.target.value)} required/>
+                          <FormInput color="#EBF3F5" type="text" name="name" value={securityQuestionAnswer} onChange={e=> setSecurityQuestionAnswer(e.target.value)} required/>
                       </FormInputWrapper>
                     </Animated>
                 }
-                <FormButton onClick={e => { handleLoginRoute()}}>
+            <FormButton isDisabled={false} onClick={e => { handleLoginRoute()}}>
                   { showSignUp && "Sign Up" }
                   { !showSignUp && "Login" }
                 </FormButton>

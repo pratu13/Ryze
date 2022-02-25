@@ -80,11 +80,11 @@ const RecoveryQuestion = ({updatePasswordFlow, email}) => {
                     </ForgotPasswordHeader>
                     <FormInputWrapper>
                         <FormLabel isError={false} htmlFor="question">{question}</FormLabel>
-                        <FormInput type="text" name="email" value={answer} onChange={e=> setAnswer(e.target.value)} required/>
+                        <FormInput color="#EBF3F5" type="text" name="email" value={answer} onChange={e=> setAnswer(e.target.value)} required/>
                     </FormInputWrapper>
                     <FormInputWrapper>
                       <FormLabel htmlFor='password'>Your new password</FormLabel>
-                      <FormInput type="password" name="password" value={password} onChange={e=> setPassword(e.target.value)} required></FormInput >
+                      <FormInput color="#EBF3F5" type="password" name="password" value={password} onChange={e=> setPassword(e.target.value)} required></FormInput >
                     </FormInputWrapper>
                     <FormButtonWrapper>
                         <FormButton onClick={updateContinue}>Continue</FormButton>

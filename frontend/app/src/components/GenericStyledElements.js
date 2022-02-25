@@ -2,7 +2,7 @@ import styled from "styled-components"
 
 export const FormButton = styled.button`
     height: 44px;
-    width: 50%;
+    width: 200px;
     background-color: #A0A5FE;
     text-decoration: none;
     color: white;
@@ -11,6 +11,7 @@ export const FormButton = styled.button`
     font-size: large;
     cursor: pointer;
     font-weight: bold;
+    opacity: ${({isDisabled})  => isDisabled ? '0.5' : '1'};;
     transition: all 0.2s ease-in-out;
 
     &:hover {
@@ -38,14 +39,20 @@ export const FormInput = styled.input`
     margin: 8px 0;
     border: none;
     border-radius: 10px;
-    background-color: #EBF3F5;
+    background-color: ${({ color }) => color};
     margin-bottom: 40px;
+    transition: all 0.2 ease-in-out;
+
+    @media screen and (max-width: 1000px) {
+        width: 225px;
+        transition: all 0.2s ease-in-out;
+    }
 `
 
 export const FormLabel = styled.label`
     font-size: ${({isError})  => isError ? 'small' : 'larger'};
     font-weight: bold;
-    color: ${({ isError }) => isError ? 'red' : '#000'};
+    color: ${({ isError, color }) => isError ? 'red' : color};
     text-align: start;
     width: 335px;
 `
@@ -90,4 +97,31 @@ export const SectionCard = styled.div`
     justify-content: flex-start;
     align-items: center;
     min-height: 400px;
+`
+
+export const ModalContainer = styled.div`
+    width: 100vw;
+    height: 100vh;
+    background-color: #fff;
+    z-index: 1;
+    opacity: 1;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+export const ModalWrapper = styled.div`
+    width: 100%;
+    max-width: 60vw;
+    position: fixed;
+    border-radius: 20px;
+    height: 80vh;
+    background: #DFC3E6;
+    transition: all 0.2s ease-in-out;
+
+    @media screen and (max-width: 1000px) {
+        height: 75vh;
+        transition: all 0.2s ease-in-out;
+    }
+
 `

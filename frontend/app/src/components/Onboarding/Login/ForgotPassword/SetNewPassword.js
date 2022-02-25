@@ -24,11 +24,11 @@ const SetNewPassword = () => {
                 <Form>
                     <FormInputWrapper>
                       <FormLabel htmlFor='password'>Your new password</FormLabel>
-                      <FormInput type="password" name="password" required></FormInput >
+                      <FormInput color="#EBF3F5" type="password" name="password" required></FormInput >
                     </FormInputWrapper>
                     <FormInputWrapper>
                         <FormLabel htmlFor='confirm'>Confirm new password</FormLabel>
-                        <FormInput type="password" name="confirm" required></FormInput>
+                        <FormInput color="#EBF3F5" type="password" name="confirm" required></FormInput>
                     </FormInputWrapper>
                     <FormButton>Change Password</FormButton>
                 </Form>

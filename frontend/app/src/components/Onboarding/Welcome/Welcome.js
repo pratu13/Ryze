@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import ForgotPassword from '../Login/ForgotPassword/ForgotPassword'
 import Login from '../Login/Login'
 import { Animated } from 'react-animated-css';
 import { LoginWrapper } from './WelcomeStyledElements'
 import RecoveryQuestion from '../Login/ForgotPassword/RecoveryQuestion';
+import SettingsModal from '../../Settings/SettingsModal';
 
 const Welcome = () => {
 
