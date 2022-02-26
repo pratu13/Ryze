@@ -23,7 +23,7 @@ import {
 } from './LoginStyledElements'
 import { API, ENUM_LOGINERROR } from './LoginUtilities';
 
-const Login = ({updatePasswordFlow, updateEmail}) => {
+const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
   const [showSignUp, setSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,6 +46,10 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
   useEffect(() => {
     getQuestions()
   }, []);
+
+  const handleFacebookSignIn = () => {
+    completeOauthSignIn()
+  }
 
   const getQuestions = async () => {
       const requestOptions = {
@@ -255,8 +259,8 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
 
         <Container>
           <FooterButtonContainer>
-              <FormButton>Google</FormButton>
-              <FormButton>Facebook</FormButton>
+            <FormButton onClick={e => handleFacebookSignIn()}>Google</FormButton>
+            <FormButton onClick={e => handleFacebookSignIn()}>Facebook</FormButton>
           </FooterButtonContainer>
         </Container>
         </LoginContainer>

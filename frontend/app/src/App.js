@@ -9,8 +9,8 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path='/' element={<Welcome/>} exact></Route>
-        <Route path='/main/*' element={<MainBoard/>} exact></Route>
+          <Route path='/' element={<Welcome />} exact></Route>
+          <Route path='/main/*' element={<MainBoard/>} exact></Route>
       </Routes>
     </Router>
     </>

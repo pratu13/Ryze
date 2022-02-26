@@ -5,6 +5,6 @@ export const ENUM_LOGINERROR = {
     NameError: 'NameError',
     NoError: 'NoError',
     SecurityError: 'SecurityError'
-  }
-  
- export const API = "https://ryze-lms-be.herokuapp.com"
+}
+
+export const API = "https://ryze-lms-be.herokuapp.com"

@@ -10,12 +10,12 @@ import {
 
 import { Animated } from "react-animated-css";
 
-const ConfirmationPage = ({setupComplete, img, description}) => {
+const ConfirmationPage = ({setupComplete, img, description, success}) => {
     return (
         <>
             <Animated animationIn="fadeIn" animationOut="fadeInOut" isVisible={setupComplete}>
                 <SucessModalContainer>
-                    <SucessModalWrapper>
+                    <SucessModalWrapper success = {success}>
                         <SucessModalContentWrapper>
                             <ModalImage src={img} />
                             <ModalDescription>{description}</ModalDescription>
