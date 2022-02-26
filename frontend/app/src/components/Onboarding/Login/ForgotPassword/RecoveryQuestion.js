@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FormInput, FormInputWrapper, FormLabel, FormButton, Container  } from '../../../GenericStyledElements';
+import { FormInput, FormInputWrapper, FormLabel, FormButton, Container  } from '../../../Custom/GenericStyledElements';
 import { API } from '../LoginUtilities';
 import SetNewPassword from './SetNewPassword';
 import BackButton from '../../../../assets/backButton.png'

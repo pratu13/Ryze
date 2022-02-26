@@ -7,7 +7,7 @@ import {
     FormInputWrapper, 
     FormLabel,
     Form
-} from '../../../GenericStyledElements'
+} from '../../../Custom/GenericStyledElements'
 
 import { 
     SetPasswordTitle,

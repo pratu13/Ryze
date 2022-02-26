@@ -1,5 +1,5 @@
 import React from 'react'
-import { SectionCard } from '../../GenericStyledElements'
+import { SectionCard, EmptyCardTitle, EmptyCardTitleContainer } from '../../Custom/GenericStyledElements'
 import TodoSectionItem from './TodoSectionItem'
 import { TodoSectionContainer, TodoSectionTitle } from './TodoSectionStyledElements'
 
@@ -8,10 +8,13 @@ const TodoSection = () => {
     <>
         <TodoSectionContainer>
             <TodoSectionTitle> Coming this Week ... </TodoSectionTitle>
-            <SectionCard>
-              <TodoSectionItem completed={true}/>
-              <TodoSectionItem completed={false}/>
-            </SectionCard>
+        <SectionCard>
+          <EmptyCardTitleContainer>
+              <EmptyCardTitle>Looks like you aced this week and completed all your homework</EmptyCardTitle>
+          </EmptyCardTitleContainer>
+              {/* <TodoSectionItem completed={true}/>
+              <TodoSectionItem completed={false}/> */}
+        </SectionCard>
                
         </TodoSectionContainer>
     </>

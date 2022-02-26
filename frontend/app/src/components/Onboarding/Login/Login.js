@@ -8,7 +8,7 @@ import {
   FormInput,
   FormContent, 
   FormInputWrapper
-} from '../../GenericStyledElements';
+} from '../../Custom/GenericStyledElements';
 
 import { 
   LoginFormTitle, 
@@ -128,8 +128,10 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
                    setPassword("");
                    setErrorMessage("")
                   navigate(`/main`, {
-                      state: {
-                          token: data.token,
+                    state: {
+                        email: email,
+                        token: "dfd",
+                        userFirstTimeLogin: true
                       }
                   });
                 }

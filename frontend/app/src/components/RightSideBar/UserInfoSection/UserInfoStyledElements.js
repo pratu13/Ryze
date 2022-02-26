@@ -21,7 +21,7 @@ export const UserBackgroundColor = styled.div`
     width: 237px;
     height: 98px;
     border-radius: 20px;
-    background-color: #AAC6FC;
+    background-color: ${({color}) => color};
 `
 
 export const UserImageIcon = styled.img`
@@ -29,7 +29,7 @@ export const UserImageIcon = styled.img`
     height: 80px;
     border-radius: 50%;
     margin-top: -30px;
-    background: #F9D9EB;
+    background: ${({color}) => color};
     border: 3px solid white;
 `
 

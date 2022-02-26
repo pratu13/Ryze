@@ -1,27 +1,27 @@
 import React from 'react'
-import { SectionCard } from '../../GenericStyledElements'
+import { SectionCard } from '../../Custom/GenericStyledElements'
 import { DescriptionSubtitleLabel, DescriptionTitleLabel, InfoWrapper, TermRoleSection, UserBackgroundColor, UserDescriptionSection, UserImageIcon, UserMailLabel, UserNameLabel, UserNameSection, UserProfileHeader } from './UserInfoStyledElements'
 
-const UserInfo = () => {
+const UserInfo = ({ userInfo }) => {
   return (
     <>
         <SectionCard>
             <InfoWrapper>
               <UserProfileHeader>
-                <UserBackgroundColor/>
-                <UserImageIcon/>
+                <UserBackgroundColor color={ userInfo.bgColor}/>
+            <UserImageIcon src={ userInfo.userImage} color={ userInfo.color}/>
               </UserProfileHeader>
               <UserNameSection>
-                <UserNameLabel>Carter</UserNameLabel>
-                <UserMailLabel>carter@iu.edu</UserMailLabel>
+            <UserNameLabel>{userInfo.name}</UserNameLabel>
+            <UserMailLabel>{userInfo.email}</UserMailLabel>
                 <UserDescriptionSection>
                   <TermRoleSection>
-                    <DescriptionTitleLabel>Term</DescriptionTitleLabel>
-                    <DescriptionSubtitleLabel>Fall 2020</DescriptionSubtitleLabel>
+                    <DescriptionTitleLabel>Date Joined</DescriptionTitleLabel>
+                    <DescriptionSubtitleLabel>2022</DescriptionSubtitleLabel>
                   </TermRoleSection>
                   <TermRoleSection>
                     <DescriptionTitleLabel>Role</DescriptionTitleLabel>
-                    <DescriptionSubtitleLabel>Student</DescriptionSubtitleLabel>
+                <DescriptionSubtitleLabel>{userInfo.role}</DescriptionSubtitleLabel>
                   </TermRoleSection>
                 </UserDescriptionSection>
               </UserNameSection>

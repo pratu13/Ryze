@@ -1,5 +1,5 @@
 import React from 'react'
-import { MainContentContainer } from '../GenericStyledElements'
+import { MainContentContainer } from '../Custom/GenericStyledElements'
 
 const Courses = () => {
   return (
