@@ -55,7 +55,7 @@ const MainBoard = () => {
                   return (
                     <>
                     <Dashboard/>
-                      <RideSideBar userInfo={userInfo}/>
+                    <RideSideBar userInfo={userInfo}/>
                     </>
                   );
               case ENUM_STATES.Courses:
@@ -71,9 +71,6 @@ const MainBoard = () => {
           <SettingsModal updateSettingModal={updateSettingModal} updateUserInfo={updateUserInfo} />
         }
       </MainBoardContainer> 
-
-      
-
     </>
   )
 }
