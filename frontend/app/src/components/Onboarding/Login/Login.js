@@ -7,7 +7,10 @@ import {
   FormLabel, 
   FormInput,
   FormContent, 
-  FormInputWrapper
+  FormInputWrapper,
+  LoginContainer,
+  FooterButtonContainer,
+  Divider
 } from '../../Custom/GenericStyledElements';
 
 import { 
@@ -193,6 +196,7 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
   }
   return (
     <>
+      <LoginContainer>
         <Container>
           <LoginFormWrapper>
             {
@@ -246,6 +250,16 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
             </FormContent>
           </LoginFormWrapper>
         </Container>
+
+        <Divider/>
+
+        <Container>
+          <FooterButtonContainer>
+              <FormButton>Google</FormButton>
+              <FormButton>Facebook</FormButton>
+          </FooterButtonContainer>
+        </Container>
+        </LoginContainer>
     </>
   );
 }

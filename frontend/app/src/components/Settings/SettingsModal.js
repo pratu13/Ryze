@@ -5,11 +5,6 @@ import {
     FormLabel,
     ModalContainer,
     ModalWrapper,
-    SucessModalWrapper,
-    SucessModalContainer,
-    SucessModalContentWrapper,
-    ModalImage,
-    ModalDescription
 } from '../Custom/GenericStyledElements'
 import {
     ProfileContainer,
@@ -27,7 +22,7 @@ import Admin from "../../assets/admin.png"
 import Student from "../../assets/student.png"
 import Teacher from "../../assets/teacher.png"
 import DropDownMenu from '../Custom/DropDownMenu'
-import { Animated } from "react-animated-css";
+import ConfirmationPage from '../Custom/ConfirmationPage'
 const SettingsModal = ({updateSettingModal, updateUserInfo}) => {
     const [name, setName] =  useState("")
     const [role, setRole] = useState("")
@@ -88,16 +83,7 @@ const SettingsModal = ({updateSettingModal, updateUserInfo}) => {
                 }  
                 {
                     setupComplete &&
-                    <Animated animationIn="fadeIn" animationOut="fadeInOut" isVisible={ setupComplete }>  
-                        <SucessModalContainer>
-                                <SucessModalWrapper>
-                                    <SucessModalContentWrapper>
-                                        <ModalImage src={Success}/>
-                                        <ModalDescription>Great!! You are all set</ModalDescription>
-                                    </SucessModalContentWrapper>
-                                </SucessModalWrapper>
-                        </SucessModalContainer>
-                    </Animated>
+                    <ConfirmationPage img={Success} description="Great!! You are all set" setupComplete={setupComplete}/>
                 } 
             </ModalContainer>
         </>

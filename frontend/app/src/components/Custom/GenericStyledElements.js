@@ -22,7 +22,7 @@ export const FormButton = styled.button`
 
 export const Container = styled.div`
     height: auto;  
-    min-height: 60vh;
+    /* min-height: 60vh; */
     max-width: 500px;
     width: 500px;
     display: flex;
@@ -30,6 +30,31 @@ export const Container = styled.div`
     border-radius: 50px;
     margin-left: 30px;
     margin-right: 30px;
+`
+
+export const FooterButtonContainer = styled.div`
+    height: 16vh;  
+    max-width: 500px;
+    width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 50px;
+    margin-left: 30px;
+    margin-right: 30px;
+`
+
+export const Divider = styled.div`
+    padding: 1em;
+`
+
+export const LoginContainer = styled.div`
+    height: 100vh;  
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `
 
 export const FormInput = styled.input`
