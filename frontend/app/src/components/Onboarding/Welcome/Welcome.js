@@ -32,7 +32,13 @@ const Welcome = () => {
     setStartOFlow(true);
     setTimeout(() => {
       setStartOFlow(false);
-      navigate('/main')
+      navigate(`/main`, {
+        state: {
+            email: "pratu935@gmail.com",
+            token: "dfd",
+            userFirstTimeLogin: true
+          }
+      });
     }, 3000);
   }
 
