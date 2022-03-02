@@ -13,6 +13,7 @@ import {
   Divider
 } from '../../Custom/GenericStyledElements';
 
+import GoogleLogin from 'react-google-login'
 import { 
   LoginFormTitle, 
   LoginFormWrapper, 
@@ -47,8 +48,12 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
     getQuestions()
   }, []);
 
-  const handleFacebookSignIn = () => {
-    completeOauthSignIn()
+  const handleOAuthSignIn = (response) => {
+    if (response.accessToken != "") {
+      completeOauthSignIn(true, response)
+    } else {
+      completeOauthSignIn(false, response)
+    }
   }
 
   const getQuestions = async () => {
@@ -259,8 +264,14 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
 
         <Container>
           <FooterButtonContainer>
-            <FormButton onClick={e => handleFacebookSignIn()}>Google</FormButton>
-            <FormButton onClick={e => handleFacebookSignIn()}>Facebook</FormButton>
+            <GoogleLogin
+              clientId='915523283178-st4hp6v16e3t7orm881iir2ipc1sifc5.apps.googleusercontent.com'
+              onSuccess={handleOAuthSignIn }
+              onFailure={handleOAuthSignIn }
+              cookiePolicy="single_host_origin"
+            >Sign in with Google</GoogleLogin>
+           
+            {/* <FormButton onClick={e => handleFacebookSignIn()}>Facebook</FormButton> */}
           </FooterButtonContainer>
         </Container>
         </LoginContainer>
@@ -269,4 +280,3 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
 }
 
 export default Login;
-

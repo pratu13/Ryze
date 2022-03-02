@@ -26,20 +26,34 @@ const Welcome = () => {
 
   const navigate = useNavigate()
 
-  const completeOauthSignIn = () => {
-    setFlowDescription("Hold up. Logging you in...")
-    setStartOFlowImage(Success)
-    setStartOFlow(true);
-    setTimeout(() => {
-      setStartOFlow(false);
-      navigate(`/main`, {
-        state: {
-            email: "pratu935@gmail.com",
-            token: "dfd",
-            userFirstTimeLogin: true
-          }
-      });
-    }, 3000);
+  const completeOauthSignIn = (success, response) => {
+    console.log(response)
+    if (success) {
+      console.log("hello")
+      setFlowDescription("Hold up. Logging you in...")
+      setStartOFlowImage(Success)
+      setStartOFlow(true);
+      setTimeout(() => {
+        setStartOFlow(false);
+        navigate(`/main`, {
+          state: {
+              email: response.profileObj.email,
+              token: response.tokenId,
+              userFirstTimeLogin: true,
+              userId: response.userId,
+              isAuthSignedIn: success
+            }
+        });
+      }, 3000);
+    } else {
+      setFlowDescription("Opps, something went wrong")
+      setStartOFlowImage(Error)
+      setStartOFlow(true);
+      setTimeout(() => {
+        setStartOFlow(false);
+        navigate(`/`)
+      }, 3000);
+    }
   }
 
 
@@ -60,7 +74,7 @@ const Welcome = () => {
         }
         {
           startOFlow && 
-          <ConfirmationPage success={true}setupComplete={startOFlow} img={flowImage} description={ flowDescrition}/> 
+          <ConfirmationPage success={flowImage == Success ? true : false} setupComplete={startOFlow} img={flowImage} description={ flowDescrition}/> 
         }
       </LoginWrapper>
       </>

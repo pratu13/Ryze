@@ -40,7 +40,7 @@ export const FooterButtonContainer = styled.div`
     width: 500px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     border-radius: 50px;
     margin-left: 15%;
     margin-right: 15%;
@@ -214,8 +214,8 @@ export const ModalImage = styled.img`
 
     @keyframes scaleInOut {
     0%, 100% {
-        transform: scale(0.0);
-        -webkit-transform: scale(0.0);
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
     }
     50% {
         transform: scale(1.0);
