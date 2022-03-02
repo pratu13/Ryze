@@ -17,12 +17,11 @@ export const ENUM_STATES = {
 };
 
 const MainBoard = () => {
-  // const location = useLocation();
-  // const { token, userFirstTimeLogin } = location.state;
-  const userFirstTimeLogin = true
+  const location = useLocation();
+  const { email, token, userFirstTimeLogin, userId, isAuthSignedIn } = location.state;
 
   const [userInfo, setInfo] = useState({name: "", email: "", role: "", color: "", bgColor: "", userImage: Profile})
-  const [settingModel, setSettingModal] = useState(true)
+  const [settingModal, setSettingModal] = useState(userFirstTimeLogin)
   const [selectedPage, setSelectedPage] = useState(ENUM_STATES.Dashboard)
   const updateSelectedPage = (page) => {
     setSelectedPage(page)
@@ -37,7 +36,7 @@ const MainBoard = () => {
       {
         name: name,
         role: role,
-        email: "pratu@iu.edu",
+        email: email,
         color: randomHex(),
         bgColor: randomHex(),
         userImage: userImage
@@ -48,7 +47,7 @@ const MainBoard = () => {
   return (
     <>
       <MainBoardContainer>
-          <LeftSideBar updateSelectedPage = {updateSelectedPage} selectedPage={selectedPage}/>
+          <LeftSideBar updateSelectedPage = {updateSelectedPage} selectedPage={selectedPage} isAuthSignedIn ={isAuthSignedIn} />
           {(() => {
             switch(selectedPage) {
               case ENUM_STATES.Dashboard:
@@ -67,7 +66,7 @@ const MainBoard = () => {
             }
         })()}
         {
-          settingModel  &&
+          settingModal  &&
           <SettingsModal updateSettingModal={updateSettingModal} updateUserInfo={updateUserInfo} />
         }
       </MainBoardContainer> 

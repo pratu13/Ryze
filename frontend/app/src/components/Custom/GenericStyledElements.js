@@ -2,7 +2,8 @@ import styled from "styled-components"
 
 export const FormButton = styled.button`
     height: 44px;
-    width: 200px;
+    max-width: 200px;
+    min-width: 150px;
     background-color: #A0A5FE;
     text-decoration: none;
     color: white;
@@ -11,8 +12,9 @@ export const FormButton = styled.button`
     font-size: large;
     cursor: pointer;
     font-weight: bold;
-    opacity: ${({isDisabled})  => isDisabled ? '0.5' : '1'};;
+    opacity: ${({isDisabled})  => isDisabled ? '0.5' : '1'};
     transition: all 0.2s ease-in-out;
+    pointer-events: ${({isDisabled})  => isDisabled ? 'none' : 'all'};
 
     &:hover {
         transition: all 0.2s ease-in-out;
@@ -22,7 +24,7 @@ export const FormButton = styled.button`
 
 export const Container = styled.div`
     height: auto;  
-    min-height: 60vh;
+    /* min-height: 60vh; */
     max-width: 500px;
     width: 500px;
     display: flex;
@@ -30,6 +32,38 @@ export const Container = styled.div`
     border-radius: 50px;
     margin-left: 30px;
     margin-right: 30px;
+`
+
+export const FooterButtonContainer = styled.div`
+    height: 16vh;  
+    max-width: 500px;
+    width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50px;
+    margin-left: 15%;
+    margin-right: 15%;
+    transition: all 0.2s ease-in-out;
+
+    @media screen and (max-width: 1000px) {
+        flex-direction: column;
+        justify-content: space-around;
+        transition: all 0.2s ease-in-out;
+    }
+`
+
+export const Divider = styled.div`
+    padding: 1em;
+`
+
+export const LoginContainer = styled.div`
+    height: 100vh;  
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 `
 
 export const FormInput = styled.input`
@@ -148,7 +182,7 @@ export const SucessModalWrapper = styled.div`
     position: fixed;
     border-radius: 20px;
     height: 40vh;
-    background: #C3E5D1;
+    background: ${({ success }) => success ? '#C3E5D1' : '#E5C3C3'};
     transition: all 0.2s ease-in-out;
 
     @media screen and (max-width: 1000px) {
@@ -180,8 +214,8 @@ export const ModalImage = styled.img`
 
     @keyframes scaleInOut {
     0%, 100% {
-        transform: scale(0.0);
-        -webkit-transform: scale(0.0);
+        transform: scale(0.8);
+        -webkit-transform: scale(0.8);
     }
     50% {
         transform: scale(1.0);

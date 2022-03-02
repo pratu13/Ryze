@@ -7,9 +7,13 @@ import {
   FormLabel, 
   FormInput,
   FormContent, 
-  FormInputWrapper
+  FormInputWrapper,
+  LoginContainer,
+  FooterButtonContainer,
+  Divider
 } from '../../Custom/GenericStyledElements';
 
+import GoogleLogin from 'react-google-login'
 import { 
   LoginFormTitle, 
   LoginFormWrapper, 
@@ -20,7 +24,7 @@ import {
 } from './LoginStyledElements'
 import { API, ENUM_LOGINERROR } from './LoginUtilities';
 
-const Login = ({updatePasswordFlow, updateEmail}) => {
+const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
   const [showSignUp, setSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,6 +47,14 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
   useEffect(() => {
     getQuestions()
   }, []);
+
+  const handleOAuthSignIn = (response) => {
+    if (response.accessToken != "") {
+      completeOauthSignIn(true, response)
+    } else {
+      completeOauthSignIn(false, response)
+    }
+  }
 
   const getQuestions = async () => {
       const requestOptions = {
@@ -193,6 +205,7 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
   }
   return (
     <>
+      <LoginContainer>
         <Container>
           <LoginFormWrapper>
             {
@@ -246,9 +259,24 @@ const Login = ({updatePasswordFlow, updateEmail}) => {
             </FormContent>
           </LoginFormWrapper>
         </Container>
+
+        <Divider/>
+
+        <Container>
+          <FooterButtonContainer>
+            <GoogleLogin
+              clientId='915523283178-st4hp6v16e3t7orm881iir2ipc1sifc5.apps.googleusercontent.com'
+              onSuccess={handleOAuthSignIn }
+              onFailure={handleOAuthSignIn }
+              cookiePolicy="single_host_origin"
+            >Sign in with Google</GoogleLogin>
+           
+            {/* <FormButton onClick={e => handleFacebookSignIn()}>Facebook</FormButton> */}
+          </FooterButtonContainer>
+        </Container>
+        </LoginContainer>
     </>
   );
 }
 
 export default Login;
-

@@ -16,8 +16,10 @@ import CoursesSelectedIcon from  '../../assets/coursesSelected.png'
 import SettingsSelectedIcon from  '../../assets/settingsSelected.png'
 import LogoutIcon from  '../../assets/logoutIcon.png'
 import { ENUM_STATES } from '../Main/MainBoard'
+import { useNavigate } from 'react-router'
 
-const LeftSideBar = ({updateSelectedPage, selectedPage}) => {
+const LeftSideBar = ({ updateSelectedPage, selectedPage, isAuthSignedIn }) => {
+    const navigate = useNavigate()
   return (
     <>
         <SideBarContainer>
@@ -36,11 +38,21 @@ const LeftSideBar = ({updateSelectedPage, selectedPage}) => {
                         <ItemLabel dark={true} selected={selectedPage === "Settings" ? true : false}>Settings</ItemLabel>
                     </SideBarItem>
                 </SideBarItemWrapper>
-                <FooterItems>
-                    <SideBarFooterItem to='/'>
-                        <ItemIcon src = {LogoutIcon}/>
-                        <ItemLabel dark={false}>logout</ItemLabel>
-                    </SideBarFooterItem>
+                  <FooterItems>
+                      {
+                          isAuthSignedIn &&
+                          <div onClick={() => { navigate('/') }}>
+                         {/* <GoogleAuth requestToLogout={ true} completeOauthSignIn={() => { console.log("Signed In")
+                        }}/> */}
+                          </div>
+                    }
+                    {
+                        isAuthSignedIn &&  
+                        <SideBarFooterItem to='/'>
+                                <ItemIcon src={LogoutIcon} />
+                                <ItemLabel dark={false}>logout</ItemLabel>
+                        </SideBarFooterItem>
+                    }
                 </FooterItems>
             </SideBarWrapper>
         </SideBarContainer>
