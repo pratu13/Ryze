@@ -48,11 +48,11 @@ def course_creation():
 
 @course_bp.route('/v1/course/enroll/<course_id>', methods=['GET'])
 @jwt_required()
-def course_creation(course_id):
+def enroll(course_id):
     try:
         user_id = get_jwt_identity()
         user = User.objects.get(uid=user_id)
-        course = Course().objects.get(uid = course_id)
+        course = Course.objects.get(uid = course_id)
         if len(CoursePermission.objects(user_id = user, course_id = course)) != 0:
             return INVALID_INPUT_TUPLE
         course_permission = CoursePermission(
@@ -68,7 +68,7 @@ def course_creation(course_id):
         logging.exception(e)
         return {"message": str(e)}, 400
 
-@course_bp.route('/v1/course/<course_id>?strategy=<strategy>', methods=['GET'])
+@course_bp.route('/v1/course/<strategy>/<course_id>', methods=['GET'])
 @jwt_required()
 def view_course(course_id, strategy):
     try:
@@ -110,14 +110,14 @@ def view_course(course_id, strategy):
             return INVALID_INPUT_TUPLE
         user_id = get_jwt_identity()
         user = User.objects.get(uid=user_id)
-        course = Course.objects.get(course_id=course_id)
+        course = Course.objects.get(uid=course_id)
 
         return strategies[strategy](user, course)
     except Exception as e:
         logging.exception(e)
         return {"message": str(e)}, 400
 
-@course_bp.route('/v1/course?strategy=<strategy>', methods=['GET'])
+@course_bp.route('/v1/courses/<strategy>', methods=['GET'])
 @jwt_required()
 def view_courses(strategy):
     try:
@@ -162,7 +162,7 @@ def view_courses(strategy):
                 }
                 course_permission = CoursePermission.objects(user_id = user, course_id = course)
                 if len(course_permission) > 0 and course_permission[0].role in [ Role.ASSISTANT, Role.TEACHER]:
-                    course_response["role"] = course_permission[0].role
+                    course_response["role"] = course_permission[0].role.value
                 response["courses"].append(course_response)
             return response
 
@@ -236,7 +236,7 @@ def view_announcements(course_id):
 
         course_permission = CoursePermission.objects.get(course_id=course, user_id=user)
 
-        if str(course.user_id.uid) != user_id or not course_permission:
+        if not course_permission:
             abort(401, description="Unauthorized")
         
         announcements = Announcement.objects(course_id = course)
@@ -246,7 +246,7 @@ def view_announcements(course_id):
                     "created_by": str(announcement.user_id),
                     "text": announcement.text,
                     "created_at": announcement.created_at,
-                    "updated_at": announcement.upated_at
+                    "updated_at": announcement.updated_at
                 }
                 for announcement in announcements if announcement.is_active
             ]
@@ -286,6 +286,7 @@ def assignment_creation(course_id):
             course_id=course,
             user_id=user,
             title=g.data['title'],
+            description = g.data['description'],
             start_date=g.data['start_date'],
             due_date=g.data['due_date']
         )
@@ -312,7 +313,7 @@ def view_assignments(course_id):
                     "due_date": assignment.due_date,
 
                 }
-                for assignment in assignments if assignment.is_active and assignment.start_date >= datetime.datetime.now()
+                for assignment in assignments if assignment.is_active and assignment.start_date <= datetime.datetime.now()
             ]
         }
     def teacher_strategy(assignments: List[Assignment]):
