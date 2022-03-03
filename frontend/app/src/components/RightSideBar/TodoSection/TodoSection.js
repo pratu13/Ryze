@@ -3,15 +3,27 @@ import { SectionCard, EmptyCardTitle, EmptyCardTitleContainer } from '../../Cust
 import TodoSectionItem from './TodoSectionItem'
 import { TodoSectionContainer, TodoSectionTitle } from './TodoSectionStyledElements'
 
-const TodoSection = () => {
+const TodoSection = ({ assignments }) => {
   return (
     <>
         <TodoSectionContainer>
             <TodoSectionTitle> Coming this Week ... </TodoSectionTitle>
         <SectionCard>
-          <EmptyCardTitleContainer>
-              <EmptyCardTitle>Looks like you aced this week and completed all your homework</EmptyCardTitle>
-          </EmptyCardTitleContainer>
+          {
+            assignments.length != 0 &&
+              Object.keys(assignments).map((key, index) => (       
+                <>
+                  <TodoSectionItem key={key} assignment = {assignments[index]} />
+                </>
+                          
+              ))      
+          }
+          {
+            assignments.length == 0 &&
+              <EmptyCardTitleContainer>
+                <EmptyCardTitle>Looks like you aced this week and completed all your homework</EmptyCardTitle>
+            </EmptyCardTitleContainer>
+          }
               {/* <TodoSectionItem completed={true}/>
               <TodoSectionItem completed={false}/> */}
         </SectionCard>

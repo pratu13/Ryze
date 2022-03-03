@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import Dashboard from '../Dashboard/Dashboard'
 import { MainBoardContainer } from './MainBoardStyedElements'
 import  LeftSideBar from '../LeftSideBar/LeftSideBar'
@@ -7,8 +7,10 @@ import RideSideBar from '../RightSideBar/RideSideBar'
 import Courses from '../Courses/Courses'
 import Settings from '../Settings/Settings'
 import SettingsModal from '../Settings/SettingsModal'
-import { randomHex } from '../Utilities/Utilities'
+import { randomHex, SampleAnnouncementsData, SampleAssignmentsData, Subjects, UserType } from '../Utilities/Utilities'
 import Profile from '../../assets/ProfileIcon.png'
+import Announcement from '../Announcement/Announcement'
+import { useEffect } from 'react'
 
 export const ENUM_STATES = {
   Dashboard: "Dashboard",
@@ -20,9 +22,12 @@ const MainBoard = () => {
   const location = useLocation();
   const { email, token, userFirstTimeLogin, userId, isAuthSignedIn } = location.state;
 
-  const [userInfo, setInfo] = useState({name: "", email: "", role: "", color: "", bgColor: "", userImage: Profile})
+  const [userInfo, setInfo] = useState({name: "", email: "", role: UserType.NOROLE.title, color: "", bgColor: "", userImage: Profile})
   const [settingModal, setSettingModal] = useState(userFirstTimeLogin)
   const [selectedPage, setSelectedPage] = useState(ENUM_STATES.Dashboard)
+  const [announcementIsOpen, setIsOpen] = useState(false)
+  const [assignments, setAssignments] = useState([])
+
   const updateSelectedPage = (page) => {
     setSelectedPage(page)
   }
@@ -35,7 +40,7 @@ const MainBoard = () => {
     setInfo(
       {
         name: name,
-        role: role,
+        role: role.title,
         email: email,
         color: randomHex(),
         bgColor: randomHex(),
@@ -43,6 +48,20 @@ const MainBoard = () => {
       }
     )
   }
+  
+  const navigate = useNavigate()
+  const updateAnnouncement = () => {
+    navigate(`/announcement`, {
+      state: {
+        announcements: SampleAnnouncementsData
+      }
+    })
+  }
+
+  useEffect(() => {
+    setAssignments(SampleAssignmentsData)
+  }, [])
+  
 
   return (
     <>
@@ -53,8 +72,8 @@ const MainBoard = () => {
               case ENUM_STATES.Dashboard:
                   return (
                     <>
-                    <Dashboard/>
-                    <RideSideBar userInfo={userInfo}/>
+                      <Dashboard userInfo={userInfo} updateAnnouncement={ updateAnnouncement }/>
+                      <RideSideBar userInfo={userInfo} assignments={ assignments}/>
                     </>
                   );
               case ENUM_STATES.Courses:
@@ -69,6 +88,7 @@ const MainBoard = () => {
           settingModal  &&
           <SettingsModal updateSettingModal={updateSettingModal} updateUserInfo={updateUserInfo} />
         }
+        
       </MainBoardContainer> 
     </>
   )
