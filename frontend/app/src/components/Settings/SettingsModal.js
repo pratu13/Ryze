@@ -67,7 +67,7 @@ const SettingsModal = ({ updateSettingModal, updateUserInfo }) => {
                                     <LabelWrapper>
                                         <FormLabel color='white'>Choose your role</FormLabel>
                                     </LabelWrapper>
-                                    <DropDownMenu updateRole={updateRole}/>
+                                    <DropDownMenu color="white" width="335px" updateRole={updateRole} isSwitch={false}/>
                                     {/* <FormInput color="white" type="text" name="name" value={role} onChange={e=> setRole(e.target.value)} required></FormInput> */}
                                 </InputSectionWrapper>
                                 <InputSectionWrapper>

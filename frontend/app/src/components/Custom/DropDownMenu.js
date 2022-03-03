@@ -13,24 +13,33 @@ import {
 import { UserType } from '../Utilities/Utilities'
 
 
-const DropDownMenu = ({ choices, updateRole }) => {
+const DropDownMenu = ({ color, updateRole, width, switchRole, isSwitch, name }) => {
   
   const [userRole, setUserRole] = useState(UserType.NOROLE)
   const [userRoleImage, setUserRoleImg] = useState("")
 
-  const updateUserRole = (role) => {
-    console.log(role)
-    setUserRole(role)
-    updateRole(role)
-  } 
+  const switchRoles = (role) => {
+    switchRole(name ,role, role.img)
+  }
+
+  const menuItemTapped = (role) => {
+    if(isSwitch) {
+      switchRoles(role)
+    } else {
+      setUserRole(role)
+      updateRole(role)
+    }
+  }
 
   return (
     <>
-      <MenuContainer color="white">
+      <MenuContainer color={color} width={ width}>
         <Item icon={<CaretIcon />} >
-          <DropMenu updateUserRole={updateUserRole}/>
+          <DropMenu menuItemTapped={menuItemTapped} isSwitch={ isSwitch}/>
         </Item>
-        {userRole.title}
+        {
+          !isSwitch && userRole.title
+        }
         </MenuContainer>
       </>
   )
@@ -40,9 +49,11 @@ const DropMenu = (props) => {
 
   const MenuItem = (props_) => {
     return (
-        <DropMenuItem onClick={e => { props_.updateUserRole(props_.value) }}>
-            <ItemIcon src = {props_.leftIcon}/>
-            {props_.value.title}
+      <DropMenuItem onClick={e => { props_.menuItemTapped(props_.value) }}>
+        <ItemIcon src={props_.leftIcon} />
+        {
+          props_.value.title
+        }
         </DropMenuItem>
     );
   }
@@ -50,9 +61,9 @@ const DropMenu = (props) => {
   return (
     <>
       <Dropdown>
-        <MenuItem leftIcon={UserType.ADMIN.img} updateUserRole={props.updateUserRole} value={ UserType.ADMIN}/>
-        <MenuItem leftIcon={UserType.STUDENT.img} updateUserRole= {props.updateUserRole} value = { UserType.STUDENT}/>
-        <MenuItem leftIcon={UserType.TEACHER.img} updateUserRole= {props.updateUserRole} value ={ UserType.TEACHER}/>
+        <MenuItem isSwitch={props.isSwitch} leftIcon={UserType.ADMIN.img} menuItemTapped={props.menuItemTapped} value={ UserType.ADMIN}/>
+        <MenuItem isSwitch={ props.isSwitch} leftIcon={UserType.STUDENT.img} menuItemTapped= {props.menuItemTapped} value = { UserType.STUDENT}/>
+        <MenuItem isSwitch={ props.isSwitch} leftIcon={UserType.TEACHER.img} menuItemTapped= {props.menuItemTapped} value ={ UserType.TEACHER}/>
       </Dropdown>
     </>
   );

@@ -248,7 +248,7 @@ export const SucessModalContainer = styled.div`
 
 
 export const MenuContainer = styled.div`
-    width: 335px;
+    width: ${({width}) => width};
     height: 34px;
     padding: 12px 20px;
     margin: 8px 0;
@@ -296,8 +296,8 @@ export const ItemIcon = styled.img`
 export const Dropdown = styled.div`
     position: relative;
     top: 150px;
-    width: 300px;
-    transform: translate(-10%);
+    width: 150px;
+    transform: translate(-50%);
     background-color: aliceblue;
     border-radius: 20px;
     padding: 0.3rem;

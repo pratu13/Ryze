@@ -1,8 +1,9 @@
 import React from 'react'
 import { SectionCard } from '../../Custom/GenericStyledElements'
 import { DescriptionSubtitleLabel, DescriptionTitleLabel, InfoWrapper, TermRoleSection, UserBackgroundColor, UserDescriptionSection, UserImageIcon, UserMailLabel, UserNameLabel, UserNameSection, UserProfileHeader } from './UserInfoStyledElements'
+import DropDownMenu from '../../Custom/DropDownMenu'
 
-const UserInfo = ({ userInfo }) => {
+const UserInfo = ({ userInfo, switchRole }) => {
   return (
     <>
         <SectionCard>
@@ -14,15 +15,15 @@ const UserInfo = ({ userInfo }) => {
               <UserNameSection>
             <UserNameLabel>{userInfo.name}</UserNameLabel>
             <UserMailLabel>{userInfo.email}</UserMailLabel>
-                <UserDescriptionSection>
-                  <TermRoleSection>
-                    <DescriptionTitleLabel>Date Joined</DescriptionTitleLabel>
-                    <DescriptionSubtitleLabel>2022</DescriptionSubtitleLabel>
-                  </TermRoleSection>
-                  <TermRoleSection>
+            <UserDescriptionSection>
+              <TermRoleSection>
                     <DescriptionTitleLabel>Role</DescriptionTitleLabel>
-                <DescriptionSubtitleLabel>{userInfo.role}</DescriptionSubtitleLabel>
+                    <DescriptionSubtitleLabel>{userInfo.role}</DescriptionSubtitleLabel>
                   </TermRoleSection>
+                  <TermRoleSection>
+                <DropDownMenu color="transparent" width="10px" switchRole={switchRole} isSwitch={true} name={ userInfo.name}/>
+                  </TermRoleSection>
+                  
                 </UserDescriptionSection>
               </UserNameSection>
             </InfoWrapper>

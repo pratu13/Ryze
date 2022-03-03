@@ -62,6 +62,7 @@ const MainBoard = () => {
     setAssignments(SampleAssignmentsData)
   }, [])
   
+  
 
   return (
     <>
@@ -73,7 +74,7 @@ const MainBoard = () => {
                   return (
                     <>
                       <Dashboard userInfo={userInfo} updateAnnouncement={ updateAnnouncement }/>
-                      <RideSideBar userInfo={userInfo} assignments={ assignments}/>
+                      <RideSideBar switchRole={updateUserInfo} userInfo={userInfo} assignments={ assignments}/>
                     </>
                   );
               case ENUM_STATES.Courses:

@@ -13,7 +13,7 @@ const TodoSection = ({ assignments }) => {
             assignments.length != 0 &&
               Object.keys(assignments).map((key, index) => (       
                 <>
-                  <TodoSectionItem key={key} assignment = {assignments[index]} />
+                  <TodoSectionItem key={key} assignment = {assignments[key]} />
                 </>
                           
               ))      

@@ -24,7 +24,6 @@ import Teacher from '../../assets/teacher.png'
 import { useNavigate } from 'react-router'
 
 const AnnouncementItem = ({ announcement }) => {
-    console.log(announcement.subject)
     return (
         <>
             <AnnouncementItemContainer>
@@ -73,7 +72,7 @@ const Announcement = ({ isOpen, updateAnnouncement }) => {
                   {
                       Object.keys(announcements).map((key, index) => ( 
                           <>
-                              <AnnouncementItem key={ key }announcement={announcements[index]}/>
+                              <AnnouncementItem key={ key }announcement={announcements[key]}/>
                               <Divider/>
                           </>
                         

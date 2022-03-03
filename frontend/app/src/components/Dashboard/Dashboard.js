@@ -12,7 +12,6 @@ import Bell from '../../assets/BellIcon.png'
 import { UserType } from '../Utilities/Utilities'
 
 const Dashboard = ({ userInfo, updateAnnouncement }) => {
-  console.log(userInfo.role)
   return (
     <>
         <DashboardMainContentWrapper>
@@ -21,8 +20,12 @@ const Dashboard = ({ userInfo, updateAnnouncement }) => {
             <HeaderLabel>Welcome,</HeaderLabel>
             <DashboardHeaderRight>
               {
-              (userInfo.role == UserType.TEACHER.title || UserType.ADMIN.title) && 
+                (userInfo.role == UserType.TEACHER.title)  && 
                   <CreateAnnouncementButton>Create Announcement</CreateAnnouncementButton>
+              }
+              {
+                (userInfo.role == UserType.ADMIN.title)  && 
+                <CreateAnnouncementButton>Create Announcement</CreateAnnouncementButton>
               }
               <BellIcon src={Bell} onClick={updateAnnouncement}></BellIcon>
             </DashboardHeaderRight>

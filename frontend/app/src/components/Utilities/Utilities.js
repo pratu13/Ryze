@@ -34,92 +34,81 @@ export const UserType = {
     }
 }
 
-export const SampleAssignmentsData = [
-    {
-        id: "1",
+export const SampleAssignmentsData = {
+    "1" : {
         title: "Assignment 1",
         subject: Subjects.MATH,
         due: "2022-02-25",
         completed: true
     },
-    {
-        id: "2",
+    "2" : {
         title: "Assignment 1",
         subject: Subjects.FINITE,
         due: "2022-02-25",
         completed: false
     },
-    {
-        id: "3",
+    "3": {
         title: "Assignment 2",
         subject: Subjects.MATH,
         due: "2022-04-10",
         completed: false
     }
-]
+}
 
-export const SampleAnnouncementsData = [
-    {
-        id: "1",
+export const SampleAnnouncementsData = {
+    "1":  {
         header: "This is some stupid announcement",
         time: "02/22/22",
         subject: Subjects.MATH,
         description: "Examine she brother prudent add day ham. Far stairs now coming bed oppose hunted become his. You zealously departure had procuring suspicion. Books whose front would purse if be do decay. Quitting you way formerly disposed perceive ladyship are. Common turned boy direct and yet. Whole every miles as tiled at seven or. Wished he entire esteem mr oh by. Possible bed you pleasure civility boy elegance ham. He prevent request by if in pleased. Picture too and concern has was comfort. Ten difficult resembled eagerness nor. Same park bore on be. Warmth his law design say are person. Pronounce suspected in belonging conveying ye repulsive. "
       },
-      {
-        id: "2",
+      "2": {
         header: "Announcement 2",
         time: "02/22/22",
         subject: Subjects.MATH,
         description: "This is a stupid description"
       },
-      {
-        id: "3",
+      "3":  {
         header: "Announcement 3",
         time: "02/22/22",
         subject: Subjects.FINITE,
         description: "This is a stupid description"
       },
-      {
-        id: "4",
+      "4": {
         header: "This is some another stupid announcement",
         time: "02/22/22",
         subject: Subjects.MATH,
         description: "Examine she brother prudent add day ham. Far stairs now coming bed oppose hunted become his. You zealously departure had procuring suspicion. Books whose front would purse if be do decay. Quitting you way formerly disposed perceive ladyship are. Common turned boy direct and yet. Whole every miles as tiled at seven or. Wished he entire esteem mr oh by. Possible bed you pleasure civility boy elegance ham. He prevent request by if in pleased. Picture too and concern has was comfort. Ten difficult resembled eagerness nor. Same park bore on be. Warmth his law design say are person. Pronounce suspected in belonging conveying ye repulsive. "
-      },
-      {
-        id: "5",
+    },
+      
+    "5":  {
         header: "Announcement 4",
         time: "02/22/22",
         subject: Subjects.MATH,
         description: "This is a stupid description"
       },
-      {
-        id: "6",
+      "6":  {
         header: "Announcement 5",
         time: "02/22/22",
         subject: Subjects.FINITE,
         description: "This is a stupid description"
       },
-      {
-        id: "7",
+      "7":  {
         header: "This is some stupid announcement",
         time: "02/22/22",
         subject: Subjects.MATH,
         description: "Examine she brother prudent add day ham. Far stairs now coming bed oppose hunted become his. You zealously departure had procuring suspicion. Books whose front would purse if be do decay. Quitting you way formerly disposed perceive ladyship are. Common turned boy direct and yet. Whole every miles as tiled at seven or. Wished he entire esteem mr oh by. Possible bed you pleasure civility boy elegance ham. He prevent request by if in pleased. Picture too and concern has was comfort. Ten difficult resembled eagerness nor. Same park bore on be. Warmth his law design say are person. Pronounce suspected in belonging conveying ye repulsive. "
       },
-      {
-        id: "8",
+      "8": {
         header: "Announcement 6",
         time: "02/22/22",
         subject: Subjects.MATH,
         description: "This is a stupid description"
       },
-      {
-        id: "9",
+      "9": {
         header: "Announcement 7",
         time: "02/22/22",
         subject: Subjects.FINITE,
         description: "This is a stupid description"
       }
-]
+}
