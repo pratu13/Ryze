@@ -130,9 +130,13 @@ export const FormInputWrapper = styled.div`
 
 export const MainContentContainer = styled.div`
     min-height: 100vh;
-    margin: 0;
+    margin-top: 10%;
     padding: 0;
     width: 55vw;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
     transition: all 0.2s ease-in-out;
 `
 

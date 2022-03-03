@@ -9,17 +9,17 @@ import {
     ItemSubject
  } from './TodoSectionStyledElements'
 
-const TodoSectionItem = ({completed}) => {
+const TodoSectionItem = ({assignment}) => {
   return (
     <>
         <ItemContainer>
             <TodoSectionItemWrapper>
-                <DueDateLabel>28 Mar</DueDateLabel>
+          <DueDateLabel>{assignment.due}</DueDateLabel>
                 <InfoSection>
-                    <ItemName>Assignment</ItemName>
-                     <ItemStatus completed={completed}> {completed ? 'Submitted': 'Not Submitted'}</ItemStatus>
+                    <ItemName>{assignment.title}</ItemName>
+                     <ItemStatus completed={assignment.completed}> {assignment.completed ? 'Submitted': 'Not Submitted'}</ItemStatus>
                 </InfoSection>
-                <ItemSubject>Python 1011</ItemSubject>
+          <ItemSubject>{assignment.subject.name}</ItemSubject>
             </TodoSectionItemWrapper>
         </ItemContainer>
     </>

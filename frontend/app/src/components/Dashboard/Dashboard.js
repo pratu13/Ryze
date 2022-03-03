@@ -1,13 +1,34 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MainContentContainer } from '../Custom/GenericStyledElements'
-import { DashboardMainContentWrapper } from './DashboardStyledElements'
+import {
+  DashboardMainContentWrapper,
+  DashboardHeader,
+  HeaderLabel,
+  DashboardHeaderRight,
+  BellIcon,
+  CreateAnnouncementButton
+} from './DashboardStyledElements'
+import Bell from '../../assets/BellIcon.png'
+import { UserType } from '../Utilities/Utilities'
 
-const Dashboard = () => {
+const Dashboard = ({ userInfo, updateAnnouncement }) => {
+  console.log(userInfo.role)
   return (
-      <>
-      <DashboardMainContentWrapper>
-        <MainContentContainer>This is the dashboard</MainContentContainer> 
-      </DashboardMainContentWrapper>
+    <>
+        <DashboardMainContentWrapper>
+          <MainContentContainer>
+            <DashboardHeader>
+            <HeaderLabel>Welcome,</HeaderLabel>
+            <DashboardHeaderRight>
+              {
+              (userInfo.role == UserType.TEACHER.title || UserType.ADMIN.title) && 
+                  <CreateAnnouncementButton>Create Announcement</CreateAnnouncementButton>
+              }
+              <BellIcon src={Bell} onClick={updateAnnouncement}></BellIcon>
+            </DashboardHeaderRight>
+            </DashboardHeader>
+        </MainContentContainer>
+        </DashboardMainContentWrapper>
       </>
 
   )

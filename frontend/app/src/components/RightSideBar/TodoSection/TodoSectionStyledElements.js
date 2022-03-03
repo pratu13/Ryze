@@ -7,7 +7,7 @@ export const TodoSectionContainer = styled.div`
     align-items: flex-start;
     width: 100%;
     max-width: 362px;
-    margin-top: 40px;
+    margin-top: 10%;
 `
 export const TodoSectionTitle = styled.h1`
     font-weight: bold;
@@ -20,7 +20,7 @@ export const ItemContainer = styled.div`
     background: white;
     width: 85%;
     height: 80px;
-    margin-top: 40px;
+    margin-top: 4%;
 `
 export const TodoSectionItemWrapper = styled.div`
     width: 85%;

@@ -10,14 +10,16 @@ import {
   Dropdown,
   CaretMenuItem
 } from './GenericStyledElements'
+import { UserType } from '../Utilities/Utilities'
 
 
 const DropDownMenu = ({ choices, updateRole }) => {
   
-  const [userRole, setUserRole] = useState("")
+  const [userRole, setUserRole] = useState(UserType.NOROLE)
   const [userRoleImage, setUserRoleImg] = useState("")
 
   const updateUserRole = (role) => {
+    console.log(role)
     setUserRole(role)
     updateRole(role)
   } 
@@ -28,12 +30,7 @@ const DropDownMenu = ({ choices, updateRole }) => {
         <Item icon={<CaretIcon />} >
           <DropMenu updateUserRole={updateUserRole}/>
         </Item>
-        {userRole}
-        {(() => {
-          if (!userRole) {
-            return <ItemIcon src={userRoleImage}/>
-          }
-        })}
+        {userRole.title}
         </MenuContainer>
       </>
   )
@@ -43,21 +40,19 @@ const DropMenu = (props) => {
 
   const MenuItem = (props_) => {
     return (
-      <>
         <DropMenuItem onClick={e => { props_.updateUserRole(props_.value) }}>
             <ItemIcon src = {props_.leftIcon}/>
-            {props_.value}
+            {props_.value.title}
         </DropMenuItem>
-      </>
     );
   }
 
   return (
     <>
       <Dropdown>
-        <MenuItem leftIcon={Admin} updateUserRole= {props.updateUserRole} value="Admin"/>
-        <MenuItem leftIcon={Student} updateUserRole= {props.updateUserRole} value = "Student"/>
-        <MenuItem leftIcon={Teacher} updateUserRole= {props.updateUserRole} value ="Teacher"/>
+        <MenuItem leftIcon={UserType.ADMIN.img} updateUserRole={props.updateUserRole} value={ UserType.ADMIN}/>
+        <MenuItem leftIcon={UserType.STUDENT.img} updateUserRole= {props.updateUserRole} value = { UserType.STUDENT}/>
+        <MenuItem leftIcon={UserType.TEACHER.img} updateUserRole= {props.updateUserRole} value ={ UserType.TEACHER}/>
       </Dropdown>
     </>
   );
@@ -65,16 +60,14 @@ const DropMenu = (props) => {
 
 const Item = (props) => {
 
-  const [open, setOpen] = useState(false)
-  return (
-    <>
-      <CaretMenuItem onClick={() => setOpen(!open)}>
-        <ItemIcon src={CaretIcon}/>
+  const [open, setOpen] = useState(false);
 
-        {open && props.children}
-      </CaretMenuItem>
-    </>
-  )
+  return (
+    <CaretMenuItem onClick={() => setOpen(!open)}>
+      <ItemIcon src={CaretIcon} />
+      {open && props.children}
+    </CaretMenuItem>
+  );
 }
 
 

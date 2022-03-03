@@ -21,22 +21,24 @@ import Success from '../../assets/success.png'
 import Admin from "../../assets/admin.png"
 import Student from "../../assets/student.png"
 import Teacher from "../../assets/teacher.png"
+import { useEffect } from 'react'
 import DropDownMenu from '../Custom/DropDownMenu'
 import ConfirmationPage from '../Custom/ConfirmationPage'
-const SettingsModal = ({updateSettingModal, updateUserInfo}) => {
+import { UserType } from '../Utilities/Utilities'
+const SettingsModal = ({ updateSettingModal, updateUserInfo }) => {
     const [name, setName] =  useState("")
-    const [role, setRole] = useState("")
+    const [role, setRole] = useState(UserType.NOROLE)
     const [userImage, setImage] = useState(Profile)
     const [setupComplete, setComplete] =  useState(false)
 
     const updateRole = (role) => {
         setRole(role)
         switch(role) {
-            case "Admin": setImage(Admin)
+            case UserType.ADMIN: setImage(UserType.ADMIN.img)
             break;
-            case "Student": setImage(Student)
+            case UserType.STUDENT: setImage(UserType.STUDENT.img)
             break;
-            case "Teacher": setImage(Teacher)
+            case UserType.TEACHER: setImage(UserType.TEACHER.img)
             break;
             default: setImage("")
             break;
