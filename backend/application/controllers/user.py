@@ -4,12 +4,13 @@ import logging
 from uuid import uuid4
 from flask import Blueprint, g
 from flask_expects_json import expects_json
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models.session import VALIDITY, Session
 from flask_jwt_extended import create_access_token
 from ..models.user import User
 from ..models.recovery_options import RecoveryOptions, defaultQuestions
 from ..models.contact import Contact
-from ..validators.user import ContactSchema, LoginRequestSchema, \
+from ..validators.user import ContactSchema, LoginRequestSchema, ProfileUpdateSchema, \
     RegistrationSchema, VerifyRecoveryOptionsSchema
 from mongoengine.errors import NotUniqueError
 
@@ -69,7 +70,24 @@ def login():
         user.sessions.append(new_session)
         user.update(add_to_set__sessions = [new_session])
         return {
-            "token": new_session.token
+            "token": new_session.token,
+            "name": user.name,
+            "color": user.color
+        }
+    except Exception as e:
+        logging.exception(e)
+        return {"message": "Invalid input"}, 400
+
+@user_bp.route('/v1/user', methods=['PATCH'])
+@jwt_required()
+@expects_json(ProfileUpdateSchema, check_formats=True)
+def update_profile():
+    try:
+        user_id = get_jwt_identity()
+        user = User.objects.get(uid=user_id)
+        user.update(name = g.data["name"], color = g.data["color"])
+        return { 
+            "message": "Success"
         }
     except Exception as e:
         logging.exception(e)
