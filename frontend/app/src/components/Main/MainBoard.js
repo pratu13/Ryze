@@ -7,9 +7,8 @@ import RideSideBar from '../RightSideBar/RideSideBar'
 import Courses from '../Courses/Courses'
 import Settings from '../Settings/Settings'
 import SettingsModal from '../Settings/SettingsModal'
-import { randomHex, SampleAnnouncementsData, SampleAssignmentsData, Subjects, UserType } from '../Utilities/Utilities'
+import { randomHex, SampleAnnouncementsData, SampleAssignmentsData, UserType } from '../Utilities/Utilities'
 import Profile from '../../assets/ProfileIcon.png'
-import Announcement from '../Announcement/Announcement'
 import { useEffect } from 'react'
 
 export const ENUM_STATES = {

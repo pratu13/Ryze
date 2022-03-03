@@ -75,3 +75,19 @@ export const CreateAnnouncementButton = styled.div`
         transform: scale(1.1);
     }
 `
+
+export const CourseContainer = styled.div`
+    display: flex;
+    width: 55vw;
+    height: auto;
+    color: white;
+    flex-wrap: wrap;
+    margin: 2%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 5%;
+    /* grid-template-rows: 0.5fr 0.5fr;
+    grid-template-areas: "course course"; */
+    /* text-align: center; */
+    /* grid-gap: 0.25rem; */
+`
