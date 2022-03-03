@@ -10,16 +10,18 @@ import {
   CourseContainer
 } from './DashboardStyledElements'
 import Bell from '../../assets/BellIcon.png'
-import { UserType } from '../Utilities/Utilities'
+import { SampleCourses, UserType } from '../Utilities/Utilities'
 import CourseCard from '../Courses/CourseCard'
 import { useEffect } from 'react'
+
+import { CoursesTitle } from '../Courses/CoursesStyledElements'
 
 const Dashboard = ({ userInfo, updateAnnouncement }) => {
 
   const [onGoingCourses, setCourses] = useState([])
 
   useEffect(() => {
-    setCourses({ "1": "Course 1", "2" : "Course 2", "3" : "Course 3", "4": "Course 4"})
+    setCourses(SampleCourses)
   }, [])
   
 
@@ -41,6 +43,7 @@ const Dashboard = ({ userInfo, updateAnnouncement }) => {
                 <BellIcon src={Bell} onClick={updateAnnouncement}></BellIcon>
               </DashboardHeaderRight>
           </DashboardHeader>
+          <CoursesTitle>On Going Courses</CoursesTitle>
           <CourseContainer>
           {
             Object.keys(onGoingCourses).map((key, index) => (       

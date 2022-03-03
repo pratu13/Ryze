@@ -138,6 +138,7 @@ export const MainContentContainer = styled.div`
     align-items: center;
     flex-direction: column;
     transition: all 0.2s ease-in-out;
+    
 `
 
 export const SectionCard = styled.div`

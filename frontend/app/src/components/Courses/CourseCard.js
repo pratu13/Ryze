@@ -1,11 +1,13 @@
 import React from 'react'
-import { CourseCardContainer } from './CoursesStyledElements'
+import { CourseCardContainer, CourseCardTitle, CourseCardWrapper } from './CoursesStyledElements'
 const CourseCard = ({ course }) => {
   return (
       <>
-          <CourseCardContainer>
-              { course }
-          </CourseCardContainer>
+          <CourseCardWrapper>
+              <CourseCardContainer color={ course.color} />
+              <CourseCardTitle>{ course.title }</CourseCardTitle>
+          </CourseCardWrapper>
+         
       </>
   )
 }
