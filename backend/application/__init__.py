@@ -1,3 +1,4 @@
+from datetime import timedelta
 from flask import Flask
 from flask_cors import CORS
 from .controllers.user import user_bp
@@ -13,6 +14,7 @@ def create_app():
     if not hasattr(app, 'prod'):
         app.production = not app.debug and not app.testing
     app.config["JWT_SECRET_KEY"] = "super-secret"  # Change this!
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=12)
     jwt = JWTManager(app)
     register_blueprint(app)
     CORS(app)
