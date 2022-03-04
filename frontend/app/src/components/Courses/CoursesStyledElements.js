@@ -19,7 +19,7 @@ export const CourseCardContainer = styled.div`
   margin-right: 8px;
   margin-top: 20px;
   width: 280px;
-  background-color: ${({color}) => color};;
+  background-color: ${({color}) => color};
 `
 
 export const CourseCardTitle = styled.div`
@@ -41,8 +41,25 @@ export const CoursesTitle = styled.h1`
     text-decoration: none;
     text-align: left;
     display: flex;
-    width: 55vw;
+    width: ${({width}) => width};
     justify-content: flex-start;
-    margin-left: 10%;
+    margin-left: ${({width}) => width == "55vw" ? "10%" : "0%"}; 
     margin-top: 5%;
+`
+
+export const CourseTitle = styled.h1`
+    font-size: 1.6em;
+    text-decoration: none;
+    text-align: left;
+    display: flex;
+    width: ${({width}) => width};
+    justify-content: flex-start;
+`
+export const CoursesMainContentWrapper = styled.div`
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 1%;
 `

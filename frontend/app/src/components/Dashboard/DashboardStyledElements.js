@@ -24,8 +24,8 @@ export const DashboardHeader = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-left: 2%;
-    margin-right: 2%;
+    /* margin-left: 2%;
+    margin-right: 2%; */
 `
 
 export const DashboardHeaderRight = styled.div`
@@ -78,14 +78,14 @@ export const CreateAnnouncementButton = styled.div`
 
 export const CourseContainer = styled.div`
     display: flex;
-    width: 55vw;
+    width: ${({width}) => width};
     height: auto;
     color: white;
     flex-wrap: wrap;
-    margin: 2%;
     justify-content: flex-start;
     align-items: flex-start;
     padding-left: 5%;
+    margin: 2%;
     /* grid-template-rows: 0.5fr 0.5fr;
     grid-template-areas: "course course"; */
     /* text-align: center; */

@@ -10,6 +10,8 @@ import SettingsModal from '../Settings/SettingsModal'
 import { randomHex, SampleAnnouncementsData, SampleAssignmentsData, UserType } from '../Utilities/Utilities'
 import Profile from '../../assets/ProfileIcon.png'
 import { useEffect } from 'react'
+import { SampleCourses } from '../Utilities/Utilities'
+
 
 export const ENUM_STATES = {
   Dashboard: "Dashboard",
@@ -26,7 +28,8 @@ const MainBoard = () => {
   const [selectedPage, setSelectedPage] = useState(ENUM_STATES.Dashboard)
   const [announcementIsOpen, setIsOpen] = useState(false)
   const [assignments, setAssignments] = useState([])
-
+  const [onGoingCourses, setCourses] = useState([])
+  
   const updateSelectedPage = (page) => {
     setSelectedPage(page)
   }
@@ -59,6 +62,8 @@ const MainBoard = () => {
 
   useEffect(() => {
     setAssignments(SampleAssignmentsData)
+    setCourses(SampleCourses)
+  
   }, [])
   
   
@@ -72,18 +77,18 @@ const MainBoard = () => {
               case ENUM_STATES.Dashboard:
                   return (
                     <>
-                      <Dashboard userInfo={userInfo} updateAnnouncement={ updateAnnouncement }/>
-                      <RideSideBar switchRole={updateUserInfo} userInfo={userInfo} assignments={ assignments}/>
+                      <Dashboard userInfo={userInfo} updateAnnouncement={updateAnnouncement} onGoingCourses={ onGoingCourses}/>
                     </>
                   );
               case ENUM_STATES.Courses:
-                  return <Courses/>
+                return <Courses userInfo={userInfo} onGoingCourses={ onGoingCourses}/>
               case ENUM_STATES.Settings:
                     return <Settings/>
               default:
                 <></>
             }
         })()}
+        <RideSideBar switchRole={updateUserInfo} userInfo={userInfo} assignments={ assignments}/>
         {
           settingModal  &&
           <SettingsModal updateSettingModal={updateSettingModal} updateUserInfo={updateUserInfo} />

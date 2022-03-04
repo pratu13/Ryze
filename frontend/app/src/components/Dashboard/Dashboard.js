@@ -16,19 +16,12 @@ import { useEffect } from 'react'
 
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 
-const Dashboard = ({ userInfo, updateAnnouncement }) => {
-
-  const [onGoingCourses, setCourses] = useState([])
-
-  useEffect(() => {
-    setCourses(SampleCourses)
-  }, [])
-  
+const Dashboard = ({ userInfo, updateAnnouncement, onGoingCourses }) => {
 
   return (
     <>
         <DashboardMainContentWrapper>
-          <MainContentContainer>
+          <MainContentContainer width="55vw">
             <DashboardHeader>
               <HeaderLabel>Welcome,</HeaderLabel>
               <DashboardHeaderRight>
@@ -43,8 +36,8 @@ const Dashboard = ({ userInfo, updateAnnouncement }) => {
                 <BellIcon src={Bell} onClick={updateAnnouncement}></BellIcon>
               </DashboardHeaderRight>
           </DashboardHeader>
-          <CoursesTitle>On Going Courses</CoursesTitle>
-          <CourseContainer>
+          <CoursesTitle width="55vw">On Going Courses</CoursesTitle>
+          <CourseContainer width="55vw">
           {
             Object.keys(onGoingCourses).map((key, index) => (       
               <>
