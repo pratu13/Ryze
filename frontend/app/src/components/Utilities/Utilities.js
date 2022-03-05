@@ -55,6 +55,25 @@ export const SampleAssignmentsData = {
     }
 }
 
+export const SampleCourses = {
+  "1": {
+    title: "Maths 101",
+    color: "#7DFC94"
+  },
+  "2": {
+    title: "Finite 101",
+    color: "#58C1FE"
+  },
+  "3": {
+    title: "Maths 101",
+    color: "#7DFC94"
+  },
+  "4": {
+    title: "Finite 101",
+    color: "#58C1FE"
+  }
+}
+
 export const SampleAnnouncementsData = {
     "1":  {
         header: "This is some stupid announcement",
