@@ -39,20 +39,10 @@ const LeftSideBar = ({ updateSelectedPage, selectedPage, isAuthSignedIn }) => {
                     </SideBarItem>
                 </SideBarItemWrapper>
                   <FooterItems>
-                      {
-                          isAuthSignedIn &&
-                          <div onClick={() => { navigate('/') }}>
-                         {/* <GoogleAuth requestToLogout={ true} completeOauthSignIn={() => { console.log("Signed In")
-                        }}/> */}
-                          </div>
-                    }
-                    {
-                        isAuthSignedIn &&  
-                        <SideBarFooterItem to='/'>
-                                <ItemIcon src={LogoutIcon} />
-                                <ItemLabel dark={false}>logout</ItemLabel>
-                        </SideBarFooterItem>
-                    }
+                  <SideBarFooterItem to='/'>
+                            <ItemIcon src={LogoutIcon} />
+                            <ItemLabel dark={false}>logout</ItemLabel>
+                  </SideBarFooterItem>
                 </FooterItems>
             </SideBarWrapper>
         </SideBarContainer>

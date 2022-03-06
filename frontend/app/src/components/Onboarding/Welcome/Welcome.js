@@ -7,6 +7,8 @@ import ConfirmationPage from '../../Custom/ConfirmationPage';
 import Success from '../../../assets/login.png'
 import Error from '../../../assets/error.png'
 import { useNavigate } from 'react-router';
+import ForgotPasswordEmail from '../Login/ForgotPassword/ForgotPasswordEmail';
+import { UserType } from '../../Utilities/Utilities';
 
 const Welcome = () => {
 
@@ -26,10 +28,9 @@ const Welcome = () => {
 
   const navigate = useNavigate()
 
-  const completeOauthSignIn = (success, response) => {
+  const completeOauthSignIn = (success, response, email) => {
     console.log(response)
     if (success) {
-      console.log("hello")
       setFlowDescription("Hold up. Logging you in...")
       setStartOFlowImage(Success)
       setStartOFlow(true);
@@ -37,11 +38,13 @@ const Welcome = () => {
         setStartOFlow(false);
         navigate(`/main`, {
           state: {
-              email: response.profileObj.email,
-              token: response.tokenId,
-              userFirstTimeLogin: true,
-              userId: response.userId,
-              isAuthSignedIn: success
+                email: email,
+                token: response.token,
+                name:  response.name,
+                color: response.color,
+                role:  UserType.NOROLE,
+                userFirstTimeLogin: !response.name || !response.color ,
+                isAuthSignedIn: success
             }
         });
       }, 3000);
@@ -69,7 +72,7 @@ const Welcome = () => {
         { 
           startForgotPasswordFlow &&
           <Animated animationIn="bounceInRight" animationOut="bounceOutLeft"> 
-              <RecoveryQuestion updatePasswordFlow={updatePasswordFlow} email={recoveryEmail}/> 
+              <ForgotPasswordEmail updatePasswordFlow={updatePasswordFlow} email={recoveryEmail}/> 
           </Animated>
         }
         {

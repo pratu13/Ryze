@@ -19,7 +19,7 @@ const TodoSectionItem = ({assignment}) => {
                     <ItemName>{assignment.title}</ItemName>
                      <ItemStatus completed={assignment.completed}> {assignment.completed ? 'Submitted': 'Not Submitted'}</ItemStatus>
                 </InfoSection>
-          <ItemSubject>{assignment.subject.name}</ItemSubject>
+          <ItemSubject>{assignment.subject}</ItemSubject>
             </TodoSectionItemWrapper>
         </ItemContainer>
     </>

@@ -34,8 +34,12 @@ export const ForgotPasswordHeader = styled.div`
 `
 export const HeaderTitle= styled.h1`
     font-size: larger;
-    font-weight: 500;
-    margin-left: 5%;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /* margin-left: 5%; */
 `
 
 export const CenterImage = styled.img`
@@ -74,8 +78,9 @@ export const SetNewPasswordWrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-around;
     align-items: center;
+    height: 500px;
 `
 
 export const SetPasswordTitle = styled.h1`

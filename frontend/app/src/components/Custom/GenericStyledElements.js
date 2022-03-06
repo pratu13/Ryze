@@ -2,8 +2,8 @@ import styled from "styled-components"
 
 export const FormButton = styled.button`
     height: 44px;
-    max-width: 200px;
-    min-width: 150px;
+    max-width: 220px;
+    min-width: 170px;
     background-color: #A0A5FE;
     text-decoration: none;
     color: white;

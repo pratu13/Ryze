@@ -50,6 +50,7 @@ const SettingsModal = ({ updateSettingModal, updateUserInfo }) => {
         setTimeout(() => {
             updateSettingModal()
             updateUserInfo(name, role, userImage)
+            
           }, 3000);
     }
     return (

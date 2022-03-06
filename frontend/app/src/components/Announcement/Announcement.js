@@ -33,8 +33,8 @@ const AnnouncementItem = ({ announcement }) => {
                         <AnnouncementHeaderContainer>
                             <AnnouncementHeaderInfoContainer>
                                 <AnnouncementHeader>{announcement.header}</AnnouncementHeader>
-                                <SubjectTagContainer color={announcement.subject.color}>
-                                    <SubjectText>{announcement.subject.name}</SubjectText>
+                                <SubjectTagContainer color={announcement.color}>
+                                    <SubjectText>{announcement.subjectName}</SubjectText>
                                 </SubjectTagContainer>
                             </AnnouncementHeaderInfoContainer>
                             <TimePublishedLabel>{ announcement.time}</TimePublishedLabel>

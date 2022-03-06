@@ -11,6 +11,7 @@ import {
     FormButtonWrapper,
 } from '../ForgotPassword/ForgotPasswordStyledElements'
 
+
 const RecoveryQuestion = ({updatePasswordFlow, email}) => {
     const [uid, setUID] = useState("")
     const [continueRecoveyQuestions, setContinue] = useState(false);
@@ -75,15 +76,19 @@ const RecoveryQuestion = ({updatePasswordFlow, email}) => {
             <Container>
                 <ForgotPasswordWrapper>
                     <ForgotPasswordHeader>
-                        <BackButtonIcon src={BackButton} onClick={e => {updatePasswordFlow(false)}} alt="Go Back"/>
-                        <HeaderTitle>Please answer the following security questions to continue</HeaderTitle>
+                        {/* <BackButtonIcon src={BackButton} onClick={e => {updatePasswordFlow(false)}} alt="Go Back"/> */}
+                        <HeaderTitle>Enter your new password</HeaderTitle>
                     </ForgotPasswordHeader>
-                    <FormInputWrapper>
+                    {/* <FormInputWrapper>
                         <FormLabel isError={false} htmlFor="question">{question}</FormLabel>
                         <FormInput color="#EBF3F5" type="text" name="email" value={answer} onChange={e=> setAnswer(e.target.value)} required/>
-                    </FormInputWrapper>
+                    </FormInputWrapper> */}
                     <FormInputWrapper>
                       <FormLabel htmlFor='password'>Your new password</FormLabel>
+                      <FormInput color="#EBF3F5" type="password" name="password" value={password} onChange={e=> setPassword(e.target.value)} required></FormInput >
+                          </FormInputWrapper>
+                          <FormInputWrapper>
+                      <FormLabel htmlFor='password'>Confirm new password</FormLabel>
                       <FormInput color="#EBF3F5" type="password" name="password" value={password} onChange={e=> setPassword(e.target.value)} required></FormInput >
                     </FormInputWrapper>
                     <FormButtonWrapper>

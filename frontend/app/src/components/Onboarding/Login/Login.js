@@ -23,11 +23,14 @@ import {
   FootP
 } from './LoginStyledElements'
 import { API, ENUM_LOGINERROR } from './LoginUtilities';
+import { UserType } from '../../Utilities/Utilities';
+import DropDownMenu from '../../Custom/DropDownMenu';
 
 const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
   const [showSignUp, setSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState(UserType.NOROLE);
   const [securityQuestion, setSecurityQuestion] = useState("");
   const [securityQuestionAnswer, setSecurityQuestionAnswer] = useState("");
   const [error, setError] = useState(ENUM_LOGINERROR.NoError);
@@ -48,11 +51,30 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
     getQuestions()
   }, []);
 
-  const handleOAuthSignIn = (response) => {
+  const handleOAuthSignIn = async (response) => {
     if (response.accessToken != "") {
-      completeOauthSignIn(true, response)
+      console.log(response)
+
+      const data = {
+        contact: {
+          email: response.profileObj.email
+        },
+        oauth_token: response.tokenId
+      }
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      }
+      await fetch(`${API}/v1/user/login/oauth`, requestOptions)
+        .then(res => handleErrors(res))
+        .then(res => res.json())
+        .then(data => {
+          completeOauthSignIn(true, data, response.profileObj.email)
+        })
+        .catch(error => error)
     } else {
-      completeOauthSignIn(false, response)
+      completeOauthSignIn(false, response, "")
     }
   }
 
@@ -61,12 +83,15 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' }
       };
-      console.log(requestOptions)
       await fetch(`${API}/v1/user/recovery_options`, requestOptions)
           .then(response => response.json())
         .then(data => {
               setSecurityQuestion(data.questions[0])
       });
+  }
+
+  const updateRole = (role) => {
+    setRole(role)
   }
 
   const handlePasswordReset = () => {
@@ -75,7 +100,7 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
       updateEmail(email)
     } else {
         setErrorMessage("Please enter your email to continue password recovery");
-        setError(ENUM_LOGINERROR.EmailError)
+      setError(ENUM_LOGINERROR.EmailError)
     }
   }
 
@@ -120,48 +145,49 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
         }
     }
     else {
-        if (isInputValid()) {
-            const data = {
-              email: email,
-              password: password
-            }
-            const requestOptions = {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(data)
-            };
-            await fetch(`${API}/v1/user/login`, requestOptions) 
-            // .then(handleErrors)
-              .then(response => {
-                 if (response.status != 200) {
-                    return response.json()
-                 } else {
-                  setEmail(""); 
-                   setPassword("");
-                   setErrorMessage("")
-                  navigate(`/main`, {
-                    state: {
-                        email: email,
-                        token: "dfd",
-                        userFirstTimeLogin: true
-                      }
-                  });
-                }
-              }) 
-              .then(data => {
-                setError(ENUM_LOGINERROR.EmailError)
-                setErrorMessage(data.message);
-                setPassword("");
-                setEmail("");
-              })
-            .catch(error => console.log(error) );
+      if (isInputValid()) {
+        const data = {
+          email: email,
+          password: password
         }
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        };
+        await fetch(`${API}/v1/user/login`, requestOptions)
+          .then(response => handleErrors(response))
+          .then(response => response.json())
+          .then(data => {
+            setEmail("");
+            setPassword("");
+            setErrorMessage("")
+            navigate(`/main`, {
+              state: {
+                email: email,
+                token: data.token,
+                name: data.name,
+                color: data.color,
+                role: role,
+                userFirstTimeLogin: !data.color || !data.name,
+                isAuthSignedIn: false
+              }
+            });
+          })
+          .catch(error => error)
+          .then(data => {
+            setError(ENUM_LOGINERROR.EmailError)
+            setErrorMessage(data.message);
+            setPassword("");
+            setEmail("");
+          })
+      }
     }
   }
 
   function handleErrors(response) {
-    if (!response.ok) {
-      throw Error(response.statusText);
+    if (response.status != 200) {
+      throw response.json()
     }
     return response;
   }
@@ -228,7 +254,14 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
                     error === "PasswordError" && <FormLabel isError={true}>{errorMessage}</FormLabel>
                     }
                     <FormInput color="#EBF3F5" type="password" name='password' value={password} onChange={e=> setPassword(e.target.value)} required/>
+              </FormInputWrapper>
+              {
+                !showSignUp && 
+                <FormInputWrapper>
+                    <FormLabel color='black' isError={false} htmlFor="role">Your role</FormLabel>
+                    <DropDownMenu color="#EBF3F5" width="335px" updateRole={updateRole} isSwitch={false}/>
                   </FormInputWrapper>
+              }
                 {
                   showSignUp &&
                     <Animated animationIn="fadeInUp" animationOut="fadeInDown" isVisible={showSignUp}>
