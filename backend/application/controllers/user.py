@@ -10,12 +10,13 @@ from flask_jwt_extended import create_access_token
 from ..models.user import User
 from ..models.recovery_options import RecoveryOptions, defaultQuestions
 from ..models.contact import Contact
-from ..validators.user import ContactSchema, LoginRequestSchema, ProfileUpdateSchema, \
+from ..validators.user import ContactSchema, LoginRequestSchema, OAuthLoginRequestSchema, ProfileUpdateSchema, \
     RegistrationSchema, VerifyRecoveryOptionsSchema
 from mongoengine.errors import NotUniqueError
 
 user_bp = Blueprint('user_bp', __name__)
-
+UNAUTHORIZED_TUPLE = ({"message":"Unauthorized"}, 401)
+INVALID_INPUT_TUPLE = ({"message": "Invalid Input"}, 400)
 
 @user_bp.route('/v1/user', methods=['POST'])
 @expects_json(RegistrationSchema, check_formats=True)
@@ -63,12 +64,50 @@ def login():
             return {"message" : "Incorrect login/password."}, 400
         created_timestamp = datetime.now()
         new_session = Session(
-                            token=create_access_token(identity=user.uid), \
+                            token=create_access_token(identity=user.uid, \
+                                expires_delta = timedelta(seconds = VALIDITY)), \
                             created_at=created_timestamp, \
                             valid_until=created_timestamp + timedelta(seconds = VALIDITY))
         new_session.save()
         user.sessions.append(new_session)
         user.update(add_to_set__sessions = [new_session])
+        return {
+            "token": new_session.token,
+            "name": user.name,
+            "color": user.color
+        }
+    except Exception as e:
+        logging.exception(e)
+        return {"message": "Invalid input"}, 400
+
+@user_bp.route('/v1/user/login/oauth', methods=['POST'])
+@expects_json(OAuthLoginRequestSchema, check_formats=True)
+def oauth_login():
+    try:
+        contact = Contact.objects(email= g.data["contact"]["email"])
+        if len(contact) == 0:
+            new_contact = Contact(**g.data["contact"])
+            new_contact.save()
+            new_user = User(
+                        contact = new_contact, \
+                        created_at = datetime.now(), \
+                        updated_at = datetime.now())
+            new_user.save()
+            user = new_user
+        elif len(contact) == 1:
+            contact = contact[0]
+            user = User.objects.get(contact = contact)
+        else:
+            return UNAUTHORIZED_TUPLE
+
+        new_session = Session(
+                            token=create_access_token(identity=user.uid, \
+                                expires_delta = timedelta(seconds = VALIDITY)), \
+                            created_at=datetime.now(), \
+                            valid_until=datetime.now() + timedelta(seconds = VALIDITY))
+        new_session.save()
+        user.update(add_to_set__sessions = [new_session])
+        
         return {
             "token": new_session.token,
             "name": user.name,

@@ -4,7 +4,7 @@ import uuid
 
 class Contact(Document):
     uid = UUIDField(default=uuid.uuid4, required=True)
-    email = EmailField()
+    email = EmailField(unique = True)
     phone = StringField()
     created_at = DateTimeField()
     updated_at = DateTimeField()

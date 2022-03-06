@@ -1,7 +1,7 @@
 from mongoengine import *
 import uuid
 
-VALIDITY = 3600 * 1
+VALIDITY = 3600 * 12
 
 
 class Session(Document):
