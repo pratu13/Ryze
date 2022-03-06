@@ -50,6 +50,16 @@ LoginRequestSchema = {
     "required" : ["email"]
 }
 
+OAuthLoginRequestSchema = {
+    "type": "object",
+    "properties": {
+        "provider": {"type": "string"},
+        "contact": ContactSchema,
+        "oauth_token": {"type":"string"}
+    },
+    "required" : ["contact", "oauth_token"]
+}
+
 ProfileUpdateSchema = {
     "type": "object",
     "properties": {
@@ -65,4 +75,14 @@ PassRecoverThroughEmailSchema = {
         "email": {"type":"string", "format":"email"},
     },
     "required": ["email"]
+}
+
+PasswordResetEmailFlowSchema = {
+    "type": "object",
+    "properties" : {
+        "contact": ContactSchema,
+        "token": { "type":"string" },
+        "password":{ "type":"string", "minLength": 8 }
+    },
+    "required": ["token", "password", "contact"]
 }
