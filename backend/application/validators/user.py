@@ -80,7 +80,6 @@ PassRecoverThroughEmailSchema = {
 PasswordResetEmailFlowSchema = {
     "type": "object",
     "properties" : {
-        "contact": ContactSchema,
         "token": { "type":"string" },
         "password":{ "type":"string", "minLength": 8 }
     },
