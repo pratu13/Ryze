@@ -18,7 +18,6 @@ app.config['MONGODB_SETTINGS'] = {
 }
 db = MongoEngine(app)
 
-
 @app.route('/')
 def check():
     return "Ryze backend running"
@@ -29,7 +28,6 @@ def validation_failure(error):
     if isinstance(error.description, ValidationError):
         return make_response(jsonify({'message': error.description.message}), 400)
     return error
-
 
 if __name__ == '__main__':
     host = "localhost"

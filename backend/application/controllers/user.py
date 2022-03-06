@@ -10,12 +10,16 @@ from flask_jwt_extended import create_access_token
 from ..models.user import User
 from ..models.recovery_options import RecoveryOptions, defaultQuestions
 from ..models.contact import Contact
-from ..validators.user import ContactSchema, LoginRequestSchema, ProfileUpdateSchema, \
+from ..validators.user import ContactSchema, LoginRequestSchema, OAuthLoginRequestSchema, PassRecoverThroughEmailSchema, PasswordResetEmailFlowSchema, ProfileUpdateSchema, \
     RegistrationSchema, VerifyRecoveryOptionsSchema
 from mongoengine.errors import NotUniqueError
+from flask import request
+from flask_mail import Message, Mail
+from flask import current_app as app
 
 user_bp = Blueprint('user_bp', __name__)
-
+UNAUTHORIZED_TUPLE = ({"message":"Unauthorized"}, 401)
+INVALID_INPUT_TUPLE = ({"message": "Invalid Input"}, 400)
 
 @user_bp.route('/v1/user', methods=['POST'])
 @expects_json(RegistrationSchema, check_formats=True)
@@ -69,6 +73,43 @@ def login():
         new_session.save()
         user.sessions.append(new_session)
         user.update(add_to_set__sessions = [new_session])
+        return {
+            "token": new_session.token,
+            "name": user.name,
+            "color": user.color
+        }
+    except Exception as e:
+        logging.exception(e)
+        return {"message": "Invalid input"}, 400
+
+@user_bp.route('/v1/user/login/oauth', methods=['POST'])
+@expects_json(OAuthLoginRequestSchema, check_formats=True)
+def oauth_login():
+    try:
+        contact = Contact.objects(email= g.data["contact"]["email"])
+        if len(contact) == 0:
+            new_contact = Contact(**g.data["contact"])
+            new_contact.save()
+            new_user = User(
+                        contact = new_contact, \
+                        created_at = datetime.now(), \
+                        updated_at = datetime.now())
+            new_user.save()
+            user = new_user
+        elif len(contact) == 1:
+            contact = contact[0]
+            user = User.objects.get(contact = contact)
+        else:
+            return UNAUTHORIZED_TUPLE
+
+        new_session = Session(
+                            token=create_access_token(identity=user.uid, \
+                                expires_delta = timedelta(seconds = VALIDITY)), \
+                            created_at=datetime.now(), \
+                            valid_until=datetime.now() + timedelta(seconds = VALIDITY))
+        new_session.save()
+        user.update(add_to_set__sessions = [new_session])
+        
         return {
             "token": new_session.token,
             "name": user.name,
@@ -136,3 +177,57 @@ def recovery_options_update_password():
     except Exception as e:
         logging.exception(e)
         return { "message": "Invalid input"}, 400
+
+
+def send_mail(user_email,token):
+    mail = Mail(app)
+    g.mail = mail
+    msg = Message('Password Reset Request', recipients=[user_email], sender='whisker7864@gmail.com')
+    msg.body = f'''To reset your password, please follow the link below
+
+
+    {'ryze-lms.herokuapp.com/passwordReset/'+ token }
+
+    '''
+
+    g.mail.send(msg)
+
+@user_bp.route('/v1/user/recovery_options/email_recovery_link', methods=['POST'])
+@expects_json(PassRecoverThroughEmailSchema, check_formats = True)
+def change_pass_through_email():
+    try:
+        semail = request.get_json().get('email')
+        email_hasher = hashlib.sha224(semail.encode('ascii'))
+        token = email_hasher.hexdigest()
+        if semail == Contact.objects.get(email= semail).email:
+            send_mail(semail,token)
+        return {'message': 'Success'}
+    except Exception as e:
+        logging.exception(e)
+        return { "message": str(e)}, 400
+
+@user_bp.route('/v1/user/recovery_options/resetPassword', methods=['POST'])
+@expects_json(PasswordResetEmailFlowSchema, check_formats = True)
+def reset_password():
+    try:
+        token = g.data["token"]
+        new_password = g.data["password"]
+        contacts = Contact.objects()
+        user_email_hashes = ["" for i in range(len(contacts))]
+        for i in range(len(contacts)):
+            email_hasher = hashlib.sha224(contacts[i].email.encode('ascii'))
+            user_email_hashes[i]  = email_hasher.hexdigest()
+
+        if token in user_email_hashes:
+            user_index = user_email_hashes.index(token)
+            user = User.objects.get(contact = contacts[user_index])
+            hasher = hashlib.new('sha256')
+            hasher.update(new_password.encode('ascii'))
+            password_hash = hasher.hexdigest()
+            user.update(set__password = password_hash)
+            return {"message": "Success"}
+        else:
+            return UNAUTHORIZED_TUPLE
+    except Exception as e:
+        logging.exception(e)
+        return { "message": str(e)}, 400
