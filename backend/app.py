@@ -5,6 +5,11 @@ from flask_mongoengine import MongoEngine
 import os
 from jsonschema import ValidationError
 import sys
+from flask_mail import Mail,Message
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import current_user
+from flask_dance.consumer.storage.sqla import OAuthConsumerMixin, SQLAlchemyStorage
+from flask_dance.consumer.storage import BaseStorage
 
 if os.getenv("PRODUCTION") == None:
     print("Not production")
@@ -17,7 +22,7 @@ app.config['MONGODB_SETTINGS'] = {
     'alias': 'default'
 }
 db = MongoEngine(app)
-
+db2 = SQLAlchemy(app)
 
 @app.route('/')
 def check():
@@ -30,6 +35,13 @@ def validation_failure(error):
         return make_response(jsonify({'message': error.description.message}), 400)
     return error
 
+
+#app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+#app.config['MAIL_PORT'] = 587
+#app.config['MAIL_USE_TLS'] = True
+#app.config['MAIL_USERNAME'] = 'whisker7864@gmail.com'
+#app.config['MAIL_PASSWORD'] = 'Adrian@22'
+#mail = Mail(app)
 
 if __name__ == '__main__':
     host = "localhost"
