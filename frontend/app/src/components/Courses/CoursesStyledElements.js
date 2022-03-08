@@ -5,6 +5,12 @@ export const CourseCardWrapper = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        transform: scale(1.15);
+        transition: all 0.2s ease-in-out;
+    }
 `
 
 export const CourseCardContainer = styled.div`
