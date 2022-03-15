@@ -77,6 +77,9 @@ export const InputSectionWrapper = styled.div`
 
 export const ButtonWrapper = styled.div`
     margin-top: 12%;
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
 `
 
 export const LabelWrapper = styled.span`

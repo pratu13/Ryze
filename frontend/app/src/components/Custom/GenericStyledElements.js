@@ -1,5 +1,7 @@
 import styled from "styled-components"
 
+import { motion } from "framer-motion";
+
 export const FormButton = styled.button`
     height: 44px;
     max-width: 220px;
@@ -69,6 +71,23 @@ export const LoginContainer = styled.div`
 export const FormInput = styled.input`
     width: 335px;
     height: 34px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background-color: ${({ color }) => color};
+    margin-bottom: 40px;
+    transition: all 0.2 ease-in-out;
+
+    @media screen and (max-width: 1000px) {
+        width: 225px;
+        transition: all 0.2s ease-in-out;
+    }
+`
+
+export const FormInputArea = styled.textarea`
+    width: 335px;
+    height: 104px;
     padding: 12px 20px;
     margin: 8px 0;
     border: none;
@@ -318,4 +337,35 @@ export const DropMenuItem = styled.div`
     &:hover {
         background-color: #C3E5D1;
     }
+`
+
+export const ModalBackgroundWrapper = styled(motion.div)`
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.6);
+`
+
+export const ModalContentContainer = styled(motion.div)`
+    position: fixed;
+    width: 50%;
+    height: auto;
+    background-color: #FEC7C8;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 50px;
+    border-radius: 20px;
+`
+
+export const ModalContent = styled(motion.div)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+
 `

@@ -14,6 +14,8 @@ import Admin from "../../assets/admin.png"
 import Student from "../../assets/student.png"
 import Teacher from "../../assets/teacher.png"
 import { Subjects } from '../Utilities/Utilities'
+import CreateAssignmentModal from '../Announcement/CreateAssignment'
+import CreateCourseModal from '../Courses/CreateCourseModal'
 
 export const ENUM_STATES = {
   Dashboard: "Dashboard",
@@ -28,7 +30,8 @@ const MainBoard = () => {
   const [userInfo, setInfo] = useState({name: "", email: "", role: UserType.NOROLE.title, color: "", bgColor: "", userImage: Profile})
   const [settingModal, setSettingModal] = useState(userFirstTimeLogin)
   const [selectedPage, setSelectedPage] = useState(ENUM_STATES.Dashboard)
-  const [announcementIsOpen, setIsOpen] = useState(false)
+  const [announcementIsOpen, setAnnouncementIsOpen] = useState(false)
+  const [courseIsOpen,setCourseIsOpen] = useState(false)
   const [assignments, setAssignments] = useState([])
   const [onGoingCourses, setCourses] = useState([])
   const [announcements, setAnnouncement] = useState([])
@@ -246,6 +249,13 @@ const MainBoard = () => {
       .catch(error => console.log(error) )
   }
 
+  const createAnnounceTapped = () => {
+    setAnnouncementIsOpen(!announcementIsOpen)
+  }
+
+  const createCourseTapped = () => {
+    setCourseIsOpen(!courseIsOpen)
+  }
   return (
     <>
       <MainBoardContainer>
@@ -255,11 +265,11 @@ const MainBoard = () => {
               case ENUM_STATES.Dashboard:
                   return (
                     <>
-                      <Dashboard userInfo={userInfo} updateAnnouncement={updateAnnouncement} onGoingCourses={ onGoingCourses}/>
+                      <Dashboard userInfo={userInfo} updateAnnouncement={updateAnnouncement} createAnnounceTapped={createAnnounceTapped}onGoingCourses={ onGoingCourses}/>
                     </>
                   );
               case ENUM_STATES.Courses:
-                return <Courses userInfo={userInfo} onGoingCourses={ onGoingCourses}/>
+                return <Courses modalTapped={ createCourseTapped }userInfo={userInfo} onGoingCourses={ onGoingCourses}/>
               case ENUM_STATES.Settings:
                     return <Settings/>
               default:
@@ -270,6 +280,15 @@ const MainBoard = () => {
         {
           settingModal  &&
           <SettingsModal updateSettingModal={updateSettingModal} updateUserInfo={updateUserInfo} />
+        }
+
+        {
+          announcementIsOpen &&
+          <CreateAssignmentModal createAnnounceTapped={createAnnounceTapped} announcementIsOpen={ announcementIsOpen} />
+        }
+        {
+          courseIsOpen &&
+          <CreateCourseModal createCourseTapped={createCourseTapped}/>
         }
         
       </MainBoardContainer> 

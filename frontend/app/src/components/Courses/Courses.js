@@ -9,7 +9,7 @@ import {
 import CourseCard from './CourseCard'
 import { CoursesMainContentWrapper, CourseTitle } from './CoursesStyledElements'
 import { UserType } from '../Utilities/Utilities'
-const Courses = ({ onGoingCourses, userInfo }) => {
+const Courses = ({ onGoingCourses, userInfo, modalTapped }) => {
 
   return (
     <>
@@ -19,11 +19,11 @@ const Courses = ({ onGoingCourses, userInfo }) => {
                 <DashboardHeaderRight>
                   {
                     (userInfo.role === UserType.TEACHER.title)  && 
-                      <CreateAnnouncementButton>Create Course</CreateAnnouncementButton>
+                      <CreateAnnouncementButton onClick={() => {modalTapped()}}>Create Course</CreateAnnouncementButton>
                   }
                   {
                     (userInfo.role === UserType.ADMIN.title)  && 
-                    <CreateAnnouncementButton>Create Course</CreateAnnouncementButton>
+                    <CreateAnnouncementButton  onClick={() => {modalTapped()}}>Create Course</CreateAnnouncementButton>
                   }
                 </DashboardHeaderRight>
             </DashboardHeader>

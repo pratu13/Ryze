@@ -17,7 +17,7 @@ import { useEffect } from 'react'
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 import CourseDetail from '../CourseDetail/CourseDetail'
 
-const Dashboard = ({ userInfo, updateAnnouncement, onGoingCourses }) => {
+const Dashboard = ({ userInfo, updateAnnouncement, onGoingCourses, createAnnounceTapped }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
 
@@ -45,7 +45,9 @@ const Dashboard = ({ userInfo, updateAnnouncement, onGoingCourses }) => {
               userInfo={userInfo}
               updateAnnouncement={updateAnnouncement}
               onGoingCourses={onGoingCourses}
-              didTapCourseCard={didTapCourseCard} />
+              didTapCourseCard={didTapCourseCard}
+              createAnnounceTapped={ createAnnounceTapped}
+            />
           }
           {
             couseCardTap && <CourseDetail selectedSegment={selectedSegment} updateSelectedSegment={ updateSelectedSegment} course={course} didTapBackButton={didTapBackButton}/>
@@ -56,7 +58,7 @@ const Dashboard = ({ userInfo, updateAnnouncement, onGoingCourses }) => {
   )
 }
 
-const RenderDashboard = ({ userInfo, updateAnnouncement, onGoingCourses, didTapCourseCard }) => {
+const RenderDashboard = ({ userInfo, updateAnnouncement, onGoingCourses, didTapCourseCard, createAnnounceTapped }) => {
   return (
     <>
        <DashboardHeader>
@@ -64,11 +66,11 @@ const RenderDashboard = ({ userInfo, updateAnnouncement, onGoingCourses, didTapC
               <DashboardHeaderRight>
                 {
                   (userInfo.role === UserType.TEACHER.title)  && 
-                    <CreateAnnouncementButton>Create Announcement</CreateAnnouncementButton>
+                    <CreateAnnouncementButton onClick={() => { createAnnounceTapped() }}>Create Announcement</CreateAnnouncementButton>
                 }
                 {
                   (userInfo.role === UserType.ADMIN.title)  && 
-                  <CreateAnnouncementButton>Create Announcement</CreateAnnouncementButton>
+            <CreateAnnouncementButton onClick={() => { createAnnounceTapped() }} >Create Announcement</CreateAnnouncementButton>
                 }
                 <BellIcon src={Bell} onClick={updateAnnouncement}></BellIcon>
               </DashboardHeaderRight>

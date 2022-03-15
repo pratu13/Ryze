@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+
 export const AnnouncementContainer =styled.div`
     width: 100vw;
     height: 100vh;
@@ -128,3 +129,4 @@ export const SubjectText = styled.label`
     padding-left: 10px;
     padding-right: 10px;
 `
+

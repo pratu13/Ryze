@@ -52,12 +52,12 @@ const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelecte
                     </>
                   );
                     
-                case Segments.MODULES: 
-                return (
-                    <>
-                           <div>This is Modules</div>
-                    </>
-                );
+                // case Segments.MODULES: 
+                // return (
+                //     <>
+                //            <div>This is Modules</div>
+                //     </>
+                // );
                 default:
                   break
             }

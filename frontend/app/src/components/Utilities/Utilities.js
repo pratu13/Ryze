@@ -4,7 +4,7 @@ import Teacher from "../../assets/teacher.png"
 
 export const randomHex = () => `#${Math.floor(Math.random() * 0xffffff).toString(16).padEnd(6, "0")}`;
 
-export const Segments = { HOME: "Home", ASSIGNMENTS: "Assignments", MODULES: "Modules", FILES: "Files", ANNOUNCEMENT: "Announcements", SYLLABUS: "Syllabus" }
+export const Segments = { HOME: "Home", ASSIGNMENTS: "Assignments", FILES: "Files", ANNOUNCEMENT: "Announcements", SYLLABUS: "Syllabus" }
 
 
 export const Subjects = {
