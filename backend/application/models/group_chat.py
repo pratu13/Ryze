@@ -1,6 +1,6 @@
 import uuid
 
-from backend.application.models.chat import Chat
+from .chat import Chat
 from mongoengine import StringField
 
 

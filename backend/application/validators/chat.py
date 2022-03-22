@@ -12,8 +12,9 @@ GroupMessageSchema = {
     "type": "object",
     "properties" : {
         "message": {"type":"string"},
+        "channel": {"type":"string"}
     },
-    "required":["message"]
+    "required":["message", "channel"]
 }
 
 CreateGroupSchema = {
@@ -28,4 +29,12 @@ ReactSchema = {
         "reaction": {"type": "string"}
     },
     "required":["uid", "reaction"]
+}
+
+BlockMessageSchema = {
+    "type": "object",
+    "properties" : {
+        "uid": {"type":"string"},
+    },
+    "required":["uid"]
 }

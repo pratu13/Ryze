@@ -8,5 +8,5 @@ class Reaction(Document):
     uid = UUIDField(default = uuid.uuid4, required = True)
     user = ReferenceField('User')
     reaction = StringField()
-    created_at = DateTimeField(default=datetime.datetime.now)
-    updated_at = DateTimeField(default=datetime.datetime.now)
+    created_at = DateTimeField(default = datetime.now)
+    updated_at = DateTimeField(default = datetime.now)
