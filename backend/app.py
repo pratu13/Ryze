@@ -16,6 +16,12 @@ app.config['MONGODB_SETTINGS'] = {
     'DB': os.getenv('DATABASE_NAME'),
     'alias': 'default'
 }
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'whisker7864@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Adrian@22'
+app.config["MAIL_DEBUG"] = True
 db = MongoEngine(app)
 
 @app.route('/')

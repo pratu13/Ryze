@@ -117,6 +117,31 @@ def view_course(course_id, strategy):
         logging.exception(e)
         return {"message": str(e)}, 400
 
+@course_bp.route('/v1/course/members/<course_id>', methods=['GET'])
+@jwt_required()
+def get_members(course_id):
+    try:
+        user_id = get_jwt_identity()
+        user = User.objects.get(uid=user_id)
+        course = Course.objects.get(uid=course_id)
+
+        if CoursePermission.objects.get(course_id = course, user_id = user) == None:
+            return INVALID_INPUT_TUPLE
+        response = []
+        for course_permission in CoursePermission.objects(course_id = course):
+            course_permission: CoursePermission
+            response.append({
+                "uid": str(course_permission.uid),
+                "user": course_permission.user_id.contact.email,
+                "role": course_permission.role.value,
+                "created_at": course_permission.created_at,
+                "updated_at": course_permission.updated_at
+            })
+        return {"course_permissions" : response}
+    except Exception as e:
+        logging.exception(e)
+        return INVALID_INPUT_TUPLE
+
 @course_bp.route('/v1/courses/<strategy>', methods=['GET'])
 @jwt_required()
 def view_courses(strategy):
