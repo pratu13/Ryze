@@ -48,7 +48,7 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
   }
 
   useEffect(() => {
-    getQuestions()
+    // getQuestions()
   }, []);
 
   const handleOAuthSignIn = async (response) => {
@@ -262,7 +262,7 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
                     <DropDownMenu color="#EBF3F5" width="335px" updateRole={updateRole} isSwitch={false}/>
                   </FormInputWrapper>
               }
-                {
+                {/* {
                   showSignUp &&
                     <Animated animationIn="fadeInUp" animationOut="fadeInDown" isVisible={showSignUp}>
                       <FormInputWrapper>
@@ -273,7 +273,7 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
                           <FormInput color="#EBF3F5" type="text" name="name" value={securityQuestionAnswer} onChange={e=> setSecurityQuestionAnswer(e.target.value)} required/>
                       </FormInputWrapper>
                     </Animated>
-                }
+                } */}
             <FormButton isDisabled={false} onClick={e => { handleLoginRoute()}}>
                   { showSignUp && "Sign Up" }
                   { !showSignUp && "Login" }
