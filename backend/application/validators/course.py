@@ -1,7 +1,7 @@
 CourseCreationSchema = {
     'type': 'object',
     'properties': {
-        'color': {'type': 'string', 'minLength': 6, 'maxLength': 6},
+        'color': {'type': 'string'},
         'name': {'type': 'string', 'minLength': 5},
         'description': {'type': 'string', 'maxLength': 1000}
     },

@@ -83,5 +83,5 @@ PasswordResetEmailFlowSchema = {
         "token": { "type":"string" },
         "password":{ "type":"string", "minLength": 8 }
     },
-    "required": ["token", "password", "contact"]
+    "required": ["token", "password"]
 }
