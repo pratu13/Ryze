@@ -4,7 +4,7 @@ import {
     InputSectionWrapper,
     ButtonWrapper,
     LabelWrapper
-} from './../Settings/SettingStyledElements'
+} from '../Settings/SettingStyledElements'
 
 import {
     FormButton,
@@ -17,17 +17,45 @@ import {
 } from '../Custom/GenericStyledElements'
 import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
+import { SubjectTagContainer, SubjectText } from './AnnouncementStyledElements'
+import { API } from '../Onboarding/Login/LoginUtilities'
 
-const CreateAssignmentModal = ({ createAnnounceTapped, announcementIsOpen }) => {
+const CreateAnnouncementModal = ({ token, course, createAnnounceTapped, announcementIsOpen }) => {
     
-    const [subject, setSubject] = useState("")
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [message, setMessage] = useState("")
 
-    const sendAnnouncement = () => {
+    const sendAnnouncement = async () => {
         // call the API to send the announcement
 
-        // createAnnounceTapped()
+        const data = {
+            text: title + " EOL " + description
+          }
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Connection' : 'keep-alive',
+              'Authorization' : `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+          };
+        let api = `${API}/v1/courses/${course.id}/announcements`
+
+        await fetch(`${api}`, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+            setTimeout(() => {
+                setMessage("Announcement Published")
+                setTimeout(() => {
+                    createAnnounceTapped()
+                }, 3000);
+            }, 1000);
+        })
+        .catch(error => console.log(error)) 
+    
+        
     } 
 
   return (
@@ -81,11 +109,9 @@ const CreateAssignmentModal = ({ createAnnounceTapped, announcementIsOpen }) => 
                         >
                             <InputSectionContainer>
                                         <InputSectionWrapper>
-                                            <LabelWrapper>
-                                                <FormLabel color='white'>Subject</FormLabel>
-                                            </LabelWrapper>
-                                            <FormInput color="white" type="text"  value={subject} onChange={e=> setSubject(e.target.value)} name="subject" required></FormInput>
-                                            {/* <FormInput color="white" type="text" name="name" value={role} onChange={e=> setRole(e.target.value)} required></FormInput> */}
+                                            <SubjectTagContainer color={course.color}>
+                                                <SubjectText>{course.title}</SubjectText>
+                                            </SubjectTagContainer>
                                         </InputSectionWrapper>
                                         <InputSectionWrapper>
                                             <LabelWrapper>
@@ -100,9 +126,12 @@ const CreateAssignmentModal = ({ createAnnounceTapped, announcementIsOpen }) => 
                                         <FormInputArea color="white" type="text" name="description"  value={description} onChange={e=> setDescription(e.target.value)} required></FormInputArea>
                                      </InputSectionWrapper>
                                             <ButtonWrapper>
-                                          <FormButton isDisabled={!subject || !title || !description }>Send</FormButton>
+                                          <FormButton onClick={() => {sendAnnouncement()}} isDisabled={ !title || !description }>Send</FormButton>
                                           <FormButton onClick={() => {createAnnounceTapped()}} isDisabled={false}>Cancel</FormButton>
-                                            </ButtonWrapper>
+                              </ButtonWrapper>
+                              {
+                                  message != "" && <FormLabel color='green'>{message}</FormLabel>
+                              }
                             </InputSectionContainer>
                         </ModalContent>
                     </ModalContentContainer>
@@ -113,4 +142,4 @@ const CreateAssignmentModal = ({ createAnnounceTapped, announcementIsOpen }) => 
   )
 }
 
-export default CreateAssignmentModal
+export default CreateAnnouncementModal

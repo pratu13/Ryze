@@ -9,8 +9,35 @@ import {
 import CourseCard from './CourseCard'
 import { CoursesMainContentWrapper, CourseTitle } from './CoursesStyledElements'
 import { UserType } from '../Utilities/Utilities'
-const Courses = ({ onGoingCourses, userInfo, modalTapped }) => {
+import { useState } from 'react'
+import { API } from '../Onboarding/Login/LoginUtilities'
+const Courses = ({ onGoingCourses, userInfo, modalTapped, token }) => {
 
+
+  const didTapCourseCard = (course_) => {
+    enrollCourse(course_.id)
+  } 
+
+  const enrollCourse = async (course_id) => {
+    let api = `${API}/v1/course/enroll/${course_id}`
+    console.log(api)
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Connection' : 'keep-alive',
+        'Authorization' : `Bearer ${token}`
+      }
+    };
+    await fetch(`${api}`, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+      })
+      .catch(error => console.log(error))
+  }
+
+ 
   return (
     <>
       <MainContentContainer width="55vw"> 
@@ -27,12 +54,11 @@ const Courses = ({ onGoingCourses, userInfo, modalTapped }) => {
                   }
                 </DashboardHeaderRight>
             </DashboardHeader>
-            
             <CourseContainer width="55vw">
               {
                 Object.keys(onGoingCourses).map((key, index) => (       
                   <>
-                    <CourseCard key={key} course = {onGoingCourses[key]} />
+                    <CourseCard userInfo={userInfo} canEnroll={true} didTapCourseCard={didTapCourseCard} key={key} course = {onGoingCourses[key]} />
                   </>           
                 ))      
               }
@@ -43,3 +69,12 @@ const Courses = ({ onGoingCourses, userInfo, modalTapped }) => {
 }
 
 export default Courses
+
+
+const RenderCourse = ({ didTapCourseCard, userInfo }) => {
+  
+}
+
+const RenderCourseDetail = ({ didTapCourseCard, userInfo }) => {
+  
+}

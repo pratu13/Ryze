@@ -1,6 +1,7 @@
 import styled from "styled-components"
 
 import { motion } from "framer-motion";
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
 
 export const FormButton = styled.button`
     height: 44px;
@@ -352,7 +353,7 @@ export const ModalContentContainer = styled(motion.div)`
     position: fixed;
     width: 50%;
     height: auto;
-    background-color: #FEC7C8;
+    background-color: #F28482;
     margin: auto;
     top: 0;
     left: 0;
@@ -367,5 +368,21 @@ export const ModalContent = styled(motion.div)`
     flex-direction: column;
     align-items: center;
     height: 100%;
+`
+
+export const CDatePicker = styled(DatePicker)`
+    width: 377px;
+    height: 60px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background-color: ${({ color }) => color};
+    margin-bottom: 40px;
+    transition: all 0.2 ease-in-out;
+    @media screen and (max-width: 1000px) {
+        width: 225px;
+        transition: all 0.2s ease-in-out;
+    }
 
 `

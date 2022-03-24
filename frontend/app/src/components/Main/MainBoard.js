@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation } from 'react-router'
 import Dashboard from '../Dashboard/Dashboard'
 import { MainBoardContainer } from './MainBoardStyedElements'
 import  LeftSideBar from '../LeftSideBar/LeftSideBar'
@@ -7,15 +7,13 @@ import RideSideBar from '../RightSideBar/RideSideBar'
 import Courses from '../Courses/Courses'
 import Settings from '../Settings/Settings'
 import SettingsModal from '../Settings/SettingsModal'
-import { randomHex, SampleAnnouncementsData, SampleAssignmentsData, UserType } from '../Utilities/Utilities'
+import { randomHex, UserType } from '../Utilities/Utilities'
 import Profile from '../../assets/ProfileIcon.png'
 import { API } from '../Onboarding/Login/LoginUtilities'
-import Admin from "../../assets/admin.png"
-import Student from "../../assets/student.png"
-import Teacher from "../../assets/teacher.png"
-import { Subjects } from '../Utilities/Utilities'
-import CreateAssignmentModal from '../Announcement/CreateAssignment'
+import CreateAnnouncementModal from '../Announcement/CreateAnnouncement'
 import CreateCourseModal from '../Courses/CreateCourseModal'
+import Announcement from '../Announcement/Announcement'
+import CreateAssignmentModal from '../RightSideBar/TodoSection/CreateAssignment'
 
 export const ENUM_STATES = {
   Dashboard: "Dashboard",
@@ -31,8 +29,11 @@ const MainBoard = () => {
   const [settingModal, setSettingModal] = useState(userFirstTimeLogin)
   const [selectedPage, setSelectedPage] = useState(ENUM_STATES.Dashboard)
   const [announcementIsOpen, setAnnouncementIsOpen] = useState(false)
+  const [assignmentIsOpen, setAssignmentIsOpen] = useState(false)
+
+  const [openAnnouncement, setOpenAnnouncement] = useState(false)
   const [courseIsOpen,setCourseIsOpen] = useState(false)
-  const [assignments, setAssignments] = useState([])
+  // const [assignments, setAssignments] = useState([])
   const [onGoingCourses, setCourses] = useState([])
   const [announcements, setAnnouncement] = useState([])
   
@@ -76,7 +77,6 @@ const MainBoard = () => {
 
   const updateUserInfo = (name_, role_, userImage) => {
     const color = randomHex()
-    let api = ""
     const data = {
       name: name_,
       color: color
@@ -90,41 +90,30 @@ const MainBoard = () => {
       },
       body: JSON.stringify(data)
     };
-    if (role.title == UserType.STUDENT.title) {
-      api = `${API}/v1/user`
-    } else {
-      api = `${API}/v1/teacher`
-    }
+    let api = `${API}/v1/user`
     updateUserProfile(api, requestOptions, name_, role_, userImage)
   }
-  
-  const navigate = useNavigate()
 
-  const updateAnnouncement = () => {
-    navigate(`/announcement`, {
-      state: {
-        announcements: announcements
-      }
-    })
+
+  const updateAnnouncement = (isOpen) => {
+    // navigate(`/announcement`, {
+    //   state: {
+    //     announcements: announcements
+    //   }
+    // })
+    setOpenAnnouncement(isOpen)
   }
 
   useEffect(() => {
     if (!userFirstTimeLogin) {
-      let userImage_ = null
-      let role_ = UserType.NOROLE
+      let role_ = UserType.STUDENT
       if (role.title == UserType.STUDENT.title) {
-        userImage_ = Student
         role_ = UserType.STUDENT
       } else if ((role.title == UserType.TEACHER.title)) {
-        userImage_ = Teacher
         role_ = UserType.TEACHER
       } else if ((role.title == UserType.ADMIN.title)) {
-        userImage_ = Admin
         role_ = UserType.ADMIN
-      } else {
-        userImage_ = Student
-        role_ = UserType.STUDENT
-      }
+      } 
         setInfo(
           {
             name: name,
@@ -132,16 +121,24 @@ const MainBoard = () => {
             email: email,
             color: color,
             bgColor: randomHex(),
-            userImage: userImage_
+            userImage: role_.img
           }
         )
-      console.log(userInfo)
+       
+    } else {
+      setInfo({
+        name: name,
+        role: role.title,
+        email: email,
+        color: color,
+        bgColor: randomHex(),
+        userImage: role.img
+      })
+     
     }
+    updateUserInfo(name, role, role.img)
     getCourses()
-  
-
   }, [])
-
 
   const getAPI = (isAnnouncement, courseId) => {
     const requestOptions = {
@@ -159,58 +156,58 @@ const MainBoard = () => {
     }
   }
 
-  const getAnnouncements = async (course) => {
-    let announcements_ = {}
-    let api = getAPI(true, course.id)
+  // const getAnnouncements = async (course) => {
+  //   let announcements_ = {}
+  //   let api = getAPI(true, course.id)
 
-    await fetch(api[0], api[1])
-      .then(response => response.json())
-      .then(data => {
-        if (data.message != "CoursePermission matching query does not exist.") {
-          data.announcements.forEach((announcement, index, data) => {
-            let header = announcement.text.split("EOL")
-            announcements_[index] = {
-              header: header[0],
-              time: announcement.created_at,
-              subjectName: course.name,
-              color: course.color,
-              description: header[1]
-            }
-          });
-          setAnnouncement(announcements_)
-        }
-      })
-    .catch(error => console.log(error) )
+  //   await fetch(api[0], api[1])
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       if (data.message != "CoursePermission matching query does not exist.") {
+  //         data.announcements.forEach((announcement, index, data) => {
+  //           let header = announcement.text.split("EOL")
+  //           announcements_[index] = {
+  //             header: header[0],
+  //             time: announcement.created_at,
+  //             subjectName: course.name,
+  //             color: course.color,
+  //             description: header[1]
+  //           }
+  //         });
+  //         setAnnouncement(announcements_)
+  //       }
+  //     })
+  //   .catch(error => console.log(error) )
 
-  }
+  // }
 
-  const getAssignments = async (course) => {
-    let assignments_ = {}
-    let api = getAPI(false, course.id)
-    await fetch(api[0], api[1])
-      .then(response => response.json())
-      .then(data => {
-        if (data.message != "Unauthorized") {
-          data.assignments.forEach((assignment, index, data) => {
-            let duedate = new Intl.DateTimeFormat("en-GB", {
-              year: "numeric",
-              month: "long",
-              day: "2-digit"
-            }).format(assignments.due_date)
-            assignments_[index] = {
-              title: assignment.title,
-              due: duedate,
-              subject: course.name,
-              start: assignment.start_date,
-              description: assignment.description,
-              completed: false
-            }
-          });
-          setAssignments(assignments_)
-        }
-      })
-    .catch(error => console.log(error) )
-  }
+  // const getAssignments = async (course) => {
+  //   let assignments_ = {}
+  //   let api = getAPI(false, course.id)
+  //   await fetch(api[0], api[1])
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       if (data.message != "Unauthorized") {
+  //         data.assignments.forEach((assignment, index, data) => {
+  //           let duedate = new Intl.DateTimeFormat("en-GB", {
+  //             year: "numeric",
+  //             month: "long",
+  //             day: "2-digit"
+  //           }).format(assignments.due_date)
+  //           assignments_[index] = {
+  //             title: assignment.title,
+  //             due: duedate,
+  //             subject: course.name,
+  //             start: assignment.start_date,
+  //             description: assignment.description,
+  //             completed: false
+  //           }
+  //         });
+  //         setAssignments(assignments_)
+  //       }
+  //     })
+  //   .catch(error => console.log(error) )
+  // }
   
   const getCourses = async () => {
     let courses = {}
@@ -241,19 +238,29 @@ const MainBoard = () => {
             title: course.name,
             published_at: course.published_at
           }
-          getAnnouncements(course)
-          getAssignments(course)
       });
         setCourses(courses)
       }) 
       .catch(error => console.log(error) )
   }
 
-  const createAnnounceTapped = () => {
+  const createAnnounceTapped = (course) => {
+    getCourses()
     setAnnouncementIsOpen(!announcementIsOpen)
+    setAnnouncementCourse(course)
   }
 
+  const createAssignmentTapped = (course) => {
+    getCourses()
+    setAssignmentIsOpen(!assignmentIsOpen)
+    setAssignmentCourse(course)
+  }
+
+  const [announcementCourse, setAnnouncementCourse] = useState()
+  const [assignmentCourse, setAssignmentCourse] = useState()
+
   const createCourseTapped = () => {
+    getCourses()
     setCourseIsOpen(!courseIsOpen)
   }
   return (
@@ -265,32 +272,56 @@ const MainBoard = () => {
               case ENUM_STATES.Dashboard:
                   return (
                     <>
-                      <Dashboard userInfo={userInfo} updateAnnouncement={updateAnnouncement} createAnnounceTapped={createAnnounceTapped}onGoingCourses={ onGoingCourses}/>
+                      <Dashboard
+                        // announcements={announcements}
+                        userInfo={userInfo}
+                        updateAnnouncement={updateAnnouncement}
+                        createAnnounceTapped={createAnnounceTapped}
+                        onGoingCourses={onGoingCourses}
+                        createAssignmentTapped={ createAssignmentTapped}
+                      />
                     </>
                   );
               case ENUM_STATES.Courses:
-                return <Courses modalTapped={ createCourseTapped }userInfo={userInfo} onGoingCourses={ onGoingCourses}/>
+                return <Courses
+                  modalTapped={createCourseTapped}
+                  userInfo={userInfo}
+                  onGoingCourses={onGoingCourses}
+                  token={ token}
+                />
               case ENUM_STATES.Settings:
                     return <Settings/>
               default:
                 <></>
             }
         })()}
-        <RideSideBar switchRole={switchRoles} userInfo={userInfo} assignments={ assignments}/>
+        <RideSideBar
+          switchRole={switchRoles}
+          userInfo={userInfo}
+          // assignments={assignments}
+        />
         {
           settingModal  &&
           <SettingsModal updateSettingModal={updateSettingModal} updateUserInfo={updateUserInfo} />
         }
-
         {
           announcementIsOpen &&
-          <CreateAssignmentModal createAnnounceTapped={createAnnounceTapped} announcementIsOpen={ announcementIsOpen} />
+          <CreateAnnouncementModal token={token} course={announcementCourse} createAnnounceTapped={createAnnounceTapped} announcementIsOpen={ announcementIsOpen} />
+        }
+        {
+          assignmentIsOpen && 
+          <CreateAssignmentModal token={token}  course={assignmentCourse} createAssignmentTapped={ createAssignmentTapped }  />
         }
         {
           courseIsOpen &&
-          <CreateCourseModal createCourseTapped={createCourseTapped}/>
+          <CreateCourseModal token={token} createCourseTapped={createCourseTapped}/>
         }
-        
+
+        {
+          openAnnouncement &&
+          <Announcement announcements={announcements} updateAnnouncement={updateAnnouncement}></Announcement>
+          // <CreateCourseModal token={token} createCourseTapped={createCourseTapped}/>
+        }
       </MainBoardContainer> 
     </>
   )

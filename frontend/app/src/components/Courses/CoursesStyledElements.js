@@ -69,3 +69,38 @@ export const CoursesMainContentWrapper = styled.div`
     justify-content: flex-start;
     margin-top: 1%;
 `
+
+export const CardFooterContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+`
+
+export const CardFooterImage = styled.img`
+    height: 24px;
+    width: 24px;
+    object-fit: contain;
+    vertical-align: auto;
+    padding-right: 10px;
+`
+
+export const CardFooterMessageWrapper = styled.div`
+    display: flex;
+    border-radius: 10px;
+    height: 34px;
+    background-color: ${({ color }) => color};
+    color: white;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+`
+
+export const CourseEnrolledMessage = styled.p`
+    font-size: 1.0em;
+    text-decoration: none;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+`

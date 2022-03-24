@@ -29,7 +29,7 @@ export const DashboardHeader = styled.div`
 `
 
 export const DashboardHeaderRight = styled.div`
-    width: 50%;
+    width: 65%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -56,7 +56,7 @@ export const HeaderLabel = styled.label`
     font-weight: bold;
 `
 export const CreateAnnouncementButton = styled.div`
-    background-color: #FEC7C8;
+    background-color: #F28482;
     font-size: 1.1em;
     color: white;
     padding: 10px;

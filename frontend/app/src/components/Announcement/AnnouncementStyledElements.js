@@ -35,6 +35,14 @@ export const AnnouncementItemsContainer = styled.div`
     justify-content: space-between;
 `
 
+export const ItemsContainer = styled.div`
+    width: 55vw;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5%;
+    justify-content: space-between;
+`
+
 export const AnnouncementItemContainer = styled.div`
     width: auto;
     /* height: 150px; */
@@ -114,13 +122,14 @@ export const AnnouncementHeaderInfoContainer = styled.div`
 `
 
 export const SubjectTagContainer = styled.div`
-    height: 24px;
+    height: 34px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
     background: ${({ color }) => color};
     margin-left: 20px;
+    font-weight: bold;
 `
 
 export const SubjectText = styled.label`

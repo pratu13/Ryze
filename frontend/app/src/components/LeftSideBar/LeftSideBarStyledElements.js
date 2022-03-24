@@ -59,7 +59,7 @@ export const ItemLabel = styled.p`
     margin-left: 40px;
     font-weight: bolder;
     font-size: large;
-    color: ${({selected, dark})  => dark ? (selected ? '#FEC7C8' : '#000') : '#c4c4c4'};
+    color: ${({selected, dark})  => dark ? (selected ? '#F28482' : '#000') : '#c4c4c4'};
 
     @media screen and (max-width: 1026px) {
         display: none;

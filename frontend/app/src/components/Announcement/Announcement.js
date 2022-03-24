@@ -18,12 +18,24 @@ import {
     AnnouncementHeaderInfoContainer
 } from './AnnouncementStyledElements'
 
+import {
+    FormButton,
+    FormInput,
+    FormLabel,
+    FormInputArea,
+    ModalBackgroundWrapper,
+    ModalContentContainer,
+    ModalContent,
+    CDatePicker
+} from '../Custom/GenericStyledElements'
+
 import ExitButtonIcon from '../../assets/ExitButtonIcon.png'
 import { useLocation } from 'react-router'
 import Teacher from '../../assets/teacher.png'
 import { useNavigate } from 'react-router'
+import { AnimatePresence } from 'framer-motion'
 
-const AnnouncementItem = ({ announcement }) => {
+export const AnnouncementItem = ({ announcement }) => {
     return (
         <>
             <AnnouncementItemContainer>
@@ -49,40 +61,73 @@ const AnnouncementItem = ({ announcement }) => {
 }
 
 
-const Announcement = ({ isOpen, updateAnnouncement }) => {
+const Announcement = ({ announcements, updateAnnouncement }) => {
 
-    const location = useLocation();
-    const navigate = useNavigate();
-    const {announcements} = location.state;
 
-    const [announcementItemOpen, setAnnouncementItemOpen] = useState(false)
+    // const location = useLocation();
+    // const navigate = useNavigate();
+    // const {announcements} = location.state;
+
+    // const [announcementItemOpen, setAnnouncementItemOpen] = useState(false)
 
   return (
       <>
-          <AnnouncementContainer>
-              <ExitButtonContainer>
-                  <ExitButton src={ExitButtonIcon} onClick={() => {navigate(-1)}}/>
-              </ExitButtonContainer>
-              <AnnouncementItemsContainer>
-                  {/* <AnnouncementItem announcement={{
-            header: "Announcment 1",
-            time: "02/22/22",
-            description: "This is a stupid description"
-          }}/> */}
-                  {
-                      Object.keys(announcements).map((key, index) => ( 
-                          <>
-                              <AnnouncementItem key={ key }announcement={announcements[key]}/>
-                              <Divider/>
-                          </>
-                        
-                    ))
-                      
-                  }
-
-              </AnnouncementItemsContainer>
-          </AnnouncementContainer>
+          <AnimatePresence>
+                    <ModalBackgroundWrapper
+                    initial={{
+                        opacity: 0
+                    }}
+                    animate={{
+                        opacity: 1,
+                        transition: {
+                            duration: 0.3
+                        }
+                    }}
+                        exit={{
+                            opacity: 0
+                        }}
+                    >
+                    <ModalContent
+                            initial={{
+                                x: 100,
+                                opacity: 0
+                            }}
+                            animate={{
+                                x: 0,
+                                opacity: 1,
+                                transition: {
+                                    delay: 0.3,
+                                    duration: 0.3
+                                }
+                            }}
+                              exit={{
+                                x: 100,
+                                opacity: 0
+                            }}
+                        >
+                            <ExitButtonContainer>
+                                <ExitButton src={ExitButtonIcon} onClick={() => {updateAnnouncement(false)}}/>
+                            </ExitButtonContainer>
+                            <AnnouncementItemsContainer>
+                            {
+                                Object.keys(announcements).map((key, index) => ( 
+                                    <>
+                                        <AnnouncementItem key={ key }announcement={announcements[key]}/>
+                                        <Divider/>
+                                    </>
+                                )) 
+                            }
+                            </AnnouncementItemsContainer>
+                            
+                        </ModalContent>
+                    </ModalBackgroundWrapper>
+        
+          </AnimatePresence>
+           {/* <AnnouncementContainer>
+              
+          </AnnouncementContainer> */}
       </>
+         
   )
 }
 

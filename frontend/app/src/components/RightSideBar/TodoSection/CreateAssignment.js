@@ -1,4 +1,10 @@
 import React from 'react'
+import {
+    InputSectionContainer,
+    InputSectionWrapper,
+    ButtonWrapper,
+    LabelWrapper
+} from '../../Settings/SettingStyledElements'
 
 import {
     FormButton,
@@ -7,65 +13,53 @@ import {
     FormInputArea,
     ModalBackgroundWrapper,
     ModalContentContainer,
-    ModalContent,
-    CDatePicker
-} from '../Custom/GenericStyledElements'
-import {
-    InputSectionContainer,
-    InputSectionWrapper,
-    ButtonWrapper,
-    LabelWrapper
-} from './../Settings/SettingStyledElements'
-
-import DatePicker from 'react-date-picker'
+    ModalContent
+} from '../../Custom/GenericStyledElements'
 import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { API } from '../Onboarding/Login/LoginUtilities'
-import { randHex, randomHex } from '../Utilities/Utilities'
+import { SubjectTagContainer, SubjectText } from '../../Announcement/AnnouncementStyledElements'
+import { API } from '../../Onboarding/Login/LoginUtilities'
+import { CDatePicker } from '../../Custom/GenericStyledElements'
 
-const CreateCourseModal = ({ createCourseTapped, token  }) => {
+const CreateAssignmentModal = ({ token, course, createAssignmentTapped }) => {
     
-    const [subject, setSubject] = useState("")
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const [sDate, setStartDate] = useState(new Date())
     const [eDate, setEndDate] = useState(new Date())
-    const [courseCreated, setCourseCreated] = useState(false)
+    const [message, setMessage] = useState("")
 
-    const createCourse = async () => {
-        console.log("Gello")
-        let api = `${API}/v1/courses`
+    const publishAssignment = async () => {
+        // call the API to publish an assignment
         const data = {
-            name: subject,
-            description: description,
-            color: randHex()
-        }
+            title: title,
+            start_date: sDate,
+            due_date: eDate,
+            description: description
+          }
         const requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Connection' : 'keep-alive',
-            'Authorization' : `Bearer ${token}`
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Connection' : 'keep-alive',
+              'Authorization' : `Bearer ${token}`
             },
             body: JSON.stringify(data)
-        };
+          };
+        let api = `${API}/v1/courses/${course.id}/assignments`
+
         await fetch(`${api}`, requestOptions)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data)
-            })
-            .catch(error => console.log(error))
-        
-        setTimeout(() => {
-            setCourseCreated(true)
+        .then(response => response.json())
+        .then(data => {
             setTimeout(() => {
-                createCourseTapped()
-            }, 2000);
-            
-        }, 1000);
-      }
-
-
+                setMessage("Assignment Published")
+                setTimeout(() => {
+                    createAssignmentTapped()
+                }, 3000);
+            }, 1000);
+        })
+        .catch(error => console.log(error)) 
+    } 
 
   return (
       <>
@@ -80,10 +74,10 @@ const CreateCourseModal = ({ createCourseTapped, token  }) => {
                             duration: 0.3
                         }
                     }}
-                        exit={{
-                            opacity: 0
-                        }}
-                    >
+                      exit={{
+                          opacity: 0
+                      }}
+                >
                     <ModalContentContainer
                         initial={{
                             scale: 0
@@ -118,21 +112,19 @@ const CreateCourseModal = ({ createCourseTapped, token  }) => {
                         >
                             <InputSectionContainer>
                                         <InputSectionWrapper>
-                                            <LabelWrapper>
-                                                <FormLabel color='white'>Subject</FormLabel>
-                                            </LabelWrapper>
-                                            <FormInput color="white" type="text"  value={subject} onChange={e=> setSubject(e.target.value)} name="subject" required></FormInput>
-                                            {/* <FormInput color="white" type="text" name="name" value={role} onChange={e=> setRole(e.target.value)} required></FormInput> */}
+                                            <SubjectTagContainer color={course.color}>
+                                                <SubjectText>{course.title}</SubjectText>
+                                            </SubjectTagContainer>
                                         </InputSectionWrapper>
                                         <InputSectionWrapper>
                                             <LabelWrapper>
-                                                <FormLabel color='white'>Course Title</FormLabel>
+                                                <FormLabel color='white'>Assignment Title</FormLabel>
                                             </LabelWrapper>
                                           <FormInput color="white" type="text" name="title"  value={title} onChange={e=> setTitle(e.target.value)} required></FormInput>
                                       </InputSectionWrapper>
                                     <InputSectionWrapper>
                                         <LabelWrapper>
-                                                <FormLabel color='white'>Course Description</FormLabel>
+                                                <FormLabel color='white'>Assignment Description</FormLabel>
                                          </LabelWrapper>
                                         <FormInputArea color="white" type="text" name="description"  value={description} onChange={e=> setDescription(e.target.value)} required></FormInputArea>
                               </InputSectionWrapper>
@@ -146,22 +138,18 @@ const CreateCourseModal = ({ createCourseTapped, token  }) => {
                               </InputSectionWrapper>
                               <InputSectionWrapper>
                                         <LabelWrapper>
-                                                <FormLabel color='white'>End Date</FormLabel>
+                                                <FormLabel color='white'>Due Date</FormLabel>
                                   </LabelWrapper>
                                   <CDatePicker color="white" onChange={setEndDate} value={eDate} ></CDatePicker>
                                         {/* <FormInput color="white" type="text" name="description"  value={eDate} onChange={e=> setEndDate(e.target.value)} required></FormInput> */}
                                      </InputSectionWrapper>
                                             <ButtonWrapper>
-                                          <FormButton isDisabled={!subject || !title || !description || !sDate || !eDate } onClick={() => {createCourse()}}>Add Course</FormButton>
-                                          <FormButton onClick={() => {createCourseTapped()}} isDisabled={false}>Cancel</FormButton>
+                                          <FormButton onClick={() => {publishAssignment()}} isDisabled={ !title || !description || !sDate || !eDate }>Send</FormButton>
+                                          <FormButton onClick={() => {createAssignmentTapped()}} isDisabled={false}>Cancel</FormButton>
                               </ButtonWrapper>
                               {
-                                  courseCreated &&
-                                //   <InputSectionContainer>
-                                        <FormLabel color='green'>Course Created Successfully</FormLabel>
-                                //   </InputSectionContainer>   
+                                  message != "" && <FormLabel color='green'>{message}</FormLabel>
                               }
-                              
                             </InputSectionContainer>
                         </ModalContent>
                     </ModalContentContainer>
@@ -172,4 +160,4 @@ const CreateCourseModal = ({ createCourseTapped, token  }) => {
   )
 }
 
-export default CreateCourseModal
+export default CreateAssignmentModal
