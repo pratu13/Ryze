@@ -60,11 +60,10 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
   const getAnnouncements = async (course) => {
     let announcements_ = {}
     let api = getAPI(true, course.id)
-
     await fetch(api[0], api[1])
       .then(response => response.json())
       .then(data => {
-        if (data.message != "CoursePermission matching query does not exist." || data.message != "Unauthorized"  ) {
+        if (data.message != "CoursePermission matching query does not exist." || data.message != "Unauthorized" || data.message != "Not enough segments" ) {
           data.announcements.forEach((announcement, index, data) => {
             let header = announcement.text.split("EOL")
             announcements_[index] = {
@@ -88,7 +87,7 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
     await fetch(api[0], api[1])
       .then(response => response.json())
       .then(data => {
-        if (data.message != "CoursePermission matching query does not exist." || data.message != "Unauthorized") {
+        if (data.message != "CoursePermission matching query does not exist." || data.message != "Unauthorized" || data.message != "Not enough segments") {
           data.assignments.forEach((assignment, index, data) => {
             let duedate = new Intl.DateTimeFormat("en-GB", {
               year: "numeric",
@@ -104,7 +103,9 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
               completed: false
             }
           });
+          
           setAssignments(assignments_)
+          // console.log(assignments)
         }
       })
     .catch(error => console.log(error) )

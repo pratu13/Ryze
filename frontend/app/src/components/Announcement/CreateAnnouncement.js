@@ -31,7 +31,7 @@ const CreateAnnouncementModal = ({ token, course, createAnnounceTapped, announce
 
         const data = {
             text: title + " EOL " + description
-          }
+        }
         const requestOptions = {
             method: 'POST',
             headers: {
@@ -44,18 +44,16 @@ const CreateAnnouncementModal = ({ token, course, createAnnounceTapped, announce
         let api = `${API}/v1/courses/${course.id}/announcements`
 
         await fetch(`${api}`, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-            setTimeout(() => {
-                setMessage("Announcement Published")
+            .then(response => response.json())
+            .then(data => {
                 setTimeout(() => {
-                    createAnnounceTapped()
-                }, 3000);
-            }, 1000);
+                    setMessage("Announcement Published")
+                    setTimeout(() => {
+                        createAnnounceTapped()
+                    }, 3000);
+                }, 1000);
         })
-        .catch(error => console.log(error)) 
-    
-        
+        .catch(error => console.log(error))   
     } 
 
   return (

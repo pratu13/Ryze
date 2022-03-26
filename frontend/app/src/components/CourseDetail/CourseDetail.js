@@ -11,7 +11,6 @@ import TodoSectionItem from '../RightSideBar/TodoSection/TodoSectionItem'
 import { CreateAnnouncementButton } from '../Dashboard/DashboardStyledElements'
 import { UserType } from '../Utilities/Utilities'
 const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, userInfo, createAnnounceTapped, createAssignmentTapped }) => {
-
   const buttonTapped = () => {
     switch (selectedSegment) {
       case Segments.ANNOUNCEMENT:
@@ -96,7 +95,6 @@ const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelecte
 export default CourseDetail
 
 const RenderHeaderButton = ({ selectedSegment, buttonTapped, userInfo}) => {
-  console.log(selectedSegment)
   return (
     <>
       <DashboardHeaderRight>
@@ -143,7 +141,7 @@ const RenderAssignments = ({ assignments, course }) => {
   return (
     <>
       {
-        assignments.length != 0 &&
+        Object.keys(assignments).length !== 0 &&
         Object.keys(assignments).map((key, index) => {
           if (assignments[key].subject === course.title) return (
             <>
@@ -161,13 +159,11 @@ const RenderAssignments = ({ assignments, course }) => {
           }
         })
       }
-      {
-              assignments.length === 0 &&
-              <>
+          {
+              Object.keys(assignments).length === 0 &&
               <EmptyCardTitleContainer>
                 <EmptyCardTitle>Looks like you aced this week and completed all your homework for {course.title}</EmptyCardTitle>
               </EmptyCardTitleContainer>
-            </>
             }
     </>
       
@@ -176,10 +172,10 @@ const RenderAssignments = ({ assignments, course }) => {
 }
 
 const RenderAnnouncements = ({ announcements, course }) => {
-
   return (
     <>
-      {
+        {
+        Object.keys(announcements).length !== 0 &&
           Object.keys(announcements).map((key, index) => {
             if (announcements[key].subjectName === course.title) return (
               <>
@@ -197,17 +193,14 @@ const RenderAnnouncements = ({ announcements, course }) => {
               );
             }
             })
-      }
-        {
-              announcements.length === 0 &&
-              <>
-              <EmptyCardTitleContainer>
-                <EmptyCardTitle>Looks like you aced this week and completed all your homework for {course.title}</EmptyCardTitle>
-              </EmptyCardTitleContainer>
-            </>
-            }
+        }
+         {
+          Object.keys(announcements).length === 0 &&
+            <EmptyCardTitleContainer>
+                <EmptyCardTitle>No announcements for {course.title}</EmptyCardTitle>
+            </EmptyCardTitleContainer>
+        }
     </>
-      
   );
 
 }

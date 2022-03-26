@@ -278,7 +278,8 @@ const MainBoard = () => {
                         updateAnnouncement={updateAnnouncement}
                         createAnnounceTapped={createAnnounceTapped}
                         onGoingCourses={onGoingCourses}
-                        createAssignmentTapped={ createAssignmentTapped}
+                        createAssignmentTapped={createAssignmentTapped}
+                        token={token}
                       />
                     </>
                   );

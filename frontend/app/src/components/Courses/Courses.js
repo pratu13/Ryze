@@ -20,7 +20,7 @@ const Courses = ({ onGoingCourses, userInfo, modalTapped, token }) => {
 
   const enrollCourse = async (course_id) => {
     let api = `${API}/v1/course/enroll/${course_id}`
-    console.log(api)
+    // console.log(api)
     const requestOptions = {
       method: 'GET',
       headers: {
@@ -32,7 +32,7 @@ const Courses = ({ onGoingCourses, userInfo, modalTapped, token }) => {
     await fetch(`${api}`, requestOptions)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        // console.log(data)
       })
       .catch(error => console.log(error))
   }
