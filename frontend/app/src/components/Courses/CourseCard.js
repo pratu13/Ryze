@@ -55,8 +55,8 @@ const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrict
 
   return (
       <>
-          <CourseCardWrapper onClick={() => { (role.title === UserType.TEACHER.title || UserType.ADMIN.title) ? courseCardClicked() : console.log("")}}>
-              <CourseCardContainer color={course.color}/>
+          <CourseCardWrapper>
+              <CourseCardContainer onClick={() => { (role.title === UserType.TEACHER.title || UserType.ADMIN.title) ? courseCardClicked() : console.log("")}} color={course.color}/>
               <CourseCardTitle>{course.title}</CourseCardTitle>
               {
                   canEnroll &&

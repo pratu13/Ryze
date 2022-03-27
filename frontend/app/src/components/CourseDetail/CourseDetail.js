@@ -9,6 +9,7 @@ import { Divider, EmptyCardTitle, EmptyCardTitleContainer } from '../Custom/Gene
 import { ItemsContainer } from '../Announcement/AnnouncementStyledElements'
 import TodoSectionItem from '../RightSideBar/TodoSection/TodoSectionItem'
 const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped }) => {
+  console.log(course)
   const buttonTapped = () => {
     switch (selectedSegment) {
       case Segments.ANNOUNCEMENT:
