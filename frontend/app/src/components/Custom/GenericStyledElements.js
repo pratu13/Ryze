@@ -1,5 +1,8 @@
 import styled from "styled-components"
 
+import { motion } from "framer-motion";
+import DatePicker from 'react-date-picker/dist/entry.nostyle'
+
 export const FormButton = styled.button`
     height: 44px;
     max-width: 220px;
@@ -29,19 +32,19 @@ export const Container = styled.div`
     width: 500px;
     display: flex;
     background: white;
-    border-radius: 50px;
+    border-radius: 20px;
     margin-left: 30px;
     margin-right: 30px;
 `
 
 export const FooterButtonContainer = styled.div`
-    height: 16vh;  
+    height: 10vh;  
     max-width: 500px;
     width: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50px;
+    border-radius: 10px;
     margin-left: 15%;
     margin-right: 15%;
     transition: all 0.2s ease-in-out;
@@ -64,11 +67,29 @@ export const LoginContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transform: scale(0.9);
 `
 
 export const FormInput = styled.input`
     width: 335px;
     height: 34px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background-color: ${({ color }) => color};
+    margin-bottom: 40px;
+    transition: all 0.2 ease-in-out;
+
+    @media screen and (max-width: 1000px) {
+        width: 225px;
+        transition: all 0.2s ease-in-out;
+    }
+`
+
+export const FormInputArea = styled.textarea`
+    width: 335px;
+    height: 104px;
     padding: 12px 20px;
     margin: 8px 0;
     border: none;
@@ -99,12 +120,22 @@ export const EmptyCardTitle = styled.label`
     width: 335px;
 `
 
+export const NoCourseImage = styled.img`
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    vertical-align: auto;
+    margin-bottom: 30px;
+    opacity: 0.4;
+`
+
 export const EmptyCardTitleContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 400px;
     width: 100%;
+    flex-direction: column;
 `
 
 export const FormContent = styled.div`
@@ -138,7 +169,10 @@ export const MainContentContainer = styled.div`
     align-items: center;
     flex-direction: column;
     transition: all 0.2s ease-in-out;
-    
+    position: absolute;
+    top: 0;
+    bottom:0;
+    left: 18vw;
 `
 
 export const SectionCard = styled.div`
@@ -318,4 +352,51 @@ export const DropMenuItem = styled.div`
     &:hover {
         background-color: #C3E5D1;
     }
+`
+
+export const ModalBackgroundWrapper = styled(motion.div)`   
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.6);
+`
+
+export const ModalContentContainer = styled(motion.div)`
+    
+    width: 50vw;
+    height: 100vh;
+    background-color: #F28482;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 50px;
+    border-radius: 20px;
+`
+
+export const ModalContent = styled(motion.div)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+`
+
+export const CDatePicker = styled(DatePicker)`
+    width: 377px;
+    height: 60px;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    background-color: ${({ color }) => color};
+    margin-bottom: 40px;
+    transition: all 0.2 ease-in-out;
+    @media screen and (max-width: 1000px) {
+        width: 225px;
+        transition: all 0.2s ease-in-out;
+    }
+
 `

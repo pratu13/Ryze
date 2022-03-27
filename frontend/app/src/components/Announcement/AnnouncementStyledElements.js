@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+
 export const AnnouncementContainer =styled.div`
     width: 100vw;
     height: 100vh;
@@ -28,6 +29,14 @@ export const ExitButton = styled.img`
 
 export const AnnouncementItemsContainer = styled.div`
     width: 100vw;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5%;
+    justify-content: space-between;
+`
+
+export const ItemsContainer = styled.div`
+    width: 55vw;
     display: flex;
     flex-direction: column;
     margin-top: 5%;
@@ -113,13 +122,15 @@ export const AnnouncementHeaderInfoContainer = styled.div`
 `
 
 export const SubjectTagContainer = styled.div`
-    height: 24px;
+    height: 34px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
     background: ${({ color }) => color};
     margin-left: 20px;
+    font-weight: bold;
+    margin-right: 20px;
 `
 
 export const SubjectText = styled.label`
@@ -128,3 +139,4 @@ export const SubjectText = styled.label`
     padding-left: 10px;
     padding-right: 10px;
 `
+

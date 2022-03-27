@@ -7,6 +7,10 @@ export const SideBarContainer = styled.div`
     padding: 0;
     width: 18vw;
     border-right: 0.2px solid rgba(0,0,0,0.28);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
 `
 
 export const SideBarWrapper = styled.div`
@@ -59,7 +63,7 @@ export const ItemLabel = styled.p`
     margin-left: 40px;
     font-weight: bolder;
     font-size: large;
-    color: ${({selected, dark})  => dark ? (selected ? '#FEC7C8' : '#000') : '#c4c4c4'};
+    color: ${({selected, dark})  => dark ? (selected ? '#F28482' : '#000') : '#c4c4c4'};
 
     @media screen and (max-width: 1026px) {
         display: none;
