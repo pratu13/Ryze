@@ -14,9 +14,11 @@ export const DashboardMainContentWrapper = styled.div`
     height: 100vh;
     margin: 0;
     padding: 0;
-    width: 55%;
+    width: 55vw;
     display: flex;
     flex-direction: column;
+    top: 0;
+    bottom:0;
 `
 
 export const DashboardHeader = styled.div`
@@ -84,8 +86,8 @@ export const CourseContainer = styled.div`
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
-    padding-left: 5%;
-    margin: 2%;
+    padding-left: 2%;
+    margin: 1%;
     /* grid-template-rows: 0.5fr 0.5fr;
     grid-template-areas: "course course"; */
     /* text-align: center; */

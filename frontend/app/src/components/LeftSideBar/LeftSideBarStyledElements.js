@@ -7,6 +7,10 @@ export const SideBarContainer = styled.div`
     padding: 0;
     width: 18vw;
     border-right: 0.2px solid rgba(0,0,0,0.28);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
 `
 
 export const SideBarWrapper = styled.div`

@@ -32,19 +32,19 @@ export const Container = styled.div`
     width: 500px;
     display: flex;
     background: white;
-    border-radius: 50px;
+    border-radius: 20px;
     margin-left: 30px;
     margin-right: 30px;
 `
 
 export const FooterButtonContainer = styled.div`
-    height: 16vh;  
+    height: 10vh;  
     max-width: 500px;
     width: 500px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50px;
+    border-radius: 10px;
     margin-left: 15%;
     margin-right: 15%;
     transition: all 0.2s ease-in-out;
@@ -67,6 +67,7 @@ export const LoginContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transform: scale(0.9);
 `
 
 export const FormInput = styled.input`
@@ -119,12 +120,22 @@ export const EmptyCardTitle = styled.label`
     width: 335px;
 `
 
+export const NoCourseImage = styled.img`
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    vertical-align: auto;
+    margin-bottom: 30px;
+    opacity: 0.4;
+`
+
 export const EmptyCardTitleContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 400px;
     width: 100%;
+    flex-direction: column;
 `
 
 export const FormContent = styled.div`
@@ -158,7 +169,10 @@ export const MainContentContainer = styled.div`
     align-items: center;
     flex-direction: column;
     transition: all 0.2s ease-in-out;
-    
+    position: absolute;
+    top: 0;
+    bottom:0;
+    left: 18vw;
 `
 
 export const SectionCard = styled.div`
@@ -340,19 +354,19 @@ export const DropMenuItem = styled.div`
     }
 `
 
-export const ModalBackgroundWrapper = styled(motion.div)`
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
+export const ModalBackgroundWrapper = styled(motion.div)`   
+    position: absolute;
     top: 0;
     left: 0;
+    bottom: 0;
+    right: 0;
     background-color: rgba(0,0,0,0.6);
 `
 
 export const ModalContentContainer = styled(motion.div)`
-    position: fixed;
-    width: 50%;
-    height: auto;
+    
+    width: 50vw;
+    height: 100vh;
     background-color: #F28482;
     margin: auto;
     top: 0;

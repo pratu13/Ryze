@@ -24,7 +24,8 @@ export const ENUM_STATES = {
 const MainBoard = () => {
   const location = useLocation();
   const { email, token, name, color, role, userFirstTimeLogin, isAuthSignedIn } = location.state;
-
+  console.log(token)
+  const [role_, setRole] = useState(role)
   const [userInfo, setInfo] = useState({name: "", email: "", role: UserType.NOROLE.title, color: "", bgColor: "", userImage: Profile})
   const [settingModal, setSettingModal] = useState(userFirstTimeLogin)
   const [selectedPage, setSelectedPage] = useState(ENUM_STATES.Dashboard)
@@ -33,9 +34,10 @@ const MainBoard = () => {
 
   const [openAnnouncement, setOpenAnnouncement] = useState(false)
   const [courseIsOpen,setCourseIsOpen] = useState(false)
-  // const [assignments, setAssignments] = useState([])
+  const [assignments, setAssignments] = useState([])
   const [onGoingCourses, setCourses] = useState([])
   const [announcements, setAnnouncement] = useState([])
+  const [allAnnouncements, setAllAnnouncement] = useState([])
   
   const updateSelectedPage = (page) => {
     setSelectedPage(page)
@@ -63,15 +65,16 @@ const MainBoard = () => {
   }
 
 
-  const switchRoles = (name_, role_, userImage) => {
+  const switchRoles = (name_, role__, userImage) => {
     setInfo({
       name: name_,
-      role: role_.title,
+      role: role__.title,
       email: email,
       color: color,
       bgColor: randomHex(),
       userImage: userImage
     })
+    setRole(role__)
     getCourses()
   }
 
@@ -90,53 +93,57 @@ const MainBoard = () => {
       },
       body: JSON.stringify(data)
     };
-    let api = `${API}/v1/user`
+    let api = ""
+    if (role_.title == UserType.STUDENT.title) {
+      api = `${API}/v1/user`
+    } else {
+      api = `${API}/v1/teacher`
+    }
+    getCourses()
     updateUserProfile(api, requestOptions, name_, role_, userImage)
   }
 
 
   const updateAnnouncement = (isOpen) => {
-    // navigate(`/announcement`, {
-    //   state: {
-    //     announcements: announcements
-    //   }
-    // })
+    let _announcements = []
+    Object.keys(onGoingCourses).map((key, index) => {
+      // getAnnouncements(onGoingCourses[key])
+      _announcements = _announcements.concat(announcements)
+    })    
+    setAllAnnouncement(_announcements)
     setOpenAnnouncement(isOpen)
   }
 
   useEffect(() => {
-    if (!userFirstTimeLogin) {
-      let role_ = UserType.STUDENT
-      if (role.title == UserType.STUDENT.title) {
-        role_ = UserType.STUDENT
-      } else if ((role.title == UserType.TEACHER.title)) {
-        role_ = UserType.TEACHER
-      } else if ((role.title == UserType.ADMIN.title)) {
-        role_ = UserType.ADMIN
-      } 
-        setInfo(
-          {
-            name: name,
-            role: role_.title,
-            email: email,
-            color: color,
-            bgColor: randomHex(),
-            userImage: role_.img
-          }
-        )
-       
+    if (userFirstTimeLogin) {
+      let role__ = UserType.STUDENT
+      if (role_.title == UserType.STUDENT.title) {
+        role__ = UserType.STUDENT
+      } else if ((role_.title == UserType.TEACHER.title)) {
+        role__ = UserType.TEACHER
+      } else if ((role_.title == UserType.ADMIN.title)) {
+        role__ = UserType.ADMIN
+      }
+      setInfo(
+        {
+          name: name,
+          role: role__.title,
+          email: email,
+          color: color,
+          bgColor: randomHex(),
+          userImage: role__.img
+        }
+      )
     } else {
       setInfo({
         name: name,
-        role: role.title,
+        role: role_.title,
         email: email,
         color: color,
         bgColor: randomHex(),
-        userImage: role.img
+        userImage: role_.img
       })
-     
     }
-    updateUserInfo(name, role, role.img)
     getCourses()
   }, [])
 
@@ -212,11 +219,6 @@ const MainBoard = () => {
   const getCourses = async () => {
     let courses = {}
     let api = ""
-    if (userInfo.role == UserType.STUDENT.title) {
-      api = `${API}/v1/courses/user`
-    } else {
-      api = `${API}/v1/courses/teacher`
-    }
     const requestOptions = {
       method: 'GET',
       headers: {
@@ -225,7 +227,10 @@ const MainBoard = () => {
         'Authorization' : `Bearer ${token}`
       }
     };
-    await fetch(`${api}`, requestOptions)
+    console.log(role_)
+    if (role_.title == UserType.STUDENT.title) {
+      api = `${API}/v1/courses/user`
+      await fetch(`${api}`, requestOptions)
       .then(response => response.json())
       .then(data => {
         data.courses.forEach((course, index, data) => {
@@ -234,7 +239,7 @@ const MainBoard = () => {
             created_by: course.created_by,
             description: course.description,
             id: course.id,
-            is_enrolled: true,
+            is_enrolled: course.is_enrolled,
             title: course.name,
             published_at: course.published_at
           }
@@ -242,6 +247,27 @@ const MainBoard = () => {
         setCourses(courses)
       }) 
       .catch(error => console.log(error) )
+    } else {
+      api = `${API}/v1/courses/teacher`
+      await fetch(`${api}`, requestOptions)
+      .then(response => response.json())
+      .then(data => {
+        data.courses.forEach((course, index, data) => {
+          courses[index] = {
+            color: course.color,
+            created_by: course.created_by,
+            description: course.description,
+            id: course.id,
+            is_active: course.is_active, 
+            is_enrolled: course.is_enrolled,
+            title: course.name,
+            published_at: course.published_at
+          }
+      });
+        setCourses(courses)
+      }) 
+      .catch(error => console.log(error) )
+    }
   }
 
   const createAnnounceTapped = (course) => {
@@ -251,9 +277,9 @@ const MainBoard = () => {
   }
 
   const createAssignmentTapped = (course) => {
-    getCourses()
     setAssignmentIsOpen(!assignmentIsOpen)
     setAssignmentCourse(course)
+    getCourses()
   }
 
   const [announcementCourse, setAnnouncementCourse] = useState()
@@ -265,6 +291,7 @@ const MainBoard = () => {
   }
   return (
     <>
+    
       <MainBoardContainer>
           <LeftSideBar updateSelectedPage = {updateSelectedPage} selectedPage={selectedPage} isAuthSignedIn ={isAuthSignedIn} />
           {(() => {
@@ -274,7 +301,7 @@ const MainBoard = () => {
                     <>
                       <Dashboard
                         // announcements={announcements}
-                        userInfo={userInfo}
+                        role={role_}
                         updateAnnouncement={updateAnnouncement}
                         createAnnounceTapped={createAnnounceTapped}
                         onGoingCourses={onGoingCourses}
@@ -286,9 +313,12 @@ const MainBoard = () => {
               case ENUM_STATES.Courses:
                 return <Courses
                   modalTapped={createCourseTapped}
-                  userInfo={userInfo}
+                  role={role_}
                   onGoingCourses={onGoingCourses}
-                  token={ token}
+                  token={token}
+                  getCourses={getCourses}
+                  createAnnounceTapped={createAnnounceTapped}
+                  createAssignmentTapped={createAssignmentTapped}
                 />
               case ENUM_STATES.Settings:
                     return <Settings/>
@@ -320,7 +350,7 @@ const MainBoard = () => {
 
         {
           openAnnouncement &&
-          <Announcement announcements={announcements} updateAnnouncement={updateAnnouncement}></Announcement>
+          <Announcement announcements={allAnnouncements} updateAnnouncement={updateAnnouncement}></Announcement>
           // <CreateCourseModal token={token} createCourseTapped={createCourseTapped}/>
         }
       </MainBoardContainer> 

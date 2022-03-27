@@ -1,16 +1,14 @@
 import React from 'react'
-import { HeaderLabel, DashboardHeaderRight } from '../Dashboard/DashboardStyledElements'
+import { HeaderLabel, DashboardHeaderRight, CreateAnnouncementButton } from '../Dashboard/DashboardStyledElements'
 import { CourseDetailHeader,BackIcon } from './CourseDetailStyledElements'
 import BackButton from '../../assets/BackIcon2.png'
 import CourseSegmentControl from './CourseSegmentControl'
-import { Segments } from '../Utilities/Utilities'
+import { Segments, UserType } from '../Utilities/Utilities'
 import { AnnouncementItem } from '../Announcement/Announcement'
 import { Divider, EmptyCardTitle, EmptyCardTitleContainer } from '../Custom/GenericStyledElements'
 import { ItemsContainer } from '../Announcement/AnnouncementStyledElements'
 import TodoSectionItem from '../RightSideBar/TodoSection/TodoSectionItem'
-import { CreateAnnouncementButton } from '../Dashboard/DashboardStyledElements'
-import { UserType } from '../Utilities/Utilities'
-const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, userInfo, createAnnounceTapped, createAssignmentTapped }) => {
+const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped }) => {
   const buttonTapped = () => {
     switch (selectedSegment) {
       case Segments.ANNOUNCEMENT:
@@ -30,7 +28,7 @@ const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelecte
               <RenderHeaderButton
                 selectedSegment={selectedSegment}
                 buttonTapped={buttonTapped}
-                userInfo={userInfo}
+                role={role}
               />
           </CourseDetailHeader>
           <CourseSegmentControl
@@ -53,6 +51,8 @@ const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelecte
                       <RenderAnnouncements
                         announcements={announcements}
                         course={course}
+                        token={token}
+                        role={role}
                       />
                     </ItemsContainer>
                     </>
@@ -74,7 +74,11 @@ const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelecte
                     <>
                     <RenderAssignments
                       assignments={assignments}
-                      course={ course}/>
+                      course={course}
+                      token={token}
+                      role={role}
+                    />
+                    
                     </>
                   );
                     
@@ -94,7 +98,7 @@ const CourseDetail = ({ course, didTapBackButton, selectedSegment, updateSelecte
 
 export default CourseDetail
 
-const RenderHeaderButton = ({ selectedSegment, buttonTapped, userInfo}) => {
+const RenderHeaderButton = ({ selectedSegment, buttonTapped, role}) => {
   return (
     <>
       <DashboardHeaderRight>
@@ -104,11 +108,11 @@ const RenderHeaderButton = ({ selectedSegment, buttonTapped, userInfo}) => {
                 return (
                   <>
                     {
-                      (userInfo.role === UserType.TEACHER.title) &&
+                      (role.title === UserType.TEACHER.title) &&
                       <CreateAnnouncementButton onClick={() => { buttonTapped() }}>Create Announcement</CreateAnnouncementButton>
                     }
                     {
-                      (userInfo.role === UserType.ADMIN.title) &&
+                      (role.title === UserType.ADMIN.title) &&
                       <CreateAnnouncementButton onClick={() => { buttonTapped() }} >Create Announcement</CreateAnnouncementButton>
                      }
                   </>
@@ -117,15 +121,28 @@ const RenderHeaderButton = ({ selectedSegment, buttonTapped, userInfo}) => {
                 return (
                   <>
                     {
-                      (userInfo.role === UserType.TEACHER.title) &&
+                      (role.title === UserType.TEACHER.title) &&
                       <CreateAnnouncementButton onClick={() => { buttonTapped() }}>Create Assignment</CreateAnnouncementButton>
                     }
                     {
-                      (userInfo.role === UserType.ADMIN.title) &&
+                      (role.title === UserType.ADMIN.title) &&
                       <CreateAnnouncementButton onClick={() => { buttonTapped() }} >Create Assignment</CreateAnnouncementButton>
                      }
                   </>
                 );
+                case Segments.FILES:
+                  return (
+                    <>
+                      {
+                        (role.title === UserType.TEACHER.title) &&
+                        <CreateAnnouncementButton>Add Files</CreateAnnouncementButton>
+                      }
+                      {
+                        (role.title === UserType.ADMIN.title) &&
+                        <CreateAnnouncementButton>Add Files</CreateAnnouncementButton>
+                       }
+                    </>
+                  );
 
             }
           })()
@@ -136,27 +153,62 @@ const RenderHeaderButton = ({ selectedSegment, buttonTapped, userInfo}) => {
 }
 
 
-const RenderAssignments = ({ assignments, course }) => {
+const RenderAssignments = ({ assignments, course, token, role }) => {
+
 
   return (
     <>
       {
         Object.keys(assignments).length !== 0 &&
         Object.keys(assignments).map((key, index) => {
-          if (assignments[key].subject === course.title) return (
-            <>
-              <TodoSectionItem key={key} assignment={assignments[key]} />
-            </>
-          );
-          else {
+          if (role.title === UserType.ADMIN.title) {
             return (
-              <>
-                <EmptyCardTitleContainer>
-                  <EmptyCardTitle>Looks like you aced this week and completed all your homework for {course.title}</EmptyCardTitle>
-                </EmptyCardTitleContainer>
-              </>
+              <TodoSectionItem
+                course={course}
+                key={key}
+                assignment={assignments[key]}
+                token={token}
+                role={role}
+              />
             );
           }
+          else if(role.title === UserType.TEACHER.title) {
+            if (assignments[key].is_active) {
+              return (
+                <TodoSectionItem
+                  course={course}
+                  key={key}
+                  assignment={assignments[key]}
+                  token={token}
+                  role={role}
+                />
+              );
+            }
+          } else {
+            return (
+              <TodoSectionItem
+                course={course}
+                key={key}
+                assignment={assignments[key]}
+                token={token}
+                role={role}
+              />
+            );
+          }
+        // if (assignments[key].subject === course.title) return (
+          //   <>
+             
+          //   </>
+          // );
+          // else {
+          //   return (
+          //     <>
+          //       <EmptyCardTitleContainer>
+          //         <EmptyCardTitle>Looks like you aced this week and completed all your homework for {course.title}</EmptyCardTitle>
+          //       </EmptyCardTitleContainer>
+          //     </>
+          //   );
+          // }
         })
       }
           {
@@ -171,27 +223,57 @@ const RenderAssignments = ({ assignments, course }) => {
 
 }
 
-const RenderAnnouncements = ({ announcements, course }) => {
+const RenderAnnouncements = ({ announcements, course, token, role }) => {
+  console.log(announcements)
   return (
     <>
         {
         Object.keys(announcements).length !== 0 &&
-          Object.keys(announcements).map((key, index) => {
-            if (announcements[key].subjectName === course.title) return (
+        Object.keys(announcements).map((key, index) => {
+          if (role.title === UserType.ADMIN.title) {
+            return (
               <>
-              <AnnouncementItem key={key} announcement={announcements[key]} />
-              <Divider />
+                <AnnouncementItem
+                  course={course}
+                  key={key}
+                  announcement={announcements[key]}
+                  token={token}
+                  role={role}
+                />
+                <Divider />
               </>
             );
-            else {
+          }
+          else {
+            if (announcements[key].is_active) {
               return (
                 <>
-                 <EmptyCardTitleContainer>
-                  <EmptyCardTitle>No announcements for {course.title}</EmptyCardTitle>
-                </EmptyCardTitleContainer>
-                  </>
+                  <AnnouncementItem
+                    course={course}
+                    key={key}
+                    announcement={announcements[key]}
+                    token={token}
+                    role={role}
+                  />
+                  <Divider />
+                </>
               );
             }
+          }
+            // if (announcements[key].subjectName === course.title) return (
+            //   <>
+              
+            //   </>
+            // );
+            // else {
+            //   return (
+            //     <>
+            //      <EmptyCardTitleContainer>
+            //       <EmptyCardTitle>No announcements for {course.title}</EmptyCardTitle>
+            //     </EmptyCardTitleContainer>
+            //       </>
+            //   );
+            // }
             })
         }
          {

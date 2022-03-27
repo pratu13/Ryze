@@ -24,14 +24,14 @@ export const CourseCardContainer = styled.div`
   margin-left: 20px;
   margin-right: 8px;
   margin-top: 20px;
-  width: 280px;
+  width: 240px;
   background-color: ${({color}) => color};
 `
 
 export const CourseCardTitle = styled.div`
-    height: 44px;
-    width: 237px;
-    margin-top: -9%;
+    height: 34px;
+    width: 190px;
+    margin-top: -7%;
     background-color: #F9D9EB;
     display: flex;
     justify-content: center;
@@ -39,7 +39,7 @@ export const CourseCardTitle = styled.div`
     border-radius: 10px;
     color: black;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 `
 
 export const CoursesTitle = styled.h1`
@@ -83,6 +83,7 @@ export const CardFooterImage = styled.img`
     object-fit: contain;
     vertical-align: auto;
     padding-right: 10px;
+    cursor: pointer;
 `
 
 export const CardFooterMessageWrapper = styled.div`

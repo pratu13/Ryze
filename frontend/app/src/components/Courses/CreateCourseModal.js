@@ -38,7 +38,7 @@ const CreateCourseModal = ({ createCourseTapped, token  }) => {
         const data = {
             name: subject,
             description: description,
-            color: randHex()
+            color: randomHex()
         }
         const requestOptions = {
           method: 'POST',
@@ -53,16 +53,17 @@ const CreateCourseModal = ({ createCourseTapped, token  }) => {
             .then(response => response.json())
             .then(data => {
                 console.log(data)
+                setTimeout(() => {
+                    setCourseCreated(true)
+                    setTimeout(() => {
+                        createCourseTapped()
+                    }, 2000);
+                    
+                }, 1000);
             })
             .catch(error => console.log(error))
         
-        setTimeout(() => {
-            setCourseCreated(true)
-            setTimeout(() => {
-                createCourseTapped()
-            }, 2000);
-            
-        }, 1000);
+        
       }
 
 

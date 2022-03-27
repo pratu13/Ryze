@@ -33,8 +33,8 @@ const CreateAssignmentModal = ({ token, course, createAssignmentTapped }) => {
         // call the API to publish an assignment
         const data = {
             title: title,
-            start_date: sDate,
-            due_date: eDate,
+            start_date: sDate.toISOString().split('T')[0],
+            due_date: eDate.toISOString().split('T')[0],
             description: description
           }
         const requestOptions = {

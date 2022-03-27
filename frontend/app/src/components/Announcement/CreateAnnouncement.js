@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     InputSectionContainer,
     InputSectionWrapper,
@@ -15,7 +15,6 @@ import {
     ModalContentContainer,
     ModalContent
 } from '../Custom/GenericStyledElements'
-import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { SubjectTagContainer, SubjectText } from './AnnouncementStyledElements'
 import { API } from '../Onboarding/Login/LoginUtilities'
@@ -45,7 +44,7 @@ const CreateAnnouncementModal = ({ token, course, createAnnounceTapped, announce
 
         await fetch(`${api}`, requestOptions)
             .then(response => response.json())
-            .then(data => {
+            .then(data_ => {
                 setTimeout(() => {
                     setMessage("Announcement Published")
                     setTimeout(() => {

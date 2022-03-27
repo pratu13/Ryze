@@ -1,28 +1,29 @@
-import React, { useState }  from 'react'
-import { MainContentContainer } from '../Custom/GenericStyledElements'
+import React, { useState, useEffect }   from 'react'
+import { EmptyCardTitle, EmptyCardTitleContainer, MainContentContainer, NoCourseImage } from '../Custom/GenericStyledElements'
 import {
   DashboardMainContentWrapper,
   DashboardHeader,
   HeaderLabel,
   DashboardHeaderRight,
   BellIcon,
-  CreateAnnouncementButton,
   CourseContainer
 } from './DashboardStyledElements'
 import Bell from '../../assets/BellIcon.png'
-import { SampleCourses, Segments, UserType } from '../Utilities/Utilities'
+import { Segments } from '../Utilities/Utilities'
 import CourseCard from '../Courses/CourseCard'
-import { useEffect } from 'react'
 import { API } from '../Onboarding/Login/LoginUtilities'
+
+import NoCouseImg from '../../assets/courses.png'
 
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 import CourseDetail from '../CourseDetail/CourseDetail'
 
-const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped }) => {
+const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
   const [announcements, setAnnouncement] = useState([])
+  const [isEnrolled, setIsEnrolled] = useState(false)
 
   const didTapCourseCard = (course_) => {
     setCourseCardTapped(true)
@@ -57,21 +58,23 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
     }
   }
 
-  const getAnnouncements = async (course) => {
+  const getAnnouncements = async (course_) => {
     let announcements_ = {}
-    let api = getAPI(true, course.id)
+    let api = getAPI(true, course_.id)
     await fetch(api[0], api[1])
       .then(response => response.json())
-      .then(data => {
-        if (data.message != "CoursePermission matching query does not exist." || data.message != "Unauthorized" || data.message != "Not enough segments" ) {
-          data.announcements.forEach((announcement, index, data) => {
+      .then(data_ => {
+        if (data_.message != "CoursePermission matching query does not exist." || data_.message != "Unauthorized" || data_.message != "Not enough segments" ) {
+          data_.announcements.forEach((announcement, index, data_) => {
             let header = announcement.text.split("EOL")
             announcements_[index] = {
               header: header[0],
               time: announcement.created_at,
-              subjectName: course.name,
-              color: course.color,
-              description: header[1]
+              subjectName: course_.name,
+              color: course_.color,
+              description: header[1],
+              uid: announcement.uid,
+              is_active: announcement.is_active
             }
           });
           setAnnouncement(announcements_)
@@ -81,14 +84,15 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
 
   }
 
-  const getAssignments = async (course) => {
+  const getAssignments = async (course_) => {
     let assignments_ = {}
-    let api = getAPI(false, course.id)
+    let api = getAPI(false, course_.id)
     await fetch(api[0], api[1])
       .then(response => response.json())
-      .then(data => {
-        if (data.message != "CoursePermission matching query does not exist." || data.message != "Unauthorized" || data.message != "Not enough segments") {
-          data.assignments.forEach((assignment, index, data) => {
+      .then(data_ => {
+        console.log(data_.assignments)
+        if (data_.message != "CoursePermission matching query does not exist." || data_.message != "Unauthorized" || data_.message != "Not enough segments") {
+          data_.assignments.forEach((assignment, index, data_) => {
             let duedate = new Intl.DateTimeFormat("en-GB", {
               year: "numeric",
               month: "long",
@@ -97,15 +101,17 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
             assignments_[index] = {
               title: assignment.title,
               due: duedate,
-              subject: course.name,
+              subject: course_.name,
               start: assignment.start_date,
               description: assignment.description,
-              completed: false
+              completed: false,
+              uid: assignment.uid,
+              is_active: assignment.is_active
             }
           });
           
           setAssignments(assignments_)
-          // console.log(assignments)
+          console.log(assignments)
         }
       })
     .catch(error => console.log(error) )
@@ -118,10 +124,12 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
           {
             !couseCardTap &&
             <RenderDashboard
-              userInfo={userInfo}
+              role={role}
               updateAnnouncement={updateAnnouncement}
               onGoingCourses={onGoingCourses}
               didTapCourseCard={didTapCourseCard}
+              isEnrolled={isEnrolled}
+              setIsEnrolled={setIsEnrolled}
             />
           }
           {
@@ -133,7 +141,8 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
               course={course}
               didTapBackButton={didTapBackButton}
               assignments={assignments}
-              userInfo={userInfo}
+              role={role}
+              token={token}
               createAnnounceTapped={createAnnounceTapped}
               createAssignmentTapped={ createAssignmentTapped}
             />
@@ -144,25 +153,44 @@ const Dashboard = ({ token, userInfo, updateAnnouncement, onGoingCourses, create
   )
 }
 
-const RenderDashboard = ({ userInfo, updateAnnouncement, onGoingCourses, didTapCourseCard }) => {
+const RenderDashboard = ({ role, updateAnnouncement, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled }) => {
+  
   return (
     <>
        <DashboardHeader>
               <HeaderLabel>Welcome,</HeaderLabel>
-              <DashboardHeaderRight>
+              {/* <DashboardHeaderRight>
                   <BellIcon src={Bell} onClick={() => { updateAnnouncement(true) }}></BellIcon>
-              </DashboardHeaderRight>
+              </DashboardHeaderRight> */}
         </DashboardHeader>
-        <CoursesTitle width="55vw">On Going Courses</CoursesTitle>
+      <CoursesTitle width="55vw">On Going Courses</CoursesTitle>
+      {
+        Object.keys(onGoingCourses).length === 0 &&
+        <EmptyCardTitleContainer>
+            <NoCourseImage img={ NoCouseImg} />
+            <EmptyCardTitle>No On-going courses</EmptyCardTitle>
+        </EmptyCardTitleContainer>
+      }
+      {
+        Object.keys(onGoingCourses).length !== 0 &&
         <CourseContainer width="55vw">
         {
           Object.keys(onGoingCourses).map((key, index) => {
             if (onGoingCourses[key].is_enrolled) {
-              return <CourseCard userInfo={userInfo} canEnroll={false}  didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
+              setIsEnrolled(true)
+              return <CourseCard role={role} canEnroll={false}  didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
             }
-          })      
-          }
+          })
+            }
+            {
+              !isEnrolled &&
+              <EmptyCardTitleContainer>
+                   <NoCourseImage src={ NoCouseImg} />
+                    <EmptyCardTitle>No Enrolled courses</EmptyCardTitle>
+              </EmptyCardTitleContainer> 
+            }
         </CourseContainer>
+      }
     </>
   );
 }

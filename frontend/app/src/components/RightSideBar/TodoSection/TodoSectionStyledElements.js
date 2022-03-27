@@ -58,4 +58,5 @@ export const ItemStatus = styled.p`
 export const ItemSubject = styled.p`
     font-weight: bold;
     font-size: medium;
+    margin-right: 20px;
 `

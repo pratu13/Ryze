@@ -130,6 +130,7 @@ export const SubjectTagContainer = styled.div`
     background: ${({ color }) => color};
     margin-left: 20px;
     font-weight: bold;
+    margin-right: 20px;
 `
 
 export const SubjectText = styled.label`
