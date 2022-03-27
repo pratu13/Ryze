@@ -253,15 +253,14 @@ def announcement_creation(course_id):
 @jwt_required()
 def view_announcements(course_id):
     try:
+        # TODO: Add strategies here
         user_id = get_jwt_identity()
         user = User.objects.get(uid=user_id)
         course = Course.objects.get(uid=course_id)
         if not course:
             abort(404, description="Course not found")
 
-        course_permission = CoursePermission.objects.get(course_id=course, user_id=user)
-
-        if not course_permission:
+        if user.type != UserType.ADMIN and not CoursePermission.objects.get(course_id=course, user_id=user):
             abort(401, description="Unauthorized")
         
         announcements = Announcement.objects(course_id = course)
@@ -272,9 +271,10 @@ def view_announcements(course_id):
                     "created_by": str(announcement.user_id),
                     "text": announcement.text,
                     "created_at": announcement.created_at,
-                    "updated_at": announcement.updated_at
+                    "updated_at": announcement.updated_at,
+                    "is_active": announcement.is_active
                 }
-                for announcement in announcements if announcement.is_active
+                for announcement in announcements # if announcement.is_active
             ]
         }
     except Exception as e:
@@ -347,6 +347,7 @@ def view_assignments(course_id):
         return {
             "assignments":[
                 {
+                    "uid": str(assignment.uid),
                     "created_by": str(assignment.user_id),
                     "title": assignment.title,
                     "description": assignment.description,
@@ -363,14 +364,17 @@ def view_assignments(course_id):
         user_id = get_jwt_identity()
         user = User.objects.get(uid=user_id)
         course = Course.objects.get(uid=course_id)
+        assignments = Assignment.objects(course_id = course)
         if not course:
             abort(404, description="Course not found")
+
+        if user.type == UserType.ADMIN:
+            return teacher_strategy(assignments)
         course_permission = CoursePermission.objects(course_id = course, user_id = user)
 
-        if len(course_permission) == 0 and user.type != UserType.ADMIN:
+        if len(course_permission) == 0:
             return UNAUTHORIZED_TUPLE
         course_permission = course_permission[0]
-        assignments = Assignment.objects(course_id = course)
         if course_permission.role == Role.STUDENT:
             return user_strategy(assignments)
         else:
