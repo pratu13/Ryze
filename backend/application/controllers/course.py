@@ -268,6 +268,7 @@ def view_announcements(course_id):
         return {
             "announcements": [
                 {
+                    "uid":str(announcement.uid),
                     "created_by": str(announcement.user_id),
                     "text": announcement.text,
                     "created_at": announcement.created_at,
@@ -331,6 +332,7 @@ def view_assignments(course_id):
         return {
             "assignments":[
                 {
+                    "uid":str(assignment.uid),
                     "created_by": str(assignment.user_id),
                     "title": assignment.title,
                     "description": assignment.description,
