@@ -34,7 +34,7 @@ const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrict
         const data = {
             entities: [course.id]
         }
-        let api = `${API}/v1/entities?strategy=courses&block=${!course.is_active}`
+        let api = `${API}/v1/entities?strategy=courses&block=${course.is_active}`
         const requestOptions = {
           method: 'PUT',
           headers: {
