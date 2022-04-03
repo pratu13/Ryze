@@ -1,5 +1,7 @@
 import logging
 from typing import List
+from backend.application.models.submission import Submission
+from backend.application.validators.submission import SubmissionCreationSchema
 from flask import Blueprint, g, abort
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -380,6 +382,42 @@ def view_assignments(course_id):
         else:
             return teacher_strategy(assignments)
 
+    except Exception as e:
+        logging.exception(e)
+        return {"message": str(e)}, 400
+
+
+@course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submission', methods=['POST'])
+@expects_json(SubmissionCreationSchema, check_formats=True)
+@jwt_required()
+def submission_creation(course_id, assignment_id):
+    try:
+        user_id = get_jwt_identity()
+        user = User.objects.get(uid=user_id)
+        course = Course.objects.get(uid=course_id)
+        assignment = Assignment.objects.get(uid=assignment_id)
+        if not assignment:
+            abort(404, description="Assignment not found")
+        if not course:
+            abort(404, description="Course not found")
+        if str(course.user_id.uid) != user_id:
+            abort(401, description="Unauthorized")
+
+        if assignment.end_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
+            abort(400, description="Cannot submit at this time")
+
+        submission = Submission(
+            course_id=course,
+            user_id=user,
+            assignment_id=assignment,
+            answer = g.data['answer'],
+            submission_date = datetime.datetime.now()
+        )
+        submission.save()
+        return {
+            "message": "Success",
+            "submission_id": submission.uid
+        }
     except Exception as e:
         logging.exception(e)
         return {"message": str(e)}, 400
