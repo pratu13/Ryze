@@ -1,7 +1,7 @@
 import logging
 from typing import List
-from backend.application.models.submission import Submission
-from backend.application.validators.submission import SubmissionCreationSchema
+from ..models.submission import Submission
+from ..validators.submission import SubmissionCreationSchema
 from flask import Blueprint, g, abort
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -340,7 +340,6 @@ def view_assignments(course_id):
                     "description": assignment.description,
                     "start_date": assignment.start_date,
                     "due_date": assignment.due_date,
-
                 }
                 for assignment in assignments if assignment.is_active and assignment.start_date <= datetime.datetime.now()
             ]
@@ -357,7 +356,6 @@ def view_assignments(course_id):
                     "due_date": assignment.due_date,
                     "is_active": assignment.is_active,
                     "updated_at": assignment.updated_at
-
                 }
                 for assignment in assignments
             ]
@@ -400,8 +398,6 @@ def submission_creation(course_id, assignment_id):
             abort(404, description="Assignment not found")
         if not course:
             abort(404, description="Course not found")
-        if str(course.user_id.uid) != user_id:
-            abort(401, description="Unauthorized")
 
         if assignment.end_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
             abort(400, description="Cannot submit at this time")
