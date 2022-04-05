@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     ExitButtonContainer,
     AnnouncementContainer,
@@ -18,12 +18,47 @@ import {
     AnnouncementHeaderInfoContainer
 } from './AnnouncementStyledElements'
 
-import ExitButtonIcon from '../../assets/ExitButtonIcon.png'
-import { useLocation } from 'react-router'
-import Teacher from '../../assets/teacher.png'
-import { useNavigate } from 'react-router'
+import { CardFooterImage } from '../Courses/CoursesStyledElements'
+import {
+    ModalBackgroundWrapper,
+    ModalContent,
+} from '../Custom/GenericStyledElements'
 
-const AnnouncementItem = ({ announcement }) => {
+import ExitButtonIcon from '../../assets/ExitButtonIcon.png'
+import Teacher from '../../assets/teacher.png'
+import { AnimatePresence } from 'framer-motion'
+import Publish from '../../assets/published.png'
+import Unpublish from '../../assets/unpublished.png'
+import { UserType } from '../Utilities/Utilities'
+import { API } from '../Onboarding/Login/LoginUtilities'
+
+export const AnnouncementItem = ({ token, announcement, course, role }) => {
+    const [publishedIcon, setPublishedIcon] = useState(announcement.is_active)
+
+    const publishedIconTapped = async () => {
+        console.log(announcement)
+        const data = {
+            entities: [announcement.uid]
+        }
+        let api = `${API}/v1/entities?strategy=announcements&block=${announcement.is_active}`
+        const requestOptions = {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Connection' : 'keep-alive',
+            'Authorization' : `Bearer ${token}`
+            },
+          body: JSON.stringify(data)
+        };
+        await fetch(`${api}`, requestOptions)
+          .then(response => response.json())
+          .then(data => {
+              console.log(data)
+              setPublishedIcon(!publishedIcon)
+          })
+          .catch(error => console.log(error))
+    }
+
     return (
         <>
             <AnnouncementItemContainer>
@@ -34,8 +69,12 @@ const AnnouncementItem = ({ announcement }) => {
                             <AnnouncementHeaderInfoContainer>
                                 <AnnouncementHeader>{announcement.header}</AnnouncementHeader>
                                 <SubjectTagContainer color={announcement.color}>
-                                    <SubjectText>{announcement.subjectName}</SubjectText>
+                                    <SubjectText>{course.title}</SubjectText>
                                 </SubjectTagContainer>
+                                {
+                            role.title === UserType.ADMIN.title &&
+                            <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ !publishedIcon ?  Unpublish : Publish} />
+                                  }
                             </AnnouncementHeaderInfoContainer>
                             <TimePublishedLabel>{ announcement.time}</TimePublishedLabel>
                         </AnnouncementHeaderContainer>
@@ -49,40 +88,72 @@ const AnnouncementItem = ({ announcement }) => {
 }
 
 
-const Announcement = ({ isOpen, updateAnnouncement }) => {
+const Announcement = ({ announcements, updateAnnouncement }) => {
 
-    const location = useLocation();
-    const navigate = useNavigate();
-    const {announcements} = location.state;
-
-    const [announcementItemOpen, setAnnouncementItemOpen] = useState(false)
+    
+    useEffect(() => {
+        console.log(announcements)
+    }, [])
 
   return (
       <>
-          <AnnouncementContainer>
-              <ExitButtonContainer>
-                  <ExitButton src={ExitButtonIcon} onClick={() => {navigate(-1)}}/>
-              </ExitButtonContainer>
-              <AnnouncementItemsContainer>
-                  {/* <AnnouncementItem announcement={{
-            header: "Announcment 1",
-            time: "02/22/22",
-            description: "This is a stupid description"
-          }}/> */}
-                  {
-                      Object.keys(announcements).map((key, index) => ( 
-                          <>
-                              <AnnouncementItem key={ key }announcement={announcements[key]}/>
-                              <Divider/>
-                          </>
-                        
-                    ))
-                      
-                  }
-
-              </AnnouncementItemsContainer>
-          </AnnouncementContainer>
-      </>
+          <AnimatePresence>
+                    <ModalBackgroundWrapper
+                    initial={{
+                        opacity: 0
+                    }}
+                    animate={{
+                        opacity: 1,
+                        transition: {
+                            duration: 0.3
+                        }
+                    }}
+                        exit={{
+                            opacity: 0
+                        }}
+                    >
+                    <ModalContent
+                            initial={{
+                                x: 100,
+                                opacity: 0
+                            }}
+                            animate={{
+                                x: 0,
+                                opacity: 1,
+                                transition: {
+                                    delay: 0.3,
+                                    duration: 0.3
+                                }
+                            }}
+                              exit={{
+                                x: 100,
+                                opacity: 0
+                            }}
+                        >
+                            <ExitButtonContainer>
+                                <ExitButton src={ExitButtonIcon} onClick={() => {updateAnnouncement(false)}}/>
+                            </ExitButtonContainer>
+                            <AnnouncementItemsContainer>
+                            {
+                               announcements.map((announcement) => ( 
+                                    <>
+                                       <AnnouncementItem
+                                           announcement={announcement[0]}
+                                       />
+                                        <Divider/>
+                                    </>
+                                )) 
+                            }
+                            </AnnouncementItemsContainer>
+                            
+                        </ModalContent>
+                    </ModalBackgroundWrapper>
+        
+          </AnimatePresence>
+           {/* <AnnouncementContainer>
+              
+          </AnnouncementContainer> */}
+      </>  
   )
 }
 

@@ -10,10 +10,10 @@ const RideSideBar = ({ userInfo, assignments, switchRole}) => {
       <SideBarContainer>
           <SideBarWrapper>
           <UserInfo switchRole={ switchRole } userInfo={userInfo} />
-          {
+          {/* {
             userInfo.role == UserType.STUDENT.title && 
               <TodoSection assignments={ assignments }/>
-          }
+          } */}
         
           </SideBarWrapper>
         </SideBarContainer>

@@ -16,7 +16,6 @@ import { UserType } from '../Utilities/Utilities'
 const DropDownMenu = ({ color, updateRole, width, switchRole, isSwitch, name }) => {
   
   const [userRole, setUserRole] = useState(UserType.NOROLE)
-  const [userRoleImage, setUserRoleImg] = useState("")
 
   const switchRoles = (role) => {
     switchRole(name ,role, role.img)

@@ -48,33 +48,35 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
   }
 
   useEffect(() => {
-    getQuestions()
+    // getQuestions()
   }, []);
 
   const handleOAuthSignIn = async (response) => {
-    if (response.accessToken != "") {
-      console.log(response)
-
-      const data = {
-        contact: {
-          email: response.profileObj.email
-        },
-        oauth_token: response.tokenId
+    if (response) {
+      if (response.accessToken != "") {
+        console.log(response)
+  
+        const data = {
+          contact: {
+            email: response.profileObj.email
+          },
+          oauth_token: response.tokenId
+        }
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        }
+        await fetch(`${API}/v1/user/login/oauth`, requestOptions)
+          .then(res => handleErrors(res))
+          .then(res => res.json())
+          .then(data => {
+            completeOauthSignIn(true, data, response.profileObj.email)
+          })
+          .catch(error => error)
+      } else {
+        completeOauthSignIn(false, response, "")
       }
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      }
-      await fetch(`${API}/v1/user/login/oauth`, requestOptions)
-        .then(res => handleErrors(res))
-        .then(res => res.json())
-        .then(data => {
-          completeOauthSignIn(true, data, response.profileObj.email)
-        })
-        .catch(error => error)
-    } else {
-      completeOauthSignIn(false, response, "")
     }
   }
 
@@ -90,8 +92,8 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
       });
   }
 
-  const updateRole = (role) => {
-    setRole(role)
+  const updateRole = (role_) => {
+    setRole(role_)
   }
 
   const handlePasswordReset = () => {
@@ -122,26 +124,22 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
           }
-            fetch(`${API}/v1/user`, requestOptions)
+          fetch(`${API}/v1/user`, requestOptions)
+            .then(response => handleErrors(response))
             .then(response => {
-              if (response.status != 200) {
-                 return response.json()
-              } else {
                 setSignUp(false);
                 setEmail("");
                 setPassword("");
                 setSecurityQuestionAnswer("");
                 setErrorMessage("")
-             }
            }) 
+           .catch(error => error)
            .then(data => {
             setError(ENUM_LOGINERROR.EmailError)
             setErrorMessage(data.message);
             setPassword("");
             setEmail("");
           })
-            .catch(error => console.log(error) );
-            
         }
     }
     else {
@@ -204,14 +202,6 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
 
   const isInputValid = () => {
       if (checkValidEmail()) {
-          if (showSignUp) {
-              if (!securityQuestionAnswer) {
-                  setErrorMessage("Please answer for security purposes")
-                setError(ENUM_LOGINERROR.SecurityError)
-                console.log(error)
-                  return false;
-              } 
-          }
           if (!password) {
               setErrorMessage("Please enter your password");
               setError(ENUM_LOGINERROR.PasswordError)
@@ -262,7 +252,7 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
                     <DropDownMenu color="#EBF3F5" width="335px" updateRole={updateRole} isSwitch={false}/>
                   </FormInputWrapper>
               }
-                {
+                {/* {
                   showSignUp &&
                     <Animated animationIn="fadeInUp" animationOut="fadeInDown" isVisible={showSignUp}>
                       <FormInputWrapper>
@@ -273,7 +263,7 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
                           <FormInput color="#EBF3F5" type="text" name="name" value={securityQuestionAnswer} onChange={e=> setSecurityQuestionAnswer(e.target.value)} required/>
                       </FormInputWrapper>
                     </Animated>
-                }
+                } */}
             <FormButton isDisabled={false} onClick={e => { handleLoginRoute()}}>
                   { showSignUp && "Sign Up" }
                   { !showSignUp && "Login" }
@@ -299,8 +289,8 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
           <FooterButtonContainer>
             <GoogleLogin
               clientId='915523283178-st4hp6v16e3t7orm881iir2ipc1sifc5.apps.googleusercontent.com'
-              onSuccess={handleOAuthSignIn }
-              onFailure={handleOAuthSignIn }
+              onSuccess={() => { handleOAuthSignIn() } }
+              onFailure={() => { handleOAuthSignIn() }  }
               cookiePolicy="single_host_origin"
             >Sign in with Google</GoogleLogin>
            

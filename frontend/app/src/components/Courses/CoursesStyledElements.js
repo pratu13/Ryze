@@ -5,6 +5,12 @@ export const CourseCardWrapper = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        transform: scale(1.15);
+        transition: all 0.2s ease-in-out;
+    }
 `
 
 export const CourseCardContainer = styled.div`
@@ -18,14 +24,14 @@ export const CourseCardContainer = styled.div`
   margin-left: 20px;
   margin-right: 8px;
   margin-top: 20px;
-  width: 280px;
+  width: 240px;
   background-color: ${({color}) => color};
 `
 
 export const CourseCardTitle = styled.div`
-    height: 44px;
-    width: 237px;
-    margin-top: -9%;
+    height: 34px;
+    width: 190px;
+    margin-top: -7%;
     background-color: #F9D9EB;
     display: flex;
     justify-content: center;
@@ -33,7 +39,7 @@ export const CourseCardTitle = styled.div`
     border-radius: 10px;
     color: black;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 `
 
 export const CoursesTitle = styled.h1`
@@ -62,4 +68,40 @@ export const CoursesMainContentWrapper = styled.div`
     align-items: flex-start;
     justify-content: flex-start;
     margin-top: 1%;
+`
+
+export const CardFooterContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+`
+
+export const CardFooterImage = styled.img`
+    height: 24px;
+    width: 24px;
+    object-fit: contain;
+    vertical-align: auto;
+    padding-right: 10px;
+    cursor: pointer;
+`
+
+export const CardFooterMessageWrapper = styled.div`
+    display: flex;
+    border-radius: 10px;
+    height: 34px;
+    background-color: ${({ color }) => color};
+    color: white;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+`
+
+export const CourseEnrolledMessage = styled.p`
+    font-size: 1.0em;
+    text-decoration: none;
+    text-align: left;
+    display: flex;
+    justify-content: flex-start;
 `

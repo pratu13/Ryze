@@ -68,6 +68,7 @@ export const InputSectionWrapper = styled.div`
     justify-content: space-between;
     align-items: center;
     transition: all 0.2 ease-in-out;
+    margin: 10px;
 
     @media screen and (max-width: 1000px) {
         flex-direction: column;
@@ -76,7 +77,10 @@ export const InputSectionWrapper = styled.div`
 `
 
 export const ButtonWrapper = styled.div`
-    margin-top: 12%;
+    margin-top: 2%;
+    display: flex;
+    justify-content: space-around;
+    width: 50%;
 `
 
 export const LabelWrapper = styled.span`

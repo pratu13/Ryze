@@ -53,7 +53,7 @@ def entity_disable():
         if user.type == UserType.ADMIN:
             entity_disable_strategy[strategy](
                 g.data['entities'],
-                bool(block)
+                True if block == "true" else False
             )
         return {
             "message": "Success"
