@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import hashlib
 import logging
 from uuid import uuid4
-from flask import Blueprint, g
+from flask import Blueprint, g, redirect, url_for
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models.session import VALIDITY, Session
@@ -17,9 +17,15 @@ from flask import request
 from flask_mail import Message, Mail
 from flask import current_app as app
 
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_dance.contrib.google import make_google_blueprint, google
+
 user_bp = Blueprint('user_bp', __name__)
 UNAUTHORIZED_TUPLE = ({"message":"Unauthorized"}, 401)
 INVALID_INPUT_TUPLE = ({"message": "Invalid Input"}, 400)
+
+
+
 
 @user_bp.route('/v1/user', methods=['POST'])
 @expects_json(RegistrationSchema, check_formats=True)
@@ -231,3 +237,40 @@ def reset_password():
     except Exception as e:
         logging.exception(e)
         return { "message": str(e)}, 400
+
+@app.route("/glogin")
+def glogin():
+    if not google.authorized:
+        return redirect(url_for("google.login"))
+    resp = google.get("/plus/v1/people/me")
+    assert resp.ok, resp.text    
+    username = resp.json()['emails'][0]['value']
+
+    contact = Contact.objects.get(email= username)
+    user = User.objects.get(contact = contact)
+
+    if not contact:
+        contact.save()
+        user.save()
+    
+    login_user(user)
+    return "Logged in as {0}".format(username)
+
+    '''
+    new_user = User(contact = new_contact, \
+                        created_at = datetime.now(), \
+                        updated_at = datetime.now())
+    new_user.save()
+    user = new_user
+
+    new_session = Session(
+                            token=create_access_token(identity=user.uid, \
+                                expires_delta = timedelta(seconds = VALIDITY)), \
+                            created_at=datetime.now(), \
+                            valid_until=datetime.now() + timedelta(seconds = VALIDITY))
+    new_session.save()
+    user.update(add_to_set__sessions = [new_session])
+    
+    login_user(user)
+    return "Logged in as {0}".format(username)
+    '''
