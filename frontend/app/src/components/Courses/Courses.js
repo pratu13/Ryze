@@ -14,7 +14,7 @@ import CourseDetail from '../CourseDetail/CourseDetail'
 import { Segments } from '../Utilities/Utilities'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 
-const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createAnnounceTapped, createAssignmentTapped }) => {
+const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createAnnounceTapped, createAssignmentTapped, dark }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -142,13 +142,13 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
  
   return (
     <>
-      <MainContentContainer width="55vw"> 
+      <MainContentContainer dark={dark} width="55vw"> 
         {
           !couseCardTap &&
             <>
-              <DashboardHeader>
-                      <CourseTitle width="55vw">All Courses</CourseTitle>
-                            <DashboardHeaderRight>
+              <DashboardHeader dark={dark}>
+                      <CourseTitle dark={dark} width="55vw">All Courses</CourseTitle>
+                            <DashboardHeaderRight dark={dark}>
                               {
                                 (role.title == UserType.TEACHER.title)  && 
                                   <CreateAnnouncementButton onClick={() => {modalTapped()}}>Create Course</CreateAnnouncementButton>
@@ -159,7 +159,7 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
                               }
                             </DashboardHeaderRight>
                         </DashboardHeader>
-                    <CourseContainer width="55vw">
+                    <CourseContainer dark={dark} width="55vw">
               {
                 (role.title === UserType.TEACHER.title) &&
                 Object.keys(onGoingCourses).map((key, index) => {
@@ -197,7 +197,8 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
               updateSelectedSegment={updateSelectedSegment}
               course={course}
               didTapBackButton={didTapBackButton}
-              assignments={assignments}
+            assignments={assignments}
+            dark= {dark}
             role={role}
             token={token}
               createAnnounceTapped={createAnnounceTapped}

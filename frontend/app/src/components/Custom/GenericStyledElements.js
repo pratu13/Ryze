@@ -136,6 +136,7 @@ export const EmptyCardTitleContainer = styled.div`
     min-height: 400px;
     width: 100%;
     flex-direction: column;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
 `
 
 export const FormContent = styled.div`
@@ -160,9 +161,9 @@ export const FormInputWrapper = styled.div`
 `
 
 export const MainContentContainer = styled.div`
-    min-height: 100vh;
-    margin-top: 5%;
-    padding: 0;
+    /* min-height: 90vh; */
+    /* padding-top: 5%; */
+    /* padding: 0; */
     width: ${({width}) => width};
     display: flex;
     justify-content: flex-start;
@@ -173,10 +174,12 @@ export const MainContentContainer = styled.div`
     top: 0;
     bottom:0;
     left: 18vw;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
+    border-left:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
 `
 
 export const SectionCard = styled.div`
-    background-color: #F8FAFB;
+    background-color: ${({ dark }) => dark ? "#1B2327" : "#F8FAFB" };
     margin-top: 20px;
     border: none;
     border-radius: 20px;

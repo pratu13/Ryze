@@ -42,12 +42,14 @@ export const UserNameSection = styled.div`
 export const UserNameLabel = styled.p`
     font-weight: bolder;
     font-size: 1.5em;
+    color: ${({ dark }) => !dark ? "black" : "white" };
 `
 
 export const UserMailLabel = styled.p`
     margin-top: 10px;
     font-size: 1em;
     font-weight: lighter;
+    color: ${({ dark }) => !dark ? "black" : "white" };
 `
 
 export const UserDescriptionSection = styled.div`
@@ -66,10 +68,12 @@ export const TermRoleSection = styled.div`
 export const DescriptionTitleLabel = styled.p`
     font-weight: lighter;
     font-size: 1em;
+    color: ${({ dark }) => !dark ? "black" : "white" };
 `
 
 export const DescriptionSubtitleLabel = styled.p`
     margin-top: 10px;
     font-weight: bolder;
     font-size: 1.2em;
+    color: ${({ dark }) => !dark ? "black" : "white" };
 `

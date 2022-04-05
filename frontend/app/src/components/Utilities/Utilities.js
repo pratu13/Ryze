@@ -7,6 +7,12 @@ export const randHex = () => `${Math.floor(Math.random() * 0xffffff).toString(16
 
 export const Segments = { HOME: "Home", ASSIGNMENTS: "Assignments", FILES: "Files", ANNOUNCEMENT: "Announcements", SYLLABUS: "Syllabus" }
 
+export function handleErrors(response) {
+  if (response.status != 200) {
+    throw response.json()
+  }
+  return response;
+}
 
 export const Subjects = {
     MATH: {

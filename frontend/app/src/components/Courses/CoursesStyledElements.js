@@ -51,6 +51,8 @@ export const CoursesTitle = styled.h1`
     justify-content: flex-start;
     margin-left: ${({width}) => width == "55vw" ? "10%" : "0%"}; 
     margin-top: 5%;
+    color: ${({ dark }) => !dark ? "black" : "white" };
+    background-clip: padding-box;
 `
 
 export const CourseTitle = styled.h1`
@@ -60,6 +62,8 @@ export const CourseTitle = styled.h1`
     display: flex;
     width: ${({width}) => width};
     justify-content: flex-start;
+    color: ${({ dark }) => !dark ? "black" : "white" };
+    margin-left: 5%;
 `
 export const CoursesMainContentWrapper = styled.div`
     height: 100vh;

@@ -18,6 +18,7 @@ import {
 import { AnimatePresence } from 'framer-motion'
 import { SubjectTagContainer, SubjectText } from './AnnouncementStyledElements'
 import { API } from '../Onboarding/Login/LoginUtilities'
+import { handleErrors } from '../Utilities/Utilities'
 
 const CreateAnnouncementModal = ({ token, course, createAnnounceTapped, announcementIsOpen }) => {
     
@@ -43,13 +44,14 @@ const CreateAnnouncementModal = ({ token, course, createAnnounceTapped, announce
         let api = `${API}/v1/courses/${course.id}/announcements`
 
         await fetch(`${api}`, requestOptions)
+            .then(response => handleErrors(response))
             .then(response => response.json())
             .then(data_ => {
                 setTimeout(() => {
                     setMessage("Announcement Published")
                     setTimeout(() => {
-                        createAnnounceTapped()
-                    }, 3000);
+                        createAnnounceTapped(course)
+                    }, 1500);
                 }, 1000);
         })
         .catch(error => console.log(error))   
