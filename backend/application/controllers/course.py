@@ -307,8 +307,7 @@ def assignment_creation(course_id):
             month=int(due_date[1]),
             day=int(due_date[2])
         ):
-            abort(400, description="Start_date cannot be greater or "
-                                   "equal than end_date")
+            abort(400, description="Start_date cannot be greater or equal than end_date")
 
         assignment = Assignment(
             course_id=course,
@@ -394,10 +393,18 @@ def submission_creation(course_id, assignment_id):
         user = User.objects.get(uid=user_id)
         course = Course.objects.get(uid=course_id)
         assignment = Assignment.objects.get(uid=assignment_id)
+        
         if not assignment:
             abort(404, description="Assignment not found")
         if not course:
             abort(404, description="Course not found")
+
+        if not course.is_active:
+            abort(404, description="Inactive course")
+
+        course_permission = CoursePermission.objects.get(course_id=course, user_id=user)
+        if course_permission.role != Role.STUDENT:
+            abort(401, description="Invalid course permissions")
 
         if assignment.end_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
             abort(400, description="Cannot submit at this time")
