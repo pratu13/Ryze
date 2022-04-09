@@ -1,3 +1,4 @@
+from unicodedata import name
 from mongoengine import Document
 from mongoengine import DateTimeField, StringField, ListField, UUIDField,\
     ReferenceField, EnumField
@@ -23,6 +24,14 @@ class User(Document):
     updated_at = DateTimeField()
 
     def __str__(self):
+        name = None
         if len(self.name) == 0:
             return "A user"
         return self.name
+    
+    def serialize(self):
+        return {
+            "uid":str(self.uid),
+            "email": self.contact.email,
+            "name": self.name if len(self.name) > 0 else "User"
+        }
