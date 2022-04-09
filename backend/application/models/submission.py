@@ -8,7 +8,5 @@ class AssignmentSubmission(Document):
     user_id = ReferenceField('User')
     course_id = ReferenceField('Course')
     assignment_id = ReferenceField('Assignment')
-    title = ReferenceField('Assignment')
-    due_date = ReferenceField('Assignment')
-    Answer = StringField(max_length=2000)
+    answer = StringField(max_length=2000)
     submitted_at = DateTimeField(default=datetime.datetime.now)

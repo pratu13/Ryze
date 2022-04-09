@@ -17,7 +17,7 @@ from flask import request
 from flask_mail import Message, Mail
 from flask import current_app as app
 
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+#from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_dance.contrib.google import make_google_blueprint, google
 
 user_bp = Blueprint('user_bp', __name__)
@@ -238,6 +238,7 @@ def reset_password():
         logging.exception(e)
         return { "message": str(e)}, 400
 
+'''
 @app.route("/glogin")
 def glogin():
     if not google.authorized:
@@ -256,7 +257,7 @@ def glogin():
     login_user(user)
     return "Logged in as {0}".format(username)
 
-    '''
+    
     new_user = User(contact = new_contact, \
                         created_at = datetime.now(), \
                         updated_at = datetime.now())
