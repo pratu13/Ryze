@@ -1,5 +1,7 @@
 import logging
 from typing import List
+from ..models.submission import Submission
+from ..validators.submission import SubmissionCreationSchema
 from flask import Blueprint, g, abort
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -305,8 +307,7 @@ def assignment_creation(course_id):
             month=int(due_date[1]),
             day=int(due_date[2])
         ):
-            abort(400, description="Start_date cannot be greater or "
-                                   "equal than end_date")
+            abort(400, description="Start_date cannot be greater or equal than end_date")
 
         assignment = Assignment(
             course_id=course,
@@ -338,7 +339,6 @@ def view_assignments(course_id):
                     "description": assignment.description,
                     "start_date": assignment.start_date,
                     "due_date": assignment.due_date,
-
                 }
                 for assignment in assignments if assignment.is_active and assignment.start_date <= datetime.datetime.now()
             ]
@@ -355,7 +355,6 @@ def view_assignments(course_id):
                     "due_date": assignment.due_date,
                     "is_active": assignment.is_active,
                     "updated_at": assignment.updated_at
-
                 }
                 for assignment in assignments
             ]
@@ -380,6 +379,48 @@ def view_assignments(course_id):
         else:
             return teacher_strategy(assignments)
 
+    except Exception as e:
+        logging.exception(e)
+        return {"message": str(e)}, 400
+
+
+@course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submission', methods=['POST'])
+@expects_json(SubmissionCreationSchema, check_formats=True)
+@jwt_required()
+def submission_creation(course_id, assignment_id):
+    try:
+        user_id = get_jwt_identity()
+        user = User.objects.get(uid=user_id)
+        course = Course.objects.get(uid=course_id)
+        assignment = Assignment.objects.get(uid=assignment_id)
+        
+        if not assignment:
+            abort(404, description="Assignment not found")
+        if not course:
+            abort(404, description="Course not found")
+
+        if not course.is_active:
+            abort(404, description="Inactive course")
+
+        course_permission = CoursePermission.objects.get(course_id=course, user_id=user)
+        if course_permission.role != Role.STUDENT:
+            abort(401, description="Invalid course permissions")
+
+        if assignment.end_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
+            abort(400, description="Cannot submit at this time")
+
+        submission = Submission(
+            course_id=course,
+            user_id=user,
+            assignment_id=assignment,
+            answer = g.data['answer'],
+            submission_date = datetime.datetime.now()
+        )
+        submission.save()
+        return {
+            "message": "Success",
+            "submission_id": submission.uid
+        }
     except Exception as e:
         logging.exception(e)
         return {"message": str(e)}, 400
