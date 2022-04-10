@@ -82,8 +82,7 @@ def send_group_message(course_id):
         user = User.objects.get(uid = get_jwt_identity())
         channel = g.data["channel"]
         course = Course.objects.get(uid = course_id)
-        if CoursePermission.objects.get(course_id = course, user_id = user, \
-                                        role = Role.STUDENT) == None:
+        if CoursePermission.objects.get(course_id = course, user_id = user) == None:
             return INVALID_INPUT_TUPLE
         chat = GroupChat.objects(course = course, channel_name = channel)
         

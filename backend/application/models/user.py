@@ -26,3 +26,10 @@ class User(Document):
         if len(self.name) == 0:
             return "A user"
         return self.name
+    
+    def serialize(self):
+        return {
+            "uid":str(self.uid),
+            "email": self.contact.email,
+            "name": self.name if len(self.name) > 0 else "User"
+        }

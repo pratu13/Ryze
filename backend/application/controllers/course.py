@@ -406,7 +406,7 @@ def submission_creation(course_id, assignment_id):
         if course_permission.role != Role.STUDENT:
             abort(401, description="Invalid course permissions")
 
-        if assignment.end_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
+        if assignment.due_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
             abort(400, description="Cannot submit at this time")
 
         submission = Submission(
@@ -414,13 +414,105 @@ def submission_creation(course_id, assignment_id):
             user_id=user,
             assignment_id=assignment,
             answer = g.data['answer'],
-            submission_date = datetime.datetime.now()
         )
         submission.save()
         return {
             "message": "Success",
             "submission_id": submission.uid
         }
+    except Exception as e:
+        logging.exception(e)
+        return {"message": str(e)}, 400
+
+# Following view by suschaud@iu.edu
+@course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submission', methods=['GET'])
+@jwt_required()
+def view_submissions(course_id,assignment_id):
+    logging.warn('abc')
+    def user_strategy(submissions: List[Submission], user):
+        return {
+            "submissions": [
+            {
+                "created_by": submission.user_id.serialize(),
+                "title": submission.assignment_id.title,
+                "user_response": submission.answer,
+                "due_date": submission.assignment_id.due_date,
+                "submission_date": submission.submission_date
+            } 
+            for submission in submissions if submission.user_id == user
+            ]
+        }
+
+    def teacher_strategy(submissions: List[Submission]):
+        logging.warn(len(submissions))
+        return {
+            "submissions": [
+            {
+                "created_by": submission.user_id.serialize(),
+                "title": submission.assignment_id.title,
+                "user_response": submission.answer,
+                "due_date": submission.assignment_id.due_date,
+                "submission_date": submission.submission_date
+            }
+            for submission in submissions
+            ]
+        }
+
+    try:
+        user_id = get_jwt_identity()
+        user = User.objects.get(uid=user_id)
+        course = Course.objects.get(uid=course_id)
+        assignment = Assignment.objects.get(uid=assignment_id)
+        if not course:
+            abort(404, description="Course not found")
+        if not assignment:
+            abort(404, description="Assignment not found")
+
+        course_permission = CoursePermission.objects.get(course_id=course, user_id=user)
+
+        if not course_permission:
+            abort(401, description="Unauthorized")
+
+        course_permission = CoursePermission.objects(course_id = course, user_id = user)
+
+        if len(course_permission) == 0 and user.type != UserType.ADMIN:
+            return UNAUTHORIZED_TUPLE
+        course_permission = course_permission[0]
+        submissions = Submission.objects(course_id = course)
+        logging.info('Returning submissions')
+        if course_permission.role == Role.STUDENT:
+            return user_strategy(submissions, user)
+        else:
+            return teacher_strategy(submissions)
+
+    except Exception as e:
+        logging.exception(e)
+        return {"message": str(e)}, 400
+
+# Following view by suschaud@iu.edu
+@course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/<submission_id>/modify', methods=['PATCH'])
+@jwt_required()
+@expects_json(SubmissionCreationSchema, check_formats=True)
+def modify_submissions(course_id,assignment_id,submission_id):
+    try:
+        user_id = get_jwt_identity()
+        user = User.objects.get(uid=user_id)
+        course = Course.objects.get(uid=course_id)
+        assignment = Assignment.objects.get(uid=assignment_id)
+        submission = Submission.objects.get(uid=submission_id)
+
+
+        if not course:
+            abort(404, description="Course not found")
+        if not assignment:
+            abort(404, description="Assignment not found")
+        if submission.user_id != user:
+            abort(400, description='Unauthorized')
+
+        modified_response = g.data["answer"]
+        submission.update(set__answer = modified_response)
+
+        return {"message": "Success"}
     except Exception as e:
         logging.exception(e)
         return {"message": str(e)}, 400
