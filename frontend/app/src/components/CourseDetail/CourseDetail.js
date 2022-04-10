@@ -1,16 +1,75 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { HeaderLabel, DashboardHeaderRight, CreateAnnouncementButton } from '../Dashboard/DashboardStyledElements'
 import { CourseDetailHeader,BackIcon } from './CourseDetailStyledElements'
 import BackButton from '../../assets/BackIcon2.png'
 import BackButtonDark from '../../assets/backButtonDark.png'
 import CourseSegmentControl from './CourseSegmentControl'
-import { Segments, UserType } from '../Utilities/Utilities'
+import { handleErrors, Segments, UserType } from '../Utilities/Utilities'
 import { AnnouncementItem } from '../Announcement/Announcement'
 import { Divider, EmptyCardTitle, EmptyCardTitleContainer } from '../Custom/GenericStyledElements'
 import { ItemsContainer } from '../Announcement/AnnouncementStyledElements'
 import TodoSectionItem from '../RightSideBar/TodoSection/TodoSectionItem'
-const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped, dark }) => {
-  console.log(course)
+import Chat from '../Chat/Chat'
+import { API } from '../Onboarding/Login/LoginUtilities'
+import { ItemContainer } from '../RightSideBar/TodoSection/TodoSectionStyledElements'
+const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped, dark, email }) => {
+  const [members, setMembers] = useState([])
+  const [messageList, setMessageList] = useState([])
+  const getMembers = async () => {
+    let api = `${API}/v1/course/members/${course.id}`
+    const requestOptions = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Connection' : 'keep-alive',
+            'Authorization' : `Bearer ${token}`
+          },
+        };
+    await fetch(`${api}`, requestOptions)
+        .then(response => handleErrors(response))
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          setMembers(data.course_permissions)
+        })
+        .catch(error => console.log(error))
+  }
+
+  const getChats = async () => {
+    let api = `${API}/v1/message/${course.id}`
+    const requestOptions = {
+          method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Connection': 'keep-alive',
+            'Authorization': `Bearer ${token}`
+        }
+    };
+
+    await fetch(`${api}`, requestOptions)
+        .then(response => handleErrors(response))
+        .then(response => response.json())
+        .then(data => {
+          setMessageList(data.messages)
+        })
+      .catch(error => console.log(error))
+
+  }
+  
+  useEffect(() => {
+    getMembers()
+    getChats()
+    const timer = setInterval(getChats, 5000);
+    return () => clearInterval(timer);
+  }, [])
+
+  const [memberSelected, setmemberSelected] = useState("")
+  
+  const didSelectMember = (user) => {
+    setmemberSelected(user)
+  }
+
+
   const buttonTapped = () => {
     switch (selectedSegment) {
       case Segments.ANNOUNCEMENT:
@@ -87,12 +146,21 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                     </>
                   );
                     
-                // case Segments.MODULES: 
-                // return (
-                //     <>
-                //            <div>This is Modules</div>
-                //     </>
-                // );
+                case Segments.CHAT: 
+                return (
+                  <>
+                    <Chat
+                      email={email}
+                      dark={dark}
+                      members={members}
+                      token={token}
+                      course_id={course.id}
+                      messageList={messageList}
+                      memberSelected={memberSelected}
+                      didSelectMember = {didSelectMember}
+                    />
+                    </>
+                );
                 default:
                   break
             }

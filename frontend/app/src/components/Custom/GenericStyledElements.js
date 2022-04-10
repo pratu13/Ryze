@@ -71,7 +71,7 @@ export const LoginContainer = styled.div`
 `
 
 export const FormInput = styled.input`
-    width: 335px;
+    width: ${({widthGiven, width})=> widthGiven ? width : "335px"};
     height: 34px;
     padding: 12px 20px;
     margin: 8px 0;

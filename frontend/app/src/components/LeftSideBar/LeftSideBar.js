@@ -28,7 +28,7 @@ const LeftSideBar = ({ updateSelectedPage, selectedPage, isAuthSignedIn, toggle,
     const navigate = useNavigate()
   return (
     <>
-        <SideBarContainer dark={dark}>
+        <SideBarContainer height="100vh" width="18vw" dark={dark}>
             <SideBarWrapper>
                 <SideBarItemWrapper>
                     <SideBarItem onClick={e=> {updateSelectedPage(ENUM_STATES.Dashboard)}}>

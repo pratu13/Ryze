@@ -317,6 +317,7 @@ const MainBoard = ({ dark, toggle }) => {
                         token={token}
                         toggle={toggle}
                         dark={dark}
+                        email={email}
                       />
                     </>
                   );

@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { Link as LinkR } from 'react-router-dom';
 
 export const SideBarContainer = styled.div`
-    height: 100vh;
+    height: ${({ height }) => height} ;
     margin: 0;
     padding: 0;
-    width: 18vw;
+    width:  ${({ width }) => width} ;
     border-right:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
     position: fixed;
     top: 0;

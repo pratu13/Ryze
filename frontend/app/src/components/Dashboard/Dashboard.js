@@ -18,7 +18,7 @@ import NoCouseImg from '../../assets/courses.png'
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 import CourseDetail from '../CourseDetail/CourseDetail'
 
-const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark }) => {
+const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -136,6 +136,7 @@ const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnno
           {
             couseCardTap &&
             <CourseDetail
+              email={email}
               announcements={announcements}
               selectedSegment={selectedSegment}
               updateSelectedSegment={updateSelectedSegment}
