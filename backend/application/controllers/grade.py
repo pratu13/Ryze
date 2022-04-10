@@ -5,8 +5,8 @@ from flask import Blueprint, g
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from backend.application.models.grade import Grade
-from backend.application.validators.grade import CreateGradeSchema, UpdateGradeSchema
+from ..models.grade import Grade
+from ..validators.grade import CreateGradeSchema, UpdateGradeSchema
 
 from ..models.course_permission import CoursePermission, Role
 from ..models.user import User
@@ -25,10 +25,11 @@ def grade_assignment(assignment_id):
         grader = User.objects.get(uid = get_jwt_identity())
         user = User.objects.get(uid = g.data["user"])
         assignment = Assignment.objects.get(uid = assignment_id)
-        if CoursePermission.objects.get(course_id = assignment.course, \
+        if CoursePermission.objects.get(course_id = assignment.course_id, \
                                         user_id = grader, role = Role.TEACHER) == None:
             return UNAUTHORIZED_TUPLE
-        
+        if len(Grade.objects(assignment = assignment, user = user)) > 0:
+            return INVALID_INPUT_TUPLE
         grade = Grade(assignment = assignment, user = user, \
                       score = g.data["score"], max_score = g.data["max_score"], \
                       graded_by = grader, comment = g.data.get("comment", ""))
@@ -48,14 +49,14 @@ def grade_assignment(assignment_id):
         logging.exception(e)
         return INVALID_INPUT_TUPLE
 
-@grade_bp.route('/v1/grade/<grade_id>', methods=['POST'])
+@grade_bp.route('/v1/grade/<grade_id>', methods=['PATCH'])
 @jwt_required()
 @expects_json(UpdateGradeSchema, check_formats=True)
 def update_grade(grade_id):
     try:
         grader = User.objects.get(uid = get_jwt_identity())
         grade = Grade.objects.get(uid = grade_id)
-        if CoursePermission.objects.get(course_id = grade.assignment.course, \
+        if CoursePermission.objects.get(course_id = grade.assignment.course_id, \
                                         user_id = grader, role = Role.TEACHER) == None:
             return UNAUTHORIZED_TUPLE
         
@@ -80,13 +81,13 @@ def update_grade(grade_id):
         logging.exception(e)
         return INVALID_INPUT_TUPLE
 
-@grade_bp.route('/v1/grade/<assignment_id>/<strategy>', methods=['GET'])
+@grade_bp.route('/v1/grade/<assignment_id>', methods=['GET'])
 @jwt_required()
-def view_grades(assignment_id, strategy):
+def view_grades(assignment_id):
     def teacher_strategy(assignment, user):
         try: 
             grades = Grade.objects(assignment = assignment)
-            if CoursePermission.objects.get(course_id = assignment.course, \
+            if CoursePermission.objects.get(course_id = assignment.course_id, \
                                             user_id = user, role = Role.TEACHER) == None:
                 return UNAUTHORIZED_TUPLE
             grades_response = {"grades": []}
@@ -109,7 +110,7 @@ def view_grades(assignment_id, strategy):
     def student_strategy(assignment, user):
         try: 
             grades = Grade.objects(assignment = assignment, user = user)
-            if CoursePermission.objects.get(course_id = assignment.course, \
+            if CoursePermission.objects.get(course_id = assignment.course_id, \
                                             user_id = user) == None:
                 return UNAUTHORIZED_TUPLE
             grades_response = {"grades": []}
@@ -132,9 +133,9 @@ def view_grades(assignment_id, strategy):
     try:
         user = User.objects.get(uid = get_jwt_identity())
         assignment = Assignment.objects.get(uid = assignment_id)
-        if strategy not in ["teacher", "student"]:
-            return INVALID_INPUT_TUPLE
-        if strategy == "teacher":
+
+        if CoursePermission.objects.get(course_id = assignment.course_id, \
+                                            user_id = user).role == Role.TEACHER:
             return teacher_strategy(assignment, user)
         else:
             return student_strategy(assignment, user)
