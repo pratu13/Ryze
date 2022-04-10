@@ -8,6 +8,7 @@ export const  MainBoardContainer = styled.div`
     align-items: flex-start;
     padding: 0;
     margin: 0;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
 
     @media screen and (max-width: 1301px) {
         width: 55vw;

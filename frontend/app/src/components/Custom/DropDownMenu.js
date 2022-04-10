@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import CaretIcon from "../../assets/caret-down.png"
+import CaretDark from "../../assets/caretDark.png"
 import Admin from "../../assets/admin.png"
 import Student from "../../assets/student.png"
 import Teacher from "../../assets/teacher.png"
@@ -13,7 +14,7 @@ import {
 import { UserType } from '../Utilities/Utilities'
 
 
-const DropDownMenu = ({ color, updateRole, width, switchRole, isSwitch, name }) => {
+const DropDownMenu = ({ color, updateRole, width, switchRole, isSwitch, name, dark }) => {
   
   const [userRole, setUserRole] = useState(UserType.NOROLE)
 
@@ -33,7 +34,7 @@ const DropDownMenu = ({ color, updateRole, width, switchRole, isSwitch, name }) 
   return (
     <>
       <MenuContainer color={color} width={ width}>
-        <Item icon={<CaretIcon />} >
+        <Item icon={dark ? CaretDark : CaretIcon} >
           <DropMenu menuItemTapped={menuItemTapped} isSwitch={ isSwitch}/>
         </Item>
         {
@@ -74,7 +75,7 @@ const Item = (props) => {
 
   return (
     <CaretMenuItem onClick={() => setOpen(!open)}>
-      <ItemIcon src={CaretIcon} />
+      <ItemIcon src={ props.icon } />
       {open && props.children}
     </CaretMenuItem>
   );

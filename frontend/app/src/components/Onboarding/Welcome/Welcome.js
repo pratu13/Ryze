@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 import ForgotPasswordEmail from '../Login/ForgotPassword/ForgotPasswordEmail';
 import { UserType } from '../../Utilities/Utilities';
 
-const Welcome = () => {
+const Welcome = ({dark}) => {
 
   const [startForgotPasswordFlow, setForgotPasswordFlow] = useState(false);
   const [recoveryEmail, setRecoveryEmail] = useState("");
@@ -66,7 +66,7 @@ const Welcome = () => {
         { 
            (!startForgotPasswordFlow && !startOFlow) && 
            <Animated animationIn="bounceInLeft" animationOut="bounceOutRight"> 
-              <Login updatePasswordFlow={updatePasswordFlow} updateEmail={updateEmail} completeOauthSignIn={ completeOauthSignIn}/>
+              <Login dark={dark} updatePasswordFlow={updatePasswordFlow} updateEmail={updateEmail} completeOauthSignIn={ completeOauthSignIn}/>
            </Animated>
         }
         { 

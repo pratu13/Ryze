@@ -1,15 +1,75 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { HeaderLabel, DashboardHeaderRight, CreateAnnouncementButton } from '../Dashboard/DashboardStyledElements'
 import { CourseDetailHeader,BackIcon } from './CourseDetailStyledElements'
 import BackButton from '../../assets/BackIcon2.png'
+import BackButtonDark from '../../assets/backButtonDark.png'
 import CourseSegmentControl from './CourseSegmentControl'
-import { Segments, UserType } from '../Utilities/Utilities'
+import { handleErrors, Segments, UserType } from '../Utilities/Utilities'
 import { AnnouncementItem } from '../Announcement/Announcement'
 import { Divider, EmptyCardTitle, EmptyCardTitleContainer } from '../Custom/GenericStyledElements'
 import { ItemsContainer } from '../Announcement/AnnouncementStyledElements'
 import TodoSectionItem from '../RightSideBar/TodoSection/TodoSectionItem'
-const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped }) => {
-  console.log(course)
+import Chat from '../Chat/Chat'
+import { API } from '../Onboarding/Login/LoginUtilities'
+import { ItemContainer } from '../RightSideBar/TodoSection/TodoSectionStyledElements'
+const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped, dark, email }) => {
+  const [members, setMembers] = useState([])
+  const [messageList, setMessageList] = useState([])
+  const getMembers = async () => {
+    let api = `${API}/v1/course/members/${course.id}`
+    const requestOptions = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Connection' : 'keep-alive',
+            'Authorization' : `Bearer ${token}`
+          },
+        };
+    await fetch(`${api}`, requestOptions)
+        .then(response => handleErrors(response))
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          setMembers(data.course_permissions)
+        })
+        .catch(error => console.log(error))
+  }
+
+  const getChats = async () => {
+    let api = `${API}/v1/message/${course.id}`
+    const requestOptions = {
+          method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Connection': 'keep-alive',
+            'Authorization': `Bearer ${token}`
+        }
+    };
+
+    await fetch(`${api}`, requestOptions)
+        .then(response => handleErrors(response))
+        .then(response => response.json())
+        .then(data => {
+          setMessageList(data.messages)
+        })
+      .catch(error => console.log(error))
+
+  }
+  
+  useEffect(() => {
+    getMembers()
+    getChats()
+    const timer = setInterval(getChats, 5000);
+    return () => clearInterval(timer);
+  }, [])
+
+  const [memberSelected, setmemberSelected] = useState("")
+  
+  const didSelectMember = (user) => {
+    setmemberSelected(user)
+  }
+
+
   const buttonTapped = () => {
     switch (selectedSegment) {
       case Segments.ANNOUNCEMENT:
@@ -23,13 +83,14 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
 
   return (
       <>
-          <CourseDetailHeader> 
-              <BackIcon onClick={() => {didTapBackButton()}} src={BackButton}></BackIcon>
-              <HeaderLabel>{course.title}</HeaderLabel>
+          <CourseDetailHeader dark={dark}> 
+              <BackIcon onClick={() => {didTapBackButton()}} src={ dark ? BackButtonDark : BackButton}></BackIcon>
+              <HeaderLabel dark={dark}>{course.title}</HeaderLabel>
               <RenderHeaderButton
                 selectedSegment={selectedSegment}
                 buttonTapped={buttonTapped}
-                role={role}
+          role={role}
+          dark={dark}
               />
           </CourseDetailHeader>
           <CourseSegmentControl
@@ -54,6 +115,7 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                         course={course}
                         token={token}
                         role={role}
+                        dark={dark}
                       />
                     </ItemsContainer>
                     </>
@@ -61,7 +123,7 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                 case Segments.FILES: 
                 return (
                     <>
-                           <div>This is Files</div>
+                    <div>This is Files</div>
                     </>
                   );
                 case Segments.SYLLABUS: 
@@ -78,17 +140,27 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                       course={course}
                       token={token}
                       role={role}
+                      dark={dark}
                     />
                     
                     </>
                   );
                     
-                // case Segments.MODULES: 
-                // return (
-                //     <>
-                //            <div>This is Modules</div>
-                //     </>
-                // );
+                case Segments.CHAT: 
+                return (
+                  <>
+                    <Chat
+                      email={email}
+                      dark={dark}
+                      members={members}
+                      token={token}
+                      course_id={course.id}
+                      messageList={messageList}
+                      memberSelected={memberSelected}
+                      didSelectMember = {didSelectMember}
+                    />
+                    </>
+                );
                 default:
                   break
             }
@@ -99,10 +171,10 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
 
 export default CourseDetail
 
-const RenderHeaderButton = ({ selectedSegment, buttonTapped, role}) => {
+const RenderHeaderButton = ({ selectedSegment, buttonTapped, role, dark}) => {
   return (
     <>
-      <DashboardHeaderRight>
+      <DashboardHeaderRight dark ={dark}>
           {(() => {
             switch (selectedSegment) {
               case Segments.ANNOUNCEMENT:
@@ -154,7 +226,7 @@ const RenderHeaderButton = ({ selectedSegment, buttonTapped, role}) => {
 }
 
 
-const RenderAssignments = ({ assignments, course, token, role }) => {
+const RenderAssignments = ({ assignments, course, token, role, dark }) => {
 
 
   return (
@@ -170,6 +242,7 @@ const RenderAssignments = ({ assignments, course, token, role }) => {
                 assignment={assignments[key]}
                 token={token}
                 role={role}
+                dark={dark}
               />
             );
           }
@@ -182,6 +255,7 @@ const RenderAssignments = ({ assignments, course, token, role }) => {
                   assignment={assignments[key]}
                   token={token}
                   role={role}
+                  dark={dark}
                 />
               );
             }
@@ -193,6 +267,7 @@ const RenderAssignments = ({ assignments, course, token, role }) => {
                 assignment={assignments[key]}
                 token={token}
                 role={role}
+                dark={dark}
               />
             );
           }
@@ -214,7 +289,7 @@ const RenderAssignments = ({ assignments, course, token, role }) => {
       }
           {
               Object.keys(assignments).length === 0 &&
-              <EmptyCardTitleContainer>
+              <EmptyCardTitleContainer dark={dark}>
                 <EmptyCardTitle>Looks like you aced this week and completed all your homework for {course.title}</EmptyCardTitle>
               </EmptyCardTitleContainer>
             }
@@ -224,7 +299,7 @@ const RenderAssignments = ({ assignments, course, token, role }) => {
 
 }
 
-const RenderAnnouncements = ({ announcements, course, token, role }) => {
+const RenderAnnouncements = ({ announcements, course, token, role, dark }) => {
   console.log(announcements)
   return (
     <>
@@ -240,6 +315,7 @@ const RenderAnnouncements = ({ announcements, course, token, role }) => {
                   announcement={announcements[key]}
                   token={token}
                   role={role}
+                  dark={dark}
                 />
                 <Divider />
               </>
@@ -255,6 +331,7 @@ const RenderAnnouncements = ({ announcements, course, token, role }) => {
                     announcement={announcements[key]}
                     token={token}
                     role={role}
+                    dark={dark}
                   />
                   <Divider />
                 </>
@@ -279,7 +356,7 @@ const RenderAnnouncements = ({ announcements, course, token, role }) => {
         }
          {
           Object.keys(announcements).length === 0 &&
-            <EmptyCardTitleContainer>
+            <EmptyCardTitleContainer dark={dark}>
                 <EmptyCardTitle>No announcements for {course.title}</EmptyCardTitle>
             </EmptyCardTitleContainer>
         }

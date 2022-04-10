@@ -20,6 +20,7 @@ import { AnimatePresence } from 'framer-motion'
 import { SubjectTagContainer, SubjectText } from '../../Announcement/AnnouncementStyledElements'
 import { API } from '../../Onboarding/Login/LoginUtilities'
 import { CDatePicker } from '../../Custom/GenericStyledElements'
+import { handleErrors } from '../../Utilities/Utilities'
 
 const CreateAssignmentModal = ({ token, course, createAssignmentTapped }) => {
     
@@ -49,18 +50,19 @@ const CreateAssignmentModal = ({ token, course, createAssignmentTapped }) => {
         let api = `${API}/v1/courses/${course.id}/assignments`
 
         await fetch(`${api}`, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-            setTimeout(() => {
-                setMessage("Assignment Published")
+            .then(response => handleErrors(response))
+            .then(response => response.json())
+            .then(data => {
                 setTimeout(() => {
-                    createAssignmentTapped()
-                }, 3000);
-            }, 1000);
-        })
-        .catch(error => console.log(error)) 
+                    setMessage("Assignment Published")
+                    setTimeout(() => {
+                        createAssignmentTapped(course)
+                    }, 1500);
+                }, 1000);
+            })
+            .catch(error => console.log(error)) 
     } 
-
+    
   return (
       <>
           <AnimatePresence>

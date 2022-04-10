@@ -95,16 +95,20 @@ export const AnnouncementHeaderContainer = styled.div`
 
 export const AnnouncementHeader = styled.h1`
     font-size: 1.5em;
+    color: ${({ dark }) => !dark ? "black" : "white" };
+
 `
 
 export const TimePublishedLabel = styled.p`
     font-size: smaller;
+    color: ${({ dark }) => !dark ? "black" : "white" };
 `
 
 export const AnnouncementDescriptionText = styled.p`
     font-size: small;
     text-align: justify;
     text-overflow: ellipsis;
+    color: ${({ dark }) => !dark ? "black" : "white" };
 `
 export const Divider = styled.div`
     height: 1px;

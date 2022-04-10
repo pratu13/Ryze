@@ -4,15 +4,22 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainBoard from "./components/Main/MainBoard";
 import Announcement from "./components/Announcement/Announcement";
 import SetNewPassword from "./components/Onboarding/Login/ForgotPassword/SetNewPassword";
+import { useState } from "react";
 
 
 function App() {
+  const [dark, setdark] = useState(false)
+
+  const toggleMode = () => {
+    setdark(!dark)
+  } 
+
   return (
     <>
     <Router>
       <Routes>
-          <Route path='/' element={<Welcome />} exact></Route>
-          <Route path='/main/*' element={<MainBoard />} exact></Route>
+          <Route path='/' element={<Welcome dark={dark}/>} exact></Route>
+          <Route path='/main/*' element={<MainBoard dark ={dark} toggle={toggleMode} />} exact></Route>
           <Route path='/announcement/' element={<Announcement />} exact></Route>
           <Route path='/passwordReset/*' element={<SetNewPassword/>} exact></Route>
       </Routes>

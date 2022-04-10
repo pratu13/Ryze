@@ -3,25 +3,25 @@ import { SectionCard } from '../../Custom/GenericStyledElements'
 import { DescriptionSubtitleLabel, DescriptionTitleLabel, InfoWrapper, TermRoleSection, UserBackgroundColor, UserDescriptionSection, UserImageIcon, UserMailLabel, UserNameLabel, UserNameSection, UserProfileHeader } from './UserInfoStyledElements'
 import DropDownMenu from '../../Custom/DropDownMenu'
 
-const UserInfo = ({ userInfo, switchRole }) => {
+const UserInfo = ({ userInfo, switchRole, dark }) => {
   return (
     <>
-        <SectionCard>
+        <SectionCard dark={dark}>
             <InfoWrapper>
               <UserProfileHeader>
                 <UserBackgroundColor color={ userInfo.bgColor}/>
             <UserImageIcon src={ userInfo.userImage} color={ userInfo.color}/>
               </UserProfileHeader>
               <UserNameSection>
-            <UserNameLabel>{userInfo.name}</UserNameLabel>
-            <UserMailLabel>{userInfo.email}</UserMailLabel>
+            <UserNameLabel dark={dark}>{userInfo.name}</UserNameLabel>
+            <UserMailLabel dark={dark}>{userInfo.email}</UserMailLabel>
             <UserDescriptionSection>
               <TermRoleSection>
-                    <DescriptionTitleLabel>Role</DescriptionTitleLabel>
-                    <DescriptionSubtitleLabel>{userInfo.role}</DescriptionSubtitleLabel>
+                    <DescriptionTitleLabel dark={dark}>Role</DescriptionTitleLabel>
+                    <DescriptionSubtitleLabel  dark={dark}>{userInfo.role}</DescriptionSubtitleLabel>
                   </TermRoleSection>
                   <TermRoleSection>
-                <DropDownMenu color="transparent" width="10px" switchRole={switchRole} isSwitch={true} name={ userInfo.name}/>
+                <DropDownMenu dark={dark} color="transparent" width="10px" switchRole={switchRole} isSwitch={true} name={ userInfo.name}/>
                   </TermRoleSection>
                   
                 </UserDescriptionSection>

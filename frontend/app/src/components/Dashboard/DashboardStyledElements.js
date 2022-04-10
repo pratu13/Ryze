@@ -8,26 +8,33 @@ export const  DashboardContainer =styled.div`
     align-items: flex-start;
     padding: 0;
     margin: 0;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
+    /* border-left:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
+    border-right:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ; */
 `
 
 export const DashboardMainContentWrapper = styled.div`
     height: 100vh;
     margin: 0;
     padding: 0;
-    width: 55vw;
+    width: 73vw;
     display: flex;
     flex-direction: column;
     top: 0;
     bottom:0;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
+    /* border-left:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
+    border-right:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ; */
 `
 
 export const DashboardHeader = styled.div`
-    width: 90%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     /* margin-left: 2%;
     margin-right: 2%; */
+    background-color: ${({ dark }) => dark ? "black" : "white" };
 `
 
 export const DashboardHeaderRight = styled.div`
@@ -37,6 +44,7 @@ export const DashboardHeaderRight = styled.div`
     align-items: center;
     margin-left: 2%;
     margin-right: 2%;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
 `
 
 export const BellIcon = styled.img`
@@ -56,6 +64,8 @@ export const BellIcon = styled.img`
 export const HeaderLabel = styled.label`
     font-size: 2.2rem;
     font-weight: bold;
+    color: ${({ dark }) => !dark ? "black" : "white" };
+    margin-left: 5%;
 `
 export const CreateAnnouncementButton = styled.div`
     background-color: #F28482;
@@ -86,8 +96,10 @@ export const CourseContainer = styled.div`
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
-    padding-left: 2%;
-    margin: 1%;
+    /* padding-left: 1%;
+    margin: 1%; */
+    background-color: ${({ dark }) => dark ? "black" : "white" };
+   
     /* grid-template-rows: 0.5fr 0.5fr;
     grid-template-areas: "course course"; */
     /* text-align: center; */

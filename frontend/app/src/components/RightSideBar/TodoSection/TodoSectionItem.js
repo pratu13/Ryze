@@ -14,7 +14,7 @@ import Publish from '../../../assets/published.png'
 import Unpublish from '../../../assets/unpublished.png'
 import { UserType } from '../../Utilities/Utilities'
 import { API } from '../../Onboarding/Login/LoginUtilities'
-const TodoSectionItem = ({ assignment, course, token, role }) => {
+const TodoSectionItem = ({ assignment, course, token, role, dark}) => {
   console.log(assignment)
   const [publishedIcon, setPublishedIcon] = useState(assignment.is_active)
 
@@ -43,19 +43,21 @@ const TodoSectionItem = ({ assignment, course, token, role }) => {
   
   return (
     <>
-        <ItemContainer>
-            <TodoSectionItemWrapper>
-           <DueDateLabel>{assignment.due}</DueDateLabel>
-                <InfoSection>
-                    <ItemName>{assignment.title}</ItemName>
+        <ItemContainer dark={dark}>
+            <TodoSectionItemWrapper dark={dark}>
+           <DueDateLabel dark={dark}>{assignment.due}</DueDateLabel>
+                <InfoSection dark={dark}>
+                    <ItemName dark={dark}>{assignment.title}</ItemName>
                      <ItemStatus completed={assignment.completed}> {assignment.completed ? 'Submitted': 'Not Submitted'}</ItemStatus>
                 </InfoSection>
-          <ItemSubject>{course.title}</ItemSubject>
+          <ItemSubject dark={dark}>{course.title}</ItemSubject>
           {
             role.title === UserType.ADMIN.title &&
             <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ publishedIcon ?  Publish : Unpublish} />
            }
-            </TodoSectionItemWrapper>
+        </TodoSectionItemWrapper>
+        <ItemName dark={dark}>Description:</ItemName>
+        <ItemName dark={dark}>{assignment.description}</ItemName>
         </ItemContainer>
     </>
   )
