@@ -14,10 +14,9 @@ import Publish from '../../../assets/published.png'
 import Unpublish from '../../../assets/unpublished.png'
 import { UserType } from '../../Utilities/Utilities'
 import { API } from '../../Onboarding/Login/LoginUtilities'
-const TodoSectionItem = ({ assignment, course, token, role, dark}) => {
-  console.log(assignment)
+import { CreateAnnouncementButton } from '../../Dashboard/DashboardStyledElements'
+const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssignment, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading}) => {
   const [publishedIcon, setPublishedIcon] = useState(assignment.is_active)
-
   const publishedIconTapped = async () => {
 
         const data = {
@@ -41,9 +40,19 @@ const TodoSectionItem = ({ assignment, course, token, role, dark}) => {
           .catch(error => console.log(error))
     }
   
+  const didTapAssignment = () => {
+    setTappedAssignment(assignment)
+    didTapAssignmentCard(true)
+    setAssignmentSubCourse(course)
+  }
+  const tappedViewGrading = () => {
+    didTapViewGrading(true)
+    setTappedAssignment(assignment)
+  }
+  
   return (
     <>
-        <ItemContainer dark={dark}>
+        <ItemContainer dark={dark} onClick={() => {didTapAssignment()}} >
             <TodoSectionItemWrapper dark={dark}>
            <DueDateLabel dark={dark}>{assignment.due}</DueDateLabel>
                 <InfoSection dark={dark}>
@@ -58,6 +67,11 @@ const TodoSectionItem = ({ assignment, course, token, role, dark}) => {
         </TodoSectionItemWrapper>
         <ItemName dark={dark}>Description:</ItemName>
         <ItemName dark={dark}>{assignment.description}</ItemName>
+        {
+          (role.title === UserType.TEACHER.title) &&
+          <CreateAnnouncementButton onClick={() => {tappedViewGrading()}}>View Submissions</CreateAnnouncementButton>
+        }
+       
         </ItemContainer>
     </>
   )

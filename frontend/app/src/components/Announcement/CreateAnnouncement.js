@@ -122,7 +122,7 @@ const CreateAnnouncementModal = ({ token, course, createAnnounceTapped, announce
                                         <LabelWrapper>
                                                 <FormLabel color='white'>Announcement Description</FormLabel>
                                          </LabelWrapper>
-                                        <FormInputArea color="white" type="text" name="description"  value={description} onChange={e=> setDescription(e.target.value)} required></FormInputArea>
+                                        <FormInputArea width="335px" color="white" type="text" name="description"  value={description} onChange={e=> setDescription(e.target.value)} required></FormInputArea>
                                      </InputSectionWrapper>
                                             <ButtonWrapper>
                                           <FormButton onClick={() => {sendAnnouncement()}} isDisabled={ !title || !description }>Send</FormButton>

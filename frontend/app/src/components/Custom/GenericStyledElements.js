@@ -88,7 +88,7 @@ export const FormInput = styled.input`
 `
 
 export const FormInputArea = styled.textarea`
-    width: 335px;
+    width: ${({width}) => width};
     height: 104px;
     padding: 12px 20px;
     margin: 8px 0;
@@ -161,7 +161,7 @@ export const FormInputWrapper = styled.div`
 `
 
 export const MainContentContainer = styled.div`
-    /* min-height: 90vh; */
+    /* min-height: 100vh; */
     /* padding-top: 5%; */
     /* padding: 0; */
     width: ${({width}) => width};
@@ -174,7 +174,9 @@ export const MainContentContainer = styled.div`
     top: 0;
     bottom:0;
     left: 18vw;
-    background-color: ${({ dark }) => dark ? "black" : "white" };
+    height: 100vh;
+    background-color: ${({ dark }) => dark ? "" : "white" };
+    /* background: none; */
     border-left:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
 `
 
@@ -363,7 +365,7 @@ export const ModalBackgroundWrapper = styled(motion.div)`
     left: 0;
     bottom: 0;
     right: 0;
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.9);
 `
 
 export const ModalContentContainer = styled(motion.div)`

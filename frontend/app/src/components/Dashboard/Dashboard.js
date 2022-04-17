@@ -4,11 +4,8 @@ import {
   DashboardMainContentWrapper,
   DashboardHeader,
   HeaderLabel,
-  DashboardHeaderRight,
-  BellIcon,
   CourseContainer
 } from './DashboardStyledElements'
-import Bell from '../../assets/BellIcon.png'
 import { Segments } from '../Utilities/Utilities'
 import CourseCard from '../Courses/CourseCard'
 import { API } from '../Onboarding/Login/LoginUtilities'
@@ -18,7 +15,7 @@ import NoCouseImg from '../../assets/courses.png'
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 import CourseDetail from '../CourseDetail/CourseDetail'
 
-const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark }) => {
+const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -35,6 +32,7 @@ const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, cre
   const didTapBackButton = () => {
     setCourseCardTapped(false)
   }
+
 
   const [selectedSegment, setSelectedSegment] = useState(Segments.HOME)
 
@@ -90,17 +88,12 @@ const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, cre
     await fetch(api[0], api[1])
       .then(response => response.json())
       .then(data_ => {
-        console.log(data_.assignments)
         if (data_.message != "CoursePermission matching query does not exist." || data_.message != "Unauthorized" || data_.message != "Not enough segments") {
           data_.assignments.forEach((assignment, index, data_) => {
-            let duedate = new Intl.DateTimeFormat("en-GB", {
-              year: "numeric",
-              month: "long",
-              day: "2-digit"
-            }).format(assignments.due_date)
+            var date = new Date(assignment.due_date);
             assignments_[index] = {
               title: assignment.title,
-              due: duedate,
+              due: date.toDateString(),
               subject: course_.name,
               start: assignment.start_date,
               description: assignment.description,
@@ -111,7 +104,6 @@ const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, cre
           });
           
           setAssignments(assignments_)
-          console.log(assignments)
         }
       })
     .catch(error => console.log(error) )
@@ -148,6 +140,11 @@ const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, cre
               createAnnounceTapped={createAnnounceTapped}
               createAssignmentTapped={createAssignmentTapped}
               dark={dark}
+              setTappedAssignment={setTappedAssignment}
+              didTapAssignmentCard={didTapAssignmentCard}
+              setAssignmentSubCourse={setAssignmentSubCourse}
+              didTapViewGrading={didTapViewGrading}
+              setAssignmentCourse={setAssignmentCourse}
             />
           }
         </MainContentContainer>

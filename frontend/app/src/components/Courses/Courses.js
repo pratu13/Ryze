@@ -14,7 +14,7 @@ import CourseDetail from '../CourseDetail/CourseDetail'
 import { Segments } from '../Utilities/Utilities'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 
-const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createAnnounceTapped, createAssignmentTapped, dark }) => {
+const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createAnnounceTapped, createAssignmentTapped, dark, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -27,7 +27,6 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
 
   const enrollCourse = async (course_id) => {
     let api = `${API}/v1/course/enroll/${course_id}`
-    console.log(api)
     const requestOptions = {
       method: 'GET',
       headers: {
@@ -116,14 +115,10 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
 
         if (data_.message != "CoursePermission matching query does not exist." || data_.message != "Unauthorized" || data_.message != "Not enough segments") {
           data_.assignments.forEach((assignment, index, data_) => {
-            let duedate = new Intl.DateTimeFormat("en-GB", {
-              year: "numeric",
-              month: "long",
-              day: "2-digit"
-            }).format(assignments.due_date)
+            var date = new Date(assignment.due_date);
             assignments_[index] = {
               title: assignment.title,
-              due: duedate,
+              due: date.toDateString(),
               is_active: assignment.is_active,
               subject: course_.name,
               start: assignment.start_date,
@@ -197,12 +192,15 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
               updateSelectedSegment={updateSelectedSegment}
               course={course}
               didTapBackButton={didTapBackButton}
-            assignments={assignments}
-            dark= {dark}
-            role={role}
-            token={token}
+              assignments={assignments}
+              dark= {dark}
+              role={role}
+              token={token}
               createAnnounceTapped={createAnnounceTapped}
-              createAssignmentTapped={ createAssignmentTapped}
+              createAssignmentTapped={createAssignmentTapped}
+              didTapViewGrading={didTapViewGrading}
+            setAssignmentCourse={setAssignmentCourse}
+            setTappedAssignment={setTappedAssignment}
             />
          }
         </MainContentContainer>

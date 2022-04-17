@@ -16,16 +16,17 @@ export const TodoSectionTitle = styled.h1`
 `
 export const ItemContainer = styled.div`
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     border-radius: 20px;
     background: white;
-    width: 75%;
+    width: 65%;
     padding: 15px;
     /* height: 80px; */
     flex-direction: column;
     margin-top: 2%;
     align-items: flex-start;
     background-color: ${({ dark }) => dark ? "#1B2327" : "white" };
+    cursor: pointer;
 `
 export const TodoSectionItemWrapper = styled.div`
     width: 75%;
@@ -57,6 +58,7 @@ export const ItemName = styled.p`
     font-weight: bold;
     font-size: medium;
     color: ${({ dark }) => !dark ? "black" : "white" };
+    margin-bottom: 20px;
 `
 
 export const ItemStatus = styled.p`

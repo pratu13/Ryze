@@ -8,7 +8,7 @@ export const  DashboardContainer =styled.div`
     align-items: flex-start;
     padding: 0;
     margin: 0;
-    background-color: ${({ dark }) => dark ? "black" : "white" };
+    background-color: ${({ dark }) => dark ? "red" : "white" };
     /* border-left:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
     border-right:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ; */
 `
@@ -22,7 +22,7 @@ export const DashboardMainContentWrapper = styled.div`
     flex-direction: column;
     top: 0;
     bottom:0;
-    background-color: ${({ dark }) => dark ? "black" : "white" };
+    background-color: ${({ dark }) => dark ? "" : "white" };
     /* border-left:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
     border-right:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ; */
 `
@@ -34,7 +34,7 @@ export const DashboardHeader = styled.div`
     align-items: center;
     /* margin-left: 2%;
     margin-right: 2%; */
-    background-color: ${({ dark }) => dark ? "black" : "white" };
+    background-color: ${({ dark }) => dark ? "" : "white" };
 `
 
 export const DashboardHeaderRight = styled.div`
@@ -91,15 +91,14 @@ export const CreateAnnouncementButton = styled.div`
 export const CourseContainer = styled.div`
     display: flex;
     width: ${({width}) => width};
-    height: auto;
-    color: white;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
     /* padding-left: 1%;
     margin: 1%; */
-    background-color: ${({ dark }) => dark ? "black" : "white" };
-   
+    background-color: ${({ dark }) => dark ? "" : "white" };
+    height: 100vh;
+    /* background: none; */
     /* grid-template-rows: 0.5fr 0.5fr;
     grid-template-areas: "course course"; */
     /* text-align: center; */

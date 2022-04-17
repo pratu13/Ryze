@@ -11,6 +11,7 @@ function App() {
   const [dark, setdark] = useState(false)
 
   const toggleMode = () => {
+    document.body.style.backgroundColor = !dark ? "black" : "white";
     setdark(!dark)
   } 
 

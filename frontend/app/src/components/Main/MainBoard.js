@@ -14,6 +14,8 @@ import CreateAnnouncementModal from '../Announcement/CreateAnnouncement'
 import CreateCourseModal from '../Courses/CreateCourseModal'
 import Announcement from '../Announcement/Announcement'
 import CreateAssignmentModal from '../RightSideBar/TodoSection/CreateAssignment'
+import AssignmentSubmission from '../RightSideBar/Assignment/AssignmentSubmission'
+import Grading from '../RightSideBar/Assignment/Grading'
 
 export const ENUM_STATES = {
   Dashboard: "Dashboard",
@@ -24,7 +26,6 @@ export const ENUM_STATES = {
 const MainBoard = ({ dark, toggle }) => {
   const location = useLocation();
   const { email, token, name, color, role, userFirstTimeLogin, isAuthSignedIn } = location.state;
-  console.log(token)
   const [role_, setRole] = useState(role)
   const [userInfo, setInfo] = useState({name: "", email: "", role: UserType.NOROLE.title, color: "", bgColor: "", userImage: Profile})
   const [settingModal, setSettingModal] = useState(userFirstTimeLogin)
@@ -38,6 +39,18 @@ const MainBoard = ({ dark, toggle }) => {
   const [onGoingCourses, setCourses] = useState([])
   const [announcements, setAnnouncement] = useState([])
   const [allAnnouncements, setAllAnnouncement] = useState([])
+
+  const [asssignmentTapped, setasssignmentTapped] = useState(false)
+  const [tappedAssignment, setTappedAssignment] = useState()
+  const [viewGradingTapped, setviewGrading] = useState(false)
+  const [assignmentSubmissionCourse, setAssignmentSubCourse] = useState()
+
+  const didTapViewGrading = (show) => {
+    setviewGrading(show)
+  }
+  const didTapAssignmentCard = (show) => {
+    setasssignmentTapped(show)
+  }
   
   const updateSelectedPage = (page) => {
     setSelectedPage(page)
@@ -63,7 +76,6 @@ const MainBoard = ({ dark, toggle }) => {
       })
       .catch(error => console.log(error))
   }
-
 
   const switchRoles = (name_, role__, userImage) => {
     setInfo({
@@ -103,7 +115,6 @@ const MainBoard = ({ dark, toggle }) => {
     updateUserProfile(api, requestOptions, name_, role_, userImage)
   }
 
-
   const updateAnnouncement = (isOpen) => {
     let _announcements = []
     Object.keys(onGoingCourses).map((key, index) => {
@@ -115,6 +126,7 @@ const MainBoard = ({ dark, toggle }) => {
   }
 
   useEffect(() => {
+    
     if (userFirstTimeLogin) {
       let role__ = UserType.STUDENT
       if (role_.title == UserType.STUDENT.title) {
@@ -196,6 +208,7 @@ const MainBoard = ({ dark, toggle }) => {
       .then(data => {
         if (data.message != "Unauthorized") {
           data.assignments.forEach((assignment, index, data) => {
+            console.log(assignment)
             let duedate = new Intl.DateTimeFormat("en-GB", {
               year: "numeric",
               month: "long",
@@ -293,8 +306,7 @@ const MainBoard = ({ dark, toggle }) => {
   }
   return (
     <>
-    
-      <MainBoardContainer>
+      <MainBoardContainer dark={dark}>
         <LeftSideBar
           updateSelectedPage={updateSelectedPage}
           selectedPage={selectedPage}
@@ -318,6 +330,11 @@ const MainBoard = ({ dark, toggle }) => {
                         toggle={toggle}
                         dark={dark}
                         email={email}
+                        didTapAssignmentCard={didTapAssignmentCard}
+                        setTappedAssignment={setTappedAssignment}
+                        setAssignmentSubCourse={setAssignmentSubCourse}
+                        didTapViewGrading={didTapViewGrading}
+                        setAssignmentCourse={setAssignmentCourse}
                       />
                     </>
                   );
@@ -331,6 +348,9 @@ const MainBoard = ({ dark, toggle }) => {
                   createAnnounceTapped={createAnnounceTapped}
                   createAssignmentTapped={createAssignmentTapped}
                   dark={dark}
+                  didTapViewGrading={didTapViewGrading}
+                  setAssignmentCourse={setAssignmentCourse}
+                  setTappedAssignment={setTappedAssignment}
                 />
               case ENUM_STATES.Settings:
                     // return <Settings/>
@@ -368,6 +388,24 @@ const MainBoard = ({ dark, toggle }) => {
           openAnnouncement &&
           <Announcement announcements={allAnnouncements} updateAnnouncement={updateAnnouncement}></Announcement>
           // <CreateCourseModal token={token} createCourseTapped={createCourseTapped}/>
+        }
+        {
+            asssignmentTapped &&
+          <AssignmentSubmission
+            course={assignmentSubmissionCourse}
+            assignment={tappedAssignment}
+            didTapCloseIcon={didTapAssignmentCard}
+            token={token}
+          /> 
+        }
+        {
+          viewGradingTapped && 
+          <Grading
+            course={assignmentCourse}
+            assignment={tappedAssignment}
+            didTapCloseIcon={didTapViewGrading}
+            token={token}
+          />
         }
       </MainBoardContainer> 
     </>
