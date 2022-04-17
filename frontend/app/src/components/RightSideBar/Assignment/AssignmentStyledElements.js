@@ -5,7 +5,7 @@ export const AssignmentSubmissionContainer = styled.div`
     width: 70%;
     border-radius: 20px;
     height: auto;
-    background-color: #FFDEC6;
+    background-color: #F3ACAA;
 `
 
 export const AssignmentSubContainer = styled.div`
@@ -14,7 +14,7 @@ export const AssignmentSubContainer = styled.div`
     border-radius: 20px;
     height: auto;
     flex-direction: column;
-    background-color: #FFDEC6;
+    background-color: #F3ACAA;
     margin: 1%;
 `
 
