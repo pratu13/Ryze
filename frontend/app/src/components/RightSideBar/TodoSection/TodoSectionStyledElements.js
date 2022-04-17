@@ -27,6 +27,7 @@ export const ItemContainer = styled.div`
     align-items: flex-start;
     background-color: ${({ dark }) => dark ? "#1B2327" : "white" };
     cursor: pointer;
+    box-shadow: ${({ dark }) => dark ? "" : "20px 20px 50px 10px pink inset"};
 `
 export const TodoSectionItemWrapper = styled.div`
     width: 75%;
