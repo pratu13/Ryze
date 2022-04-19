@@ -6,7 +6,7 @@ import {
   HeaderLabel,
   CourseContainer
 } from './DashboardStyledElements'
-import { Segments } from '../Utilities/Utilities'
+import { Segments, UserType } from '../Utilities/Utilities'
 import CourseCard from '../Courses/CourseCard'
 import { API } from '../Onboarding/Login/LoginUtilities'
 
@@ -15,7 +15,8 @@ import NoCouseImg from '../../assets/courses.png'
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 import CourseDetail from '../CourseDetail/CourseDetail'
 
-const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
+const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
+  console.log(assignments_)
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -32,6 +33,13 @@ const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, cre
   const didTapBackButton = () => {
     setCourseCardTapped(false)
   }
+  
+  useEffect(() => {
+    if (Object.keys(assignments_).length !== 0) {
+     setAssignments(assignments_)
+    }
+  }, [])
+  
 
 
   const [selectedSegment, setSelectedSegment] = useState(Segments.HOME)
@@ -123,6 +131,7 @@ const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, cre
               isEnrolled={isEnrolled}
               setIsEnrolled={setIsEnrolled}
               dark={dark}
+              name = {name}
             />
           }
           {
@@ -153,7 +162,7 @@ const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, cre
   )
 }
 
-const RenderDashboard = ({ role, updateAnnouncement, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled, dark }) => {
+const RenderDashboard = ({ name, role, updateAnnouncement, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled, dark }) => {
   
   return (
     <>
@@ -162,7 +171,30 @@ const RenderDashboard = ({ role, updateAnnouncement, onGoingCourses, didTapCours
               {/* <DashboardHeaderRight>
                   <BellIcon src={Bell} onClick={() => { updateAnnouncement(true) }}></BellIcon>
               </DashboardHeaderRight> */}
-        </DashboardHeader>
+      </DashboardHeader>
+      {
+        role.title == UserType.TEACHER.title &&
+        <>
+          <CoursesTitle dark={dark} width="55vw">Your Published Courses</CoursesTitle>
+          {
+          Object.keys(onGoingCourses).length !== 0 &&
+          <CourseContainer dark={dark} width="55vw">
+            {
+              Object.keys(onGoingCourses).map((key, index) => {
+                if (onGoingCourses[key].created_by === name) {
+                  return <CourseCard role={role} canEnroll={false}  didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
+                }
+              })
+            }
+          </CourseContainer>
+          }
+        </>
+        
+      
+      
+      }
+
+
       <CoursesTitle dark={dark} width="55vw">On Going Courses</CoursesTitle>
       {
         Object.keys(onGoingCourses).length === 0 &&

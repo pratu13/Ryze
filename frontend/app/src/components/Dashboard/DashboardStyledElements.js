@@ -69,11 +69,11 @@ export const HeaderLabel = styled.label`
 `
 export const CreateAnnouncementButton = styled.div`
     background-color: #F28482;
-    font-size: 1.1em;
+    font-size: 0.9em;
     color: white;
     padding: 10px;
-    width: 200px;
-    height: 24px;
+    width: auto;
+    /* height: 24px; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -81,6 +81,8 @@ export const CreateAnnouncementButton = styled.div`
     cursor: pointer;
     margin-right: 20px;
     transition: all 0.2s ease-in-out;
+    opacity: ${({isDisabled})  => isDisabled ? '0.5' : '1'};
+    pointer-events: ${({isDisabled})  => isDisabled ? 'none' : 'all'};
 
     &:hover {
         transition: all 0.2s ease-in-out;

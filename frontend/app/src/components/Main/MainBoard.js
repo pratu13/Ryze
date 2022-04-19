@@ -86,8 +86,8 @@ const MainBoard = ({ dark, toggle }) => {
       bgColor: randomHex(),
       userImage: userImage
     })
-    setRole(role__)
     getCourses()
+    setRole(role__)
   }
 
   const updateUserInfo = (name_, role_, userImage) => {
@@ -240,7 +240,6 @@ const MainBoard = ({ dark, toggle }) => {
         'Authorization' : `Bearer ${token}`
       }
     };
-    console.log(role_)
     if (role_.title == UserType.STUDENT.title) {
       api = `${API}/v1/courses/user`
       await fetch(`${api}`, requestOptions)
@@ -291,10 +290,10 @@ const MainBoard = ({ dark, toggle }) => {
   }
 
   const createAssignmentTapped = (course) => {
-    setAssignmentIsOpen(!assignmentIsOpen)
-    setAssignmentCourse(course)
-    getCourses()
     getAssignments(course)
+    getCourses()
+    setAssignmentCourse(course)
+    setAssignmentIsOpen(!assignmentIsOpen)
   }
 
   const [announcementCourse, setAnnouncementCourse] = useState()
@@ -330,11 +329,13 @@ const MainBoard = ({ dark, toggle }) => {
                         toggle={toggle}
                         dark={dark}
                         email={email}
+                        assignments_ = {assignments}
                         didTapAssignmentCard={didTapAssignmentCard}
                         setTappedAssignment={setTappedAssignment}
                         setAssignmentSubCourse={setAssignmentSubCourse}
                         didTapViewGrading={didTapViewGrading}
                         setAssignmentCourse={setAssignmentCourse}
+                        name={name}
                       />
                     </>
                   );

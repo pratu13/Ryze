@@ -25,6 +25,7 @@ export const CourseCardContainer = styled.div`
   margin-right: 8px;
   margin-top: 20px;
   width: 240px;
+  text-align: center;
   background-color: ${({color}) => color};
 `
 
@@ -38,8 +39,7 @@ export const CourseCardTitle = styled.div`
     align-items: center;
     border-radius: 10px;
     color: black;
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
 `
 
 export const CoursesTitle = styled.h1`

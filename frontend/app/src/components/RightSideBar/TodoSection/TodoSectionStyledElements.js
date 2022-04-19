@@ -15,27 +15,51 @@ export const TodoSectionTitle = styled.h1`
     font-size: larger;
 `
 export const ItemContainer = styled.div`
+    border-radius: 20px;
+    width: 70%;
+    padding: 15px;
     display: flex;
     justify-content: center;
-    border-radius: 20px;
-    background: white;
-    width: 65%;
-    padding: 15px;
-    /* height: 80px; */
     flex-direction: column;
     margin-top: 2%;
     align-items: flex-start;
-    background-color: ${({ dark }) => dark ? "#1B2327" : "white" };
+    background-color: ${({ dark, bgColor }) => dark ? "#1B2327" : "#F9D9EB" };
     cursor: pointer;
-    box-shadow: ${({ dark }) => dark ? "" : "20px 20px 50px 10px pink inset"};
 `
 export const TodoSectionItemWrapper = styled.div`
-    width: 75%;
+    width: 100%;
     height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: none;
+`
+
+export const FooterButtonContainer = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+`
+
+export const FooterGradesContainer = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+   
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 40%;
+`
+export const GradeText = styled.p`
+    font-weight: bold;
+    color: white;
+    background: green;
+    border-radius: 10px;
+    padding: 7px;
 `
 
 export const DueDateLabel = styled.p`
@@ -59,7 +83,7 @@ export const ItemName = styled.p`
     font-weight: bold;
     font-size: medium;
     color: ${({ dark }) => !dark ? "black" : "white" };
-    margin-bottom: 20px;
+    margin-bottom: 1%;
 `
 
 export const ItemStatus = styled.p`

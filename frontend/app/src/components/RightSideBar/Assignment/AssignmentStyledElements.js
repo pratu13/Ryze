@@ -22,7 +22,7 @@ export const AssigmentQuestionText = styled.div`
     font-weight: bold;
     font-size: 1.5em; 
     margin-bottom: 2%;
-    color: ${({color}) => color}
+    color: ${({color}) => color};
 `
 
 export const AssignmentSubHeader = styled.div`
@@ -34,9 +34,72 @@ export const AssignmentSubHeader = styled.div`
 
 export const SubmissionWrapper = styled.div`
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+    align-items: flex-start;
+    justify-content: space-between;
     padding: 5%;
     width: 100%;
+`
+
+export const TitleHeader = styled.h1`
+    font-size: x-large;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+`
+
+export const FooterTitle = styled.div`
+    font-size: medium;
+    font-weight: 100;
+    background-color: #FEC7C8;
+    padding: 10px;
+    border-radius: 10px;
+    width: auto;
+    height: auto;
+    color: white;
+`
+export const GradeFeedbackWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    width: 40%;
+`
+
+export const InputWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
+export const SubmissionContent = styled.div`
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+
+`
+export const TextLabel = styled.label`
+    font-size: ${({isError})  => isError ? 'small' : 'larger'};
+    font-weight: bold;
+    color: ${({ isError, color }) => isError ? 'red' : color};
+    text-align: center;
+    width: auto;
+    height: auto;
+    margin: 10px;
+`
+
+export const GradeInput = styled.input`
+    width: ${({widthGiven, width})=> widthGiven ? width : "335px"};
+    height: auto;
+    padding: 8px 10px 10px 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: ${({ color }) => color};
+    transition: all 0.2 ease-in-out;
+
+    @media screen and (max-width: 1000px) {
+        width: 225px;
+        transition: all 0.2s ease-in-out;
+    }
 `
