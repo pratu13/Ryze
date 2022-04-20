@@ -478,7 +478,7 @@ def view_submissions(course_id,assignment_id):
         if len(course_permission) == 0 and user.type != UserType.ADMIN:
             return UNAUTHORIZED_TUPLE
         course_permission = course_permission[0]
-        submissions = Submission.objects(course_id = course)
+        submissions = Submission.objects(course_id = course, assignment_id = assignment)
         logging.info('Returning submissions')
         if course_permission.role == Role.STUDENT:
             return user_strategy(submissions, user)

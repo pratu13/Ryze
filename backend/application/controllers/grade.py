@@ -92,6 +92,7 @@ def view_grades(assignment_id):
                 return UNAUTHORIZED_TUPLE
             grades_response = {"grades": []}
             for grade in grades:
+                grade: Grade
                 grades_response["grades"] += [
                     {
                         "uid": str(grade.uid),
@@ -100,7 +101,8 @@ def view_grades(assignment_id):
                         "max_score": grade.max_score,
                         "graded_by": grade.graded_by.serialize(),
                         "user": grade.user.serialize(),
-                        "updated_at": grade.updated_at
+                        "updated_at": grade.updated_at,
+                        "comment": grade.comment
                     } 
                 ]
             return grades_response
@@ -115,6 +117,7 @@ def view_grades(assignment_id):
                 return UNAUTHORIZED_TUPLE
             grades_response = {"grades": []}
             for grade in grades:
+                grade: Grade
                 grades_response["grades"] += [
                     {
                         "uid": str(grade.uid),
@@ -123,7 +126,8 @@ def view_grades(assignment_id):
                         "max_score": grade.max_score,
                         "graded_by": grade.graded_by.serialize(),
                         "user": grade.user.serialize(),
-                        "updated_at": grade.updated_at
+                        "updated_at": grade.updated_at,
+                        "comment": grade.comment
                     } 
                 ]
             return grades_response
