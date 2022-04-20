@@ -3,15 +3,22 @@ import React, { useState, useEffect }  from 'react'
 import { ExitButton, ExitButtonContainer } from '../../Announcement/AnnouncementStyledElements'
 import { FormButton, FormInputArea, FormLabel, ModalBackgroundWrapper, ModalContent } from '../../Custom/GenericStyledElements'
 import ExitButtonIcon from '../../../assets/ExitButtonIcon.png'
-import { AssigmentQuestionText, AssignmentSubHeader, AssignmentSubmissionContainer, SubmissionWrapper } from './AssignmentStyledElements'
+import { AssigmentQuestionText, AssignmentSubHeader, AssignmentSubmissionContainer, FileUploaderWrapper, SubmissionCWrapper, SubmissionWrapper } from './AssignmentStyledElements'
 import { API } from '../../Onboarding/Login/LoginUtilities'
 import { handleErrors } from '../../Utilities/Utilities'
-
+import { FileUploader } from "react-drag-drop-files";
+const fileTypes = ["JPG", "DOCX", "PDF"];
 const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) => {
   console.log(assignment)
   const [answer, setAnswer] = useState("")
   const [message, setMessage] = useState("")
   const [isLate, setIsLate] = useState(false)
+
+  const [file, setFile] = useState(null)
+  const handleChange = (file_) => {
+    console.log(file_)
+    setFile(file_)
+  }
 
   const submitAssignment = async () => {
     // call the API
@@ -96,7 +103,7 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
             </ExitButtonContainer>
 
             <AssignmentSubmissionContainer>
-              <SubmissionWrapper>
+              <SubmissionCWrapper>
                 <AssignmentSubHeader>
                   <AssigmentQuestionText color="black">{assignment.description}</AssigmentQuestionText>
                   <AssigmentQuestionText color="red">Due: {assignment.due} { isLate ? "(LATE)" : ""}</AssigmentQuestionText>
@@ -107,7 +114,11 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
                 {
                     message != "" && <FormLabel color='green'>{message}</FormLabel>
                 }
-              </SubmissionWrapper>
+                <FileUploaderWrapper>
+                    <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+                </FileUploaderWrapper>
+              </SubmissionCWrapper>
+             
             </AssignmentSubmissionContainer>
           </ModalContent>
         </ModalBackgroundWrapper>

@@ -19,6 +19,8 @@ import { handleErrors, UserType } from '../../Utilities/Utilities'
 import { API } from '../../Onboarding/Login/LoginUtilities'
 import { CreateAnnouncementButton } from '../../Dashboard/DashboardStyledElements'
 import { FormButton } from '../../Custom/GenericStyledElements'
+
+
 const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssignment, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading}) => {
   const [publishedIcon, setPublishedIcon] = useState(assignment.is_active)
   const [completed, setIsCompleted] = useState(false)
@@ -26,6 +28,7 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
   const [viewGradesTapped, setViewGrades] = useState(false)
   const [grade, setGrade] = useState()
   const [maxGrade, setMaxGrade] = useState()
+  
   const publishedIconTapped = async () => {
 
         const data = {

@@ -39,6 +39,18 @@ export const SubmissionWrapper = styled.div`
     padding: 5%;
     width: 100%;
 `
+export const SubmissionCWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5%;
+    width: 100%;
+`
+
+export const FileUploaderWrapper = styled.div`
+        padding: 5%;
+`
 
 export const TitleHeader = styled.h1`
     font-size: x-large;
