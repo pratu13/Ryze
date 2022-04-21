@@ -9,7 +9,9 @@ import {
     ItemSubject,
     FooterButtonContainer,
     FooterGradesContainer,
-    GradeText
+    GradeText,
+    FooterWrapper,
+    CommentText
  } from './TodoSectionStyledElements'
 
 import { CardFooterImage } from '../../Courses/CoursesStyledElements'
@@ -28,6 +30,7 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
   const [viewGradesTapped, setViewGrades] = useState(false)
   const [grade, setGrade] = useState()
   const [maxGrade, setMaxGrade] = useState()
+  const [comments, setComments] = useState("Great Assignment")
   
   const publishedIconTapped = async () => {
 
@@ -147,30 +150,38 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
         </TodoSectionItemWrapper>
         <ItemName dark={dark}>Description:</ItemName>
         <ItemName dark={dark}>{assignment.description}</ItemName>
-        <FooterButtonContainer>
-          {
-            (role.title === UserType.TEACHER.title) &&
-            <CreateAnnouncementButton onClick={() => {tappedViewGrading()}}>View Submissions</CreateAnnouncementButton>
-          }
-          {
-            (role.title === UserType.STUDENT.title) &&
-              <>
-              <CreateAnnouncementButton>View My Submissions</CreateAnnouncementButton>
-              <CreateAnnouncementButton isDisabled={!isGraded} onClick={() => { setViewGrades(!viewGradesTapped) }}> { isGraded ? (viewGradesTapped ? "Hide" : "View Grades") : "Not graded yet"}</CreateAnnouncementButton>
-              { viewGradesTapped &&
-                <FooterGradesContainer>
-                  <GradeText>
-                    {grade} / { maxGrade}
-                  </GradeText>
-                </FooterGradesContainer>
+        <FooterWrapper>
+            <FooterButtonContainer>
+              {
+                (role.title === UserType.TEACHER.title) &&
+                <CreateAnnouncementButton onClick={() => {tappedViewGrading()}}>View Submissions</CreateAnnouncementButton>
               }
-             </>
-          } 
-       
-
-        </FooterButtonContainer>
-        
-        
+              {
+                (role.title === UserType.STUDENT.title) &&
+                  <>
+                  <CreateAnnouncementButton>View My Submissions</CreateAnnouncementButton>
+                  <CreateAnnouncementButton isDisabled={!isGraded} onClick={() => { setViewGrades(!viewGradesTapped) }}> { isGraded ? (viewGradesTapped ? "Hide" : "View Grades") : "Not graded yet"}</CreateAnnouncementButton>
+                  { viewGradesTapped &&
+                    <FooterGradesContainer place={"flex-end"}>
+                      <GradeText>
+                        {grade} / { maxGrade}
+                      </GradeText>
+                    </FooterGradesContainer>
+                }
+                 </>
+              }
+            </FooterButtonContainer>
+            {
+              viewGradesTapped &&
+              <>
+                <ItemName dark={dark}>Feedback</ItemName>
+                  <FooterGradesContainer place={"flex-start"}>
+                        <CommentText>{comments}</CommentText>
+                      </FooterGradesContainer>
+           
+                </>
+            }
+        </FooterWrapper>
        
         </ItemContainer>
     </>

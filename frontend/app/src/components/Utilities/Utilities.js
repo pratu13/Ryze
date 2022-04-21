@@ -5,7 +5,7 @@ import Teacher from "../../assets/teacher.png"
 export const randomHex = () => `#${Math.floor(Math.random() * 0xffffff).toString(16).padEnd(6, "0")}`;
 export const randHex = () => `${Math.floor(Math.random() * 0xffffff).toString(16).padEnd(6, "0")}`;
 
-export const Segments = { HOME: "Home", ASSIGNMENTS: "Assignments", FILES: "Files", ANNOUNCEMENT: "Announcements", SYLLABUS: "Syllabus", CHAT: "Chat"}
+export const Segments = { HOME: "Home", ASSIGNMENTS: "Assignments", ANNOUNCEMENT: "Announcements", CHAT: "Chat"}
 
 export function handleErrors(response) {
   if (response.status != 200) {

@@ -162,7 +162,7 @@ export const FormInputWrapper = styled.div`
 
 export const MainContentContainer = styled.div`
     /* min-height: 100vh; */
-    /* padding-top: 5%; */
+    padding-top: 2%;
     /* padding: 0; */
     width: ${({width}) => width};
     display: flex;

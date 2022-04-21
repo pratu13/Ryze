@@ -4,7 +4,8 @@ import {
   DashboardMainContentWrapper,
   DashboardHeader,
   HeaderLabel,
-  CourseContainer
+  CourseContainer,
+  DashboardHeaderRight
 } from './DashboardStyledElements'
 import { Segments, UserType } from '../Utilities/Utilities'
 import CourseCard from '../Courses/CourseCard'
@@ -14,6 +15,9 @@ import NoCouseImg from '../../assets/courses.png'
 
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 import CourseDetail from '../CourseDetail/CourseDetail'
+import Search from '../Search/Search'
+import { SearchContainer } from '../Search/SearchStyledComponents'
+import SearchItems from '../Search/SearchItems'
 
 const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
   console.log(assignments_)
@@ -22,6 +26,12 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
   const [assignments, setAssignments] = useState([])
   const [announcements, setAnnouncement] = useState([])
   const [isEnrolled, setIsEnrolled] = useState(false)
+
+  const [searchTapped, setSearchTapped] = useState(false)
+
+  const didTapSearch = (show) => {
+    setSearchTapped(show)
+  }
 
   const didTapCourseCard = (course_) => {
     setCourseCardTapped(true)
@@ -131,7 +141,9 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
               isEnrolled={isEnrolled}
               setIsEnrolled={setIsEnrolled}
               dark={dark}
-              name = {name}
+              name={name}
+              didTapSearch={didTapSearch}
+              searchTapped={searchTapped}
             />
           }
           {
@@ -162,17 +174,29 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
   )
 }
 
-const RenderDashboard = ({ name, role, updateAnnouncement, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled, dark }) => {
+const RenderDashboard = ({ name, role, updateAnnouncement, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled, dark, didTapSearch, searchTapped }) => {
   
   return (
     <>
        <DashboardHeader dark ={dark}>
               <HeaderLabel dark={dark}>Welcome,</HeaderLabel>
-              {/* <DashboardHeaderRight>
-                  <BellIcon src={Bell} onClick={() => { updateAnnouncement(true) }}></BellIcon>
-              </DashboardHeaderRight> */}
+               <DashboardHeaderRight>
+          <Search dark={dark} didTapSearch={didTapSearch} />
+              </DashboardHeaderRight> 
       </DashboardHeader>
       {
+        searchTapped && 
+        <>
+          <SearchContainer>
+            <SearchItems />
+          </SearchContainer>
+        </>
+      }
+      {
+        !searchTapped &&
+        <>
+          
+          {
         role.title == UserType.TEACHER.title &&
         <>
           <CoursesTitle dark={dark} width="55vw">Your Published Courses</CoursesTitle>
@@ -189,9 +213,6 @@ const RenderDashboard = ({ name, role, updateAnnouncement, onGoingCourses, didTa
           </CourseContainer>
           }
         </>
-        
-      
-      
       }
 
 
@@ -223,6 +244,11 @@ const RenderDashboard = ({ name, role, updateAnnouncement, onGoingCourses, didTa
             }
         </CourseContainer>
       }
+
+
+        </>
+      }
+      
     </>
   );
 }

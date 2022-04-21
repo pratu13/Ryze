@@ -45,14 +45,24 @@ export const FooterButtonContainer = styled.div`
     margin-bottom: 10px;
 `
 
+export const FooterWrapper = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    flex-direction: column;
+`
+
 export const FooterGradesContainer = styled.div`
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-   
+    justify-content: ${({place}) => place};
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 40%;
+    width: 55%;
 `
 export const GradeText = styled.p`
     font-weight: bold;
@@ -60,6 +70,14 @@ export const GradeText = styled.p`
     background: green;
     border-radius: 10px;
     padding: 7px;
+`
+export const CommentText = styled.p`
+    font-weight: 200;
+    color: white;
+    background: cornflowerblue;
+    border-radius: 10px;
+    padding: 17px;
+    font-size: smaller;
 `
 
 export const DueDateLabel = styled.p`
