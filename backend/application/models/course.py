@@ -14,3 +14,13 @@ class Course(Document):
     published_at = DateTimeField(default=datetime.datetime.now)
     created_at = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField(default=datetime.datetime.now)
+
+    def serialize(self):
+        return {
+            "uid": self.uid,
+            "name": self.name,
+            "color": self.color,
+            "description": self.description,
+            "published_at": self.published_at,
+            "created_by": str(self.user_id)
+        }
