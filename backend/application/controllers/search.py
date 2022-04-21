@@ -53,7 +53,7 @@ def simple_search():
         else:
             sorting_lambda = lambda x: x.name
         results = sorted(results, key = sorting_lambda)
-        return {"courses": [course.searialize() for course in results]}
+        return {"courses": [course.serialize() for course in results]}
 
     except Exception as e:
         logging.exception(e)
@@ -77,23 +77,25 @@ def advanced_search():
                 if g.data["field"] == "announcement":
                     for announcement in Announcement.objects(course_id = course):
                         if announcement.text.count(search_query) > 0:
-                            announcements += [course]
+                            announcements += [announcement]
                 elif g.data["field"] == "assignment":
                     for assignment in Assignment.objects(course_id = course):
                         if assignment.title.count(search_query) > 0 or \
                            assignment.description.count(search_query) > 0:
-                           assignments += [course]
+                           assignments += [assignment]
 
         if g.data.get('sortby', None) ==  "date":
-            sorting_lambda = lambda x: x.created_at
+            sorting_lambda_announcement = lambda x: x.created_at
+            sorting_lambda_assignment = lambda x: x.created_at
         else:
-            sorting_lambda = lambda x: x.name
-        announcements = sorted(announcements, key = sorting_lambda)
-        assignments = sorted(assignments, key = sorting_lambda)
+            sorting_lambda_announcement = lambda x: x.text
+            sorting_lambda_assignment = lambda x: x.title
+        announcements = sorted(announcements, key = sorting_lambda_announcement)
+        assignments = sorted(assignments, key = sorting_lambda_assignment)
         
         return {
-            "announcements": [announcement.searialize() for announcement in announcements],
-            "assignments": [assignment.searialize() for assignment in assignments]
+            "announcements": [announcement.serialize() for announcement in announcements],
+            "assignments": [assignment.serialize() for assignment in assignments]
         }
 
     except Exception as e:

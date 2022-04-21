@@ -15,7 +15,7 @@ class Course(Document):
     created_at = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField(default=datetime.datetime.now)
 
-    def searialize(self):
+    def serialize(self):
         return {
             "uid": self.uid,
             "name": self.name,
