@@ -133,7 +133,7 @@ def get_members(course_id):
         for course_permission in CoursePermission.objects(course_id = course):
             course_permission: CoursePermission
             response.append({
-                "uid": str(course_permission.uid),
+                "id": str(course_permission.uid),
                 "user": course_permission.user_id.contact.email,
                 "role": course_permission.role.value,
                 "created_at": course_permission.created_at,

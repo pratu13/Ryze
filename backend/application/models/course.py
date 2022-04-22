@@ -17,7 +17,7 @@ class Course(Document):
 
     def serialize(self):
         return {
-            "uid": self.uid,
+            "id": self.uid,
             "name": self.name,
             "color": self.color,
             "description": self.description,
