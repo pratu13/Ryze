@@ -85,3 +85,12 @@ PasswordResetEmailFlowSchema = {
     },
     "required": ["token", "password"]
 }
+
+DuoCallbackSchema = {
+    "type":"object",
+    "properties": {
+         "email": {"type": "string", "format":"email"},
+         "state": {"type": "string", "minLength": 1},
+         "code": {"type": "string", "minLength": 1}
+    }
+}

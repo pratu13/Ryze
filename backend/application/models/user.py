@@ -1,3 +1,4 @@
+from datetime import datetime
 from mongoengine import Document
 from mongoengine import DateTimeField, StringField, ListField, UUIDField,\
     ReferenceField, EnumField
@@ -17,6 +18,7 @@ class User(Document):
     recovery_options = ListField(ReferenceField('RecoveryOptions'), default=list)
     contact = ReferenceField('Contact')
     sessions = ListField(ReferenceField('Session'), default=list)
+    duo_state = ReferenceField('DuoState')
     type = EnumField(UserType, default=UserType.USER)
     password = StringField()
     created_at = DateTimeField()
@@ -33,3 +35,9 @@ class User(Document):
             "email": self.contact.email,
             "name": self.name if len(self.name) > 0 else "User"
         }
+
+class DuoState(Document):
+    uid = UUIDField(default=uuid.uuid4, required=True)
+    state = StringField(default="")
+    created_at = DateTimeField(default=datetime.now)
+    expiry = DateTimeField()
