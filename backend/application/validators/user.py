@@ -91,6 +91,7 @@ DuoCallbackSchema = {
     "properties": {
          "email": {"type": "string", "format":"email"},
          "state": {"type": "string", "minLength": 1},
-         "code": {"type": "string", "minLength": 1}
-    }
+         "duo_code": {"type": "string", "minLength": 1}
+    },
+    "required": ["email", "state", "duo_code"]
 }
