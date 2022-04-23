@@ -5,6 +5,8 @@ from .controllers.user import user_bp
 from .controllers.course import course_bp
 from .controllers.entity import entity_bp
 from .controllers.chat import chat_bp
+from .controllers.grade import grade_bp
+from .controllers.search import search_bp
 from dotenv import load_dotenv
 from flask_jwt_extended import JWTManager
 load_dotenv()
@@ -27,3 +29,5 @@ def register_blueprint(app):
     app.register_blueprint(course_bp)
     app.register_blueprint(entity_bp)
     app.register_blueprint(chat_bp)
+    app.register_blueprint(grade_bp)
+    app.register_blueprint(search_bp)

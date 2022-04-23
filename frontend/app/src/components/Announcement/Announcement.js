@@ -32,7 +32,7 @@ import Unpublish from '../../assets/unpublished.png'
 import { UserType } from '../Utilities/Utilities'
 import { API } from '../Onboarding/Login/LoginUtilities'
 
-export const AnnouncementItem = ({ token, announcement, course, role }) => {
+export const AnnouncementItem = ({ token, announcement, course, role, dark }) => {
     const [publishedIcon, setPublishedIcon] = useState(announcement.is_active)
 
     const publishedIconTapped = async () => {
@@ -67,7 +67,7 @@ export const AnnouncementItem = ({ token, announcement, course, role }) => {
                     <AnnouncemntContentWrapper>
                         <AnnouncementHeaderContainer>
                             <AnnouncementHeaderInfoContainer>
-                                <AnnouncementHeader>{announcement.header}</AnnouncementHeader>
+                                <AnnouncementHeader dark={dark} >{announcement.header}</AnnouncementHeader>
                                 <SubjectTagContainer color={announcement.color}>
                                     <SubjectText>{course.title}</SubjectText>
                                 </SubjectTagContainer>
@@ -76,9 +76,9 @@ export const AnnouncementItem = ({ token, announcement, course, role }) => {
                             <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ !publishedIcon ?  Unpublish : Publish} />
                                   }
                             </AnnouncementHeaderInfoContainer>
-                            <TimePublishedLabel>{ announcement.time}</TimePublishedLabel>
+                            <TimePublishedLabel dark={dark}>{ announcement.time}</TimePublishedLabel>
                         </AnnouncementHeaderContainer>
-                        <AnnouncementDescriptionText>{ announcement.description}</AnnouncementDescriptionText>
+                        <AnnouncementDescriptionText dark={dark}>{ announcement.description}</AnnouncementDescriptionText>
                     </AnnouncemntContentWrapper>
                     
                 </AnnouncementItemWrapper>

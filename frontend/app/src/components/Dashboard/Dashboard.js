@@ -18,7 +18,7 @@ import NoCouseImg from '../../assets/courses.png'
 import { CoursesTitle } from '../Courses/CoursesStyledElements'
 import CourseDetail from '../CourseDetail/CourseDetail'
 
-const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped }) => {
+const Dashboard = ({ email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -119,8 +119,8 @@ const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnno
 
   return (
     <>
-      <DashboardMainContentWrapper>
-        <MainContentContainer width="55vw">
+      <DashboardMainContentWrapper dark={dark}>
+        <MainContentContainer width="55vw" dark={dark}>
           {
             !couseCardTap &&
             <RenderDashboard
@@ -130,11 +130,13 @@ const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnno
               didTapCourseCard={didTapCourseCard}
               isEnrolled={isEnrolled}
               setIsEnrolled={setIsEnrolled}
+              dark={dark}
             />
           }
           {
             couseCardTap &&
             <CourseDetail
+              email={email}
               announcements={announcements}
               selectedSegment={selectedSegment}
               updateSelectedSegment={updateSelectedSegment}
@@ -144,7 +146,8 @@ const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnno
               role={role}
               token={token}
               createAnnounceTapped={createAnnounceTapped}
-              createAssignmentTapped={ createAssignmentTapped}
+              createAssignmentTapped={createAssignmentTapped}
+              dark={dark}
             />
           }
         </MainContentContainer>
@@ -153,27 +156,27 @@ const Dashboard = ({ token, role, updateAnnouncement, onGoingCourses, createAnno
   )
 }
 
-const RenderDashboard = ({ role, updateAnnouncement, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled }) => {
+const RenderDashboard = ({ role, updateAnnouncement, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled, dark }) => {
   
   return (
     <>
-       <DashboardHeader>
-              <HeaderLabel>Welcome,</HeaderLabel>
+       <DashboardHeader dark ={dark}>
+              <HeaderLabel dark={dark}>Welcome,</HeaderLabel>
               {/* <DashboardHeaderRight>
                   <BellIcon src={Bell} onClick={() => { updateAnnouncement(true) }}></BellIcon>
               </DashboardHeaderRight> */}
         </DashboardHeader>
-      <CoursesTitle width="55vw">On Going Courses</CoursesTitle>
+      <CoursesTitle dark={dark} width="55vw">On Going Courses</CoursesTitle>
       {
         Object.keys(onGoingCourses).length === 0 &&
-        <EmptyCardTitleContainer>
+        <EmptyCardTitleContainer dark={dark}>
             <NoCourseImage img={ NoCouseImg} />
             <EmptyCardTitle>No On-going courses</EmptyCardTitle>
         </EmptyCardTitleContainer>
       }
       {
         Object.keys(onGoingCourses).length !== 0 &&
-        <CourseContainer width="55vw">
+        <CourseContainer dark={dark} width="55vw">
         {
           Object.keys(onGoingCourses).map((key, index) => {
             if (onGoingCourses[key].is_enrolled) {
@@ -184,7 +187,7 @@ const RenderDashboard = ({ role, updateAnnouncement, onGoingCourses, didTapCours
             }
             {
               !isEnrolled &&
-              <EmptyCardTitleContainer>
+              <EmptyCardTitleContainer dark={dark}>
                    <NoCourseImage src={ NoCouseImg} />
                     <EmptyCardTitle>No Enrolled courses</EmptyCardTitle>
               </EmptyCardTitleContainer> 

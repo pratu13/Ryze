@@ -4,6 +4,8 @@ export const CourseDetailHeader = styled.div`
     display: flex;
     width: 100%;
     align-items: center;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
+
 `
 export const BackIcon = styled.img`
     height: 24px;

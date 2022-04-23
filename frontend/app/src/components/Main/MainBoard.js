@@ -21,7 +21,7 @@ export const ENUM_STATES = {
   Settings: "Settings"
 };
 
-const MainBoard = () => {
+const MainBoard = ({ dark, toggle }) => {
   const location = useLocation();
   const { email, token, name, color, role, userFirstTimeLogin, isAuthSignedIn } = location.state;
   console.log(token)
@@ -163,58 +163,58 @@ const MainBoard = () => {
     }
   }
 
-  // const getAnnouncements = async (course) => {
-  //   let announcements_ = {}
-  //   let api = getAPI(true, course.id)
+  const getAnnouncements = async (course) => {
+    let announcements_ = {}
+    let api = getAPI(true, course.id)
 
-  //   await fetch(api[0], api[1])
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       if (data.message != "CoursePermission matching query does not exist.") {
-  //         data.announcements.forEach((announcement, index, data) => {
-  //           let header = announcement.text.split("EOL")
-  //           announcements_[index] = {
-  //             header: header[0],
-  //             time: announcement.created_at,
-  //             subjectName: course.name,
-  //             color: course.color,
-  //             description: header[1]
-  //           }
-  //         });
-  //         setAnnouncement(announcements_)
-  //       }
-  //     })
-  //   .catch(error => console.log(error) )
+    await fetch(api[0], api[1])
+      .then(response => response.json())
+      .then(data => {
+        if (data.message != "CoursePermission matching query does not exist.") {
+          data.announcements.forEach((announcement, index, data) => {
+            let header = announcement.text.split("EOL")
+            announcements_[index] = {
+              header: header[0],
+              time: announcement.created_at,
+              subjectName: course.name,
+              color: course.color,
+              description: header[1]
+            }
+          });
+          setAnnouncement(announcements_)
+        }
+      })
+    .catch(error => console.log(error) )
 
-  // }
+  }
 
-  // const getAssignments = async (course) => {
-  //   let assignments_ = {}
-  //   let api = getAPI(false, course.id)
-  //   await fetch(api[0], api[1])
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       if (data.message != "Unauthorized") {
-  //         data.assignments.forEach((assignment, index, data) => {
-  //           let duedate = new Intl.DateTimeFormat("en-GB", {
-  //             year: "numeric",
-  //             month: "long",
-  //             day: "2-digit"
-  //           }).format(assignments.due_date)
-  //           assignments_[index] = {
-  //             title: assignment.title,
-  //             due: duedate,
-  //             subject: course.name,
-  //             start: assignment.start_date,
-  //             description: assignment.description,
-  //             completed: false
-  //           }
-  //         });
-  //         setAssignments(assignments_)
-  //       }
-  //     })
-  //   .catch(error => console.log(error) )
-  // }
+  const getAssignments = async (course) => {
+    let assignments_ = {}
+    let api = getAPI(false, course.id)
+    await fetch(api[0], api[1])
+      .then(response => response.json())
+      .then(data => {
+        if (data.message != "Unauthorized") {
+          data.assignments.forEach((assignment, index, data) => {
+            let duedate = new Intl.DateTimeFormat("en-GB", {
+              year: "numeric",
+              month: "long",
+              day: "2-digit"
+            }).format(assignments.due_date)
+            assignments_[index] = {
+              title: assignment.title,
+              due: duedate,
+              subject: course.name,
+              start: assignment.start_date,
+              description: assignment.description,
+              completed: false
+            }
+          });
+          setAssignments(assignments_)
+        }
+      })
+    .catch(error => console.log(error) )
+  }
   
   const getCourses = async () => {
     let courses = {}
@@ -274,12 +274,14 @@ const MainBoard = () => {
     getCourses()
     setAnnouncementIsOpen(!announcementIsOpen)
     setAnnouncementCourse(course)
+    getAnnouncements(course)
   }
 
   const createAssignmentTapped = (course) => {
     setAssignmentIsOpen(!assignmentIsOpen)
     setAssignmentCourse(course)
     getCourses()
+    getAssignments(course)
   }
 
   const [announcementCourse, setAnnouncementCourse] = useState()
@@ -293,7 +295,13 @@ const MainBoard = () => {
     <>
     
       <MainBoardContainer>
-          <LeftSideBar updateSelectedPage = {updateSelectedPage} selectedPage={selectedPage} isAuthSignedIn ={isAuthSignedIn} />
+        <LeftSideBar
+          updateSelectedPage={updateSelectedPage}
+          selectedPage={selectedPage}
+          isAuthSignedIn={isAuthSignedIn}
+          toggle={toggle}
+          dark={ dark}
+        />
           {(() => {
             switch(selectedPage) {
               case ENUM_STATES.Dashboard:
@@ -307,6 +315,9 @@ const MainBoard = () => {
                         onGoingCourses={onGoingCourses}
                         createAssignmentTapped={createAssignmentTapped}
                         token={token}
+                        toggle={toggle}
+                        dark={dark}
+                        email={email}
                       />
                     </>
                   );
@@ -319,9 +330,13 @@ const MainBoard = () => {
                   getCourses={getCourses}
                   createAnnounceTapped={createAnnounceTapped}
                   createAssignmentTapped={createAssignmentTapped}
+                  dark={dark}
                 />
               case ENUM_STATES.Settings:
-                    return <Settings/>
+                    // return <Settings/>
+                <>
+                </>
+                break
               default:
                 <></>
             }
@@ -329,6 +344,7 @@ const MainBoard = () => {
         <RideSideBar
           switchRole={switchRoles}
           userInfo={userInfo}
+          dark={dark}
           // assignments={assignments}
         />
         {

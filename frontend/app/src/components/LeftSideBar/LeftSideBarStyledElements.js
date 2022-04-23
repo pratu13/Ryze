@@ -2,15 +2,16 @@ import styled from "styled-components";
 import { Link as LinkR } from 'react-router-dom';
 
 export const SideBarContainer = styled.div`
-    height: 100vh;
+    height: ${({ height }) => height} ;
     margin: 0;
     padding: 0;
-    width: 18vw;
-    border-right: 0.2px solid rgba(0,0,0,0.28);
+    width:  ${({ width }) => width} ;
+    border-right:  ${({ dark }) => dark ? "0.2px solid white" : "0.2px solid rgba(0,0,0,0.28)" } ;
     position: fixed;
     top: 0;
     left: 0;
     bottom: 0;
+    background-color: ${({ dark }) => dark ? "black" : "white" };
 `
 
 export const SideBarWrapper = styled.div`
@@ -57,13 +58,14 @@ export const ItemIcon = styled.img`
     width: 27px;
     height: 27px;
     object-fit: fill;
+    cursor: pointer;
 `
 
 export const ItemLabel = styled.p`
     margin-left: 40px;
     font-weight: bolder;
     font-size: large;
-    color: ${({selected, dark})  => dark ? (selected ? '#F28482' : '#000') : '#c4c4c4'};
+    color: ${({selected, dark})  => (selected ? '#F28482' : dark ? '#000' : '#c4c4c4')};
 
     @media screen and (max-width: 1026px) {
         display: none;

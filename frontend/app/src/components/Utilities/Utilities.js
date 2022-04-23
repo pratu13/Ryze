@@ -5,9 +5,44 @@ import Teacher from "../../assets/teacher.png"
 export const randomHex = () => `#${Math.floor(Math.random() * 0xffffff).toString(16).padEnd(6, "0")}`;
 export const randHex = () => `${Math.floor(Math.random() * 0xffffff).toString(16).padEnd(6, "0")}`;
 
-export const Segments = { HOME: "Home", ASSIGNMENTS: "Assignments", FILES: "Files", ANNOUNCEMENT: "Announcements", SYLLABUS: "Syllabus" }
+export const Segments = { HOME: "Home", ASSIGNMENTS: "Assignments", FILES: "Files", ANNOUNCEMENT: "Announcements", SYLLABUS: "Syllabus", CHAT: "Chat"}
+
+export function handleErrors(response) {
+  if (response.status != 200) {
+    throw response.json()
+  }
+  return response;
+}
 
 
+export const SampleMessageList = [
+  {
+    to: "jack",
+    from: "self",
+    text: "Hi jack"
+  },
+  {
+    to: "self",
+    from: "jack",
+    text: "Hi Timothy"
+  },
+  {
+    to: "self",
+    from: "jack",
+    text: "How are you doing"
+  },
+  {
+    to: "jack",
+    from: "self",
+    text: "i'm doing good wbu ?"
+  },
+  {
+    to: "self",
+    from: "jack",
+    text: "i'm good too. What are your plans for tonight?"
+  },
+]
+  
 export const Subjects = {
     MATH: {
         name: "Maths 101",

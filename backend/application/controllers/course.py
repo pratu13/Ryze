@@ -1,5 +1,7 @@
 import logging
 from typing import List
+from ..models.submission import Submission
+from ..validators.submission import SubmissionCreationSchema
 from flask import Blueprint, g, abort
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -135,7 +137,7 @@ def get_members(course_id):
         for course_permission in CoursePermission.objects(course_id = course):
             course_permission: CoursePermission
             response.append({
-                "uid": str(course_permission.uid),
+                "id": str(course_permission.uid),
                 "user": course_permission.user_id.contact.email,
                 "role": course_permission.role.value,
                 "created_at": course_permission.created_at,
@@ -309,8 +311,7 @@ def assignment_creation(course_id):
             month=int(due_date[1]),
             day=int(due_date[2])
         ):
-            abort(400, description="Start_date cannot be greater or "
-                                   "equal than end_date")
+            abort(400, description="Start_date cannot be greater or equal than end_date")
 
         assignment = Assignment(
             course_id=course,
@@ -342,7 +343,6 @@ def view_assignments(course_id):
                     "description": assignment.description,
                     "start_date": assignment.start_date,
                     "due_date": assignment.due_date,
-
                 }
                 for assignment in assignments if assignment.is_active and assignment.start_date <= datetime.datetime.now()
             ]
@@ -359,7 +359,6 @@ def view_assignments(course_id):
                     "due_date": assignment.due_date,
                     "is_active": assignment.is_active,
                     "updated_at": assignment.updated_at
-
                 }
                 for assignment in assignments
             ]
@@ -388,15 +387,24 @@ def view_assignments(course_id):
         logging.exception(e)
         return {"message": str(e)}, 400
 
+<<<<<<< HEAD
 @course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submit', methods=['POST'])
 @expects_json(AssignmentSubmissionSchema, check_formats=True)
 @jwt_required()
 def submit_assignment(course_id,assignment_id):
+=======
+
+@course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submission', methods=['POST'])
+@expects_json(SubmissionCreationSchema, check_formats=True)
+@jwt_required()
+def submission_creation(course_id, assignment_id):
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
     try:
         user_id = get_jwt_identity()
         user = User.objects.get(uid=user_id)
         course = Course.objects.get(uid=course_id)
         assignment = Assignment.objects.get(uid=assignment_id)
+<<<<<<< HEAD
         if not course:
             abort(404, description="Course not found")
         if str(course.user_id.uid) != user_id:
@@ -417,10 +425,40 @@ def submit_assignment(course_id,assignment_id):
         )
         submission.save()
         return {"message": "Success", "submission_id": str(submission.uid)}
+=======
+        
+        if not assignment:
+            abort(404, description="Assignment not found")
+        if not course:
+            abort(404, description="Course not found")
+
+        if not course.is_active:
+            abort(404, description="Inactive course")
+
+        course_permission = CoursePermission.objects.get(course_id=course, user_id=user)
+        if course_permission.role != Role.STUDENT:
+            abort(401, description="Invalid course permissions")
+
+        if assignment.due_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
+            abort(400, description="Cannot submit at this time")
+
+        submission = Submission(
+            course_id=course,
+            user_id=user,
+            assignment_id=assignment,
+            answer = g.data['answer'],
+        )
+        submission.save()
+        return {
+            "message": "Success",
+            "submission_id": submission.uid
+        }
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
     except Exception as e:
         logging.exception(e)
         return {"message": str(e)}, 400
 
+<<<<<<< HEAD
 @course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submit', methods=['GET'])
 @jwt_required()
 def view_submissions(course_id,assignment_id):
@@ -440,10 +478,33 @@ def view_submissions(course_id,assignment_id):
         }
 
     def teacher_strategy(submissions: List[AssignmentSubmission]):
+=======
+# Following view by suschaud@iu.edu
+@course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submission', methods=['GET'])
+@jwt_required()
+def view_submissions(course_id,assignment_id):
+    logging.warn('abc')
+    def user_strategy(submissions: List[Submission], user):
+        return {
+            "submissions": [
+            {
+                "created_by": submission.user_id.serialize(),
+                "title": submission.assignment_id.title,
+                "user_response": submission.answer,
+                "due_date": submission.assignment_id.due_date,
+                "submission_date": submission.submission_date
+            } 
+            for submission in submissions if submission.user_id == user
+            ]
+        }
+
+    def teacher_strategy(submissions: List[Submission]):
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
         logging.warn(len(submissions))
         return {
             "submissions": [
             {
+<<<<<<< HEAD
                 "created_by": submission.user_id.contact.email,
                 "title": submission.assignment_id.title,
                 "user_response": submission.answer,
@@ -452,6 +513,16 @@ def view_submissions(course_id,assignment_id):
             }
             ]
             for submission in submissions
+=======
+                "created_by": submission.user_id.serialize(),
+                "title": submission.assignment_id.title,
+                "user_response": submission.answer,
+                "due_date": submission.assignment_id.due_date,
+                "submission_date": submission.submission_date
+            }
+            for submission in submissions
+            ]
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
         }
 
     try:
@@ -461,8 +532,11 @@ def view_submissions(course_id,assignment_id):
         assignment = Assignment.objects.get(uid=assignment_id)
         if not course:
             abort(404, description="Course not found")
+<<<<<<< HEAD
         if str(course.user_id.uid) != user_id:
             abort(401, description="Unauthorized")
+=======
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
         if not assignment:
             abort(404, description="Assignment not found")
 
@@ -476,10 +550,17 @@ def view_submissions(course_id,assignment_id):
         if len(course_permission) == 0 and user.type != UserType.ADMIN:
             return UNAUTHORIZED_TUPLE
         course_permission = course_permission[0]
+<<<<<<< HEAD
         submissions = AssignmentSubmission.objects(course_id = course)
         logging.info('Returning submissions')
         if course_permission.role == Role.STUDENT:
             return user_strategy(submissions)
+=======
+        submissions = Submission.objects(course_id = course, assignment_id = assignment)
+        logging.info('Returning submissions')
+        if course_permission.role == Role.STUDENT:
+            return user_strategy(submissions, user)
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
         else:
             return teacher_strategy(submissions)
 
@@ -487,32 +568,57 @@ def view_submissions(course_id,assignment_id):
         logging.exception(e)
         return {"message": str(e)}, 400
 
+<<<<<<< HEAD
 @course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/<submission_id>/modify', methods=['PATCH'])
 @jwt_required()
 @expects_json(AssignmentSubmissionSchema, check_formats=True)
+=======
+# Following view by suschaud@iu.edu
+@course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/<submission_id>/modify', methods=['PATCH'])
+@jwt_required()
+@expects_json(SubmissionCreationSchema, check_formats=True)
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
 def modify_submissions(course_id,assignment_id,submission_id):
     try:
         user_id = get_jwt_identity()
         user = User.objects.get(uid=user_id)
         course = Course.objects.get(uid=course_id)
         assignment = Assignment.objects.get(uid=assignment_id)
+<<<<<<< HEAD
         submission = AssignmentSubmission.objects.get(uid=submission_id)
+=======
+        submission = Submission.objects.get(uid=submission_id)
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
 
 
         if not course:
             abort(404, description="Course not found")
+<<<<<<< HEAD
         if str(course.user_id.uid) != user_id:
             abort(401, description="Unauthorized")
         if not assignment:
             abort(404, description="Assignment not found")
         #if str(submission.user_id.uid) != user.user_id:
             #abort(400, description='Unauthorized')
+=======
+        if not assignment:
+            abort(404, description="Assignment not found")
+        if submission.user_id != user:
+            abort(400, description='Unauthorized')
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
 
         modified_response = g.data["answer"]
         submission.update(set__answer = modified_response)
 
+<<<<<<< HEAD
         return {"message": "Success", "submission_id": str(submission.uid)}
     except Exception as e:
         logging.exception(e)
         return {"message": str(e)}, 400
     
+=======
+        return {"message": "Success"}
+    except Exception as e:
+        logging.exception(e)
+        return {"message": str(e)}, 400
+>>>>>>> 6c1ea2a19487ee9635bbd88601f3635bf6886de4
