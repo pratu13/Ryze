@@ -160,17 +160,23 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
             setEmail("");
             setPassword("");
             setErrorMessage("")
-            navigate(`/main`, {
-              state: {
-                email: email,
-                token: data.token,
-                name: data.name,
-                color: data.color,
-                role: role,
-                userFirstTimeLogin: !data.color || !data.name,
-                isAuthSignedIn: false
-              }
-            });
+
+            document.cookie = `email=${email}`;
+            document.cookie = `roleTitle=${role.title}`;
+            // redirect the user to duo
+            window.location.href = data.redirect_url
+          
+            // navigate(`/main`, {
+            //   state: {
+            //     email: email,
+            //     token: data.token,
+            //     name: data.name,
+            //     color: data.color,
+            //     role: role,
+            //     userFirstTimeLogin: !data.color || !data.name,
+            //     isAuthSignedIn: false
+            //   }
+            // });
           })
           .catch(error => error)
           .then(data => {

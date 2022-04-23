@@ -44,6 +44,49 @@ export const SearchContainer = styled.div`
     display: flex;
     height: 100%;
     width: 55vw;
-    background-color: red;
     margin-top: 5%;
+    flex-direction: column;
+`
+
+export const SearchItemWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 9%;
+    margin-top: 2%;
+`
+
+export const CourseItemContainer = styled.div`
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 10px;
+    width: 100%;
+    padding-left: 10px;
+`
+
+export const CourseItemBg = styled.div`
+    width: 100px;
+    height: 60px;
+    background-color: ${({color}) => color};
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+`
+
+export const CourseContentContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+`
+
+export const CourseContentTitle = styled.div`
+   font-size: large;
+   font-weight: bold;
+   color: black;
+`
+export const CourseContentSubtitle = styled.div`
+    font-size: small;
+    color: gray;
 `

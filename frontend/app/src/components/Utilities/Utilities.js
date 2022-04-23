@@ -14,6 +14,35 @@ export function handleErrors(response) {
   return response;
 }
 
+export const SampleData = {
+  "courses": [
+      {
+          "color": "#4c81e8",
+          "created_by": "J Duncan",
+          "description": "this is a very fun course",
+          "title": "INFO - 312",
+          "published_at": "Sun, 27 Mar 2022 15:07:08 GMT",
+          "id": "52c59625-03de-452a-bde2-c799590b4cba"
+      },
+      {
+          "color": "#ba0ac0",
+          "created_by": "Pratyush",
+          "description": "Introduction to python development",
+          "title": "INFO 200",
+          "published_at": "Wed, 23 Mar 2022 00:34:41 GMT",
+          "id": "ec765cb9-fa23-4132-ac99-120ff1ccaab3"
+      },
+      {
+          "color": "#4a15c9",
+          "created_by": "J Duncan",
+          "description": "Intro to NLP",
+          "title": "LANG-454",
+          "published_at": "Sun, 27 Mar 2022 01:02:16 GMT",
+          "id": "8ba39510-8cbd-4bb7-a52b-e6ed39eda4b3"
+      }
+  ]
+}
+
 
 export const SampleMessageList = [
   {

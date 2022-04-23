@@ -10,7 +10,7 @@ const Search = ({ dark, didTapSearch }) => {
 
     const searchClicked = () => {
         setShowIcon(false)
-        didTapSearch(true)
+        didTapSearch(true, searchQuery)
     }
 
     const cancelClicked = () => {

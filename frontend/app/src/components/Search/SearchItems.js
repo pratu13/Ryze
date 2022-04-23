@@ -1,4 +1,5 @@
 import React from 'react'
+import { CourseContentContainer, CourseContentSubtitle, CourseContentTitle, CourseItemBg, CourseItemContainer, SearchItemWrapper } from './SearchStyledComponents';
 
 const SearchItemType =  {
     COURSE: "course",
@@ -6,10 +7,17 @@ const SearchItemType =  {
     ANNOUNCEMENT: "announcement"
 }
 
-const CourseItem = ({course}) => {
+const CourseItem = ({ course, didTapCourseCard, dark }) => {
     return (
         <>
-            <div>Course</div>
+            <CourseItemContainer>
+                <CourseItemBg onClick ={() => {didTapCourseCard(course)}} color={course.color} />
+                <CourseContentContainer>
+                    <CourseContentTitle dark={dark}>{course.name}</CourseContentTitle>
+                    <CourseContentTitle dark={dark}>Created by: {course.created_by}</CourseContentTitle>
+                    <CourseContentSubtitle>{course.description}</CourseContentSubtitle>
+                </CourseContentContainer>
+            </CourseItemContainer>
         </>
     );
 }
@@ -30,15 +38,25 @@ const AnnouncementItem = ({announcement}) => {
     );
 }
 
-const SearchItem = ({type, data}) => {
+const SearchItem = ({ type, courses, didTapCourseCard, dark }) => {
   return (
       <>
           {(() => {
-             switch (type) {
+            switch (type) {
                 case SearchItemType.COURSE:
                     return (
                         <>
-                           <CourseItem/>
+                            {
+                                <SearchItemWrapper>
+                                    {
+                                        Object.keys(courses).map((key, index) => {
+                                            return <CourseItem dark={dark} didTapCourseCard={didTapCourseCard} key={key} course={courses[index]} />
+
+                                        })
+                                    }     
+                                </SearchItemWrapper>
+                                
+                            }
                         </>
                       );
                 case SearchItemType.ASSIGNMENT:
@@ -60,10 +78,36 @@ const SearchItem = ({type, data}) => {
   )
 }
 
-const SearchItems = ({data}) => {
+const SearchItems = ({ data, didTapCourseCard, dark }) => {
     return (
-        <SearchItem type={SearchItemType.COURSE}></SearchItem>
+        <>
+            {
+                (() => {
+                    if ("courses" in data) {
+                        return <SearchItem dark={dark} courses={data.courses} didTapCourseCard={didTapCourseCard} type={SearchItemType.COURSE}></SearchItem>
+                    } else {
+                        return 
+                    }
+                })()
+            }
+            
+        </>
   );
+}
+
+const SearchAdvItem = ({ data, didTapCourseCard }) => {
+    return (
+        <>
+            {
+                data.announcements.length != 0 &&
+                <SearchItem data={data} didTapCourseCard={didTapCourseCard} type={SearchItemType.ANNOUNCEMENT}></SearchItem>
+            }
+            {
+                data.assignments.length != 0 &&
+                <SearchItem data={data} didTapCourseCard={didTapCourseCard} type={SearchItemType.ASSIGNMENT}></SearchItem>
+            }
+        </>
+    )
 }
 
 
