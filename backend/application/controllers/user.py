@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import hashlib
 import logging
 from uuid import uuid4
-from flask import Blueprint, g
+from flask import Blueprint, g, redirect, url_for, session
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models.session import VALIDITY, Session
@@ -11,15 +11,37 @@ from ..models.user import User
 from ..models.recovery_options import RecoveryOptions, defaultQuestions
 from ..models.contact import Contact
 from ..validators.user import ContactSchema, LoginRequestSchema, OAuthLoginRequestSchema, PassRecoverThroughEmailSchema, PasswordResetEmailFlowSchema, ProfileUpdateSchema, \
-    RegistrationSchema, VerifyRecoveryOptionsSchema
+    RegistrationSchema, VerifyRecoveryOptionsSchema, TwoFactorLoginSchema
 from mongoengine.errors import NotUniqueError
 from flask import request
 from flask_mail import Message, Mail
 from flask import current_app as app
 
+import os, hashlib, configparser, traceback
+
+from duo_universal.client import Client, DuoException
+
 user_bp = Blueprint('user_bp', __name__)
 UNAUTHORIZED_TUPLE = ({"message":"Unauthorized"}, 401)
 INVALID_INPUT_TUPLE = ({"message": "Invalid Input"}, 400)
+
+config = configparser.ConfigParser()
+config.read("duo.conf")
+
+try:
+    duo_client = Client(
+        client_id='DIPG51277QDTXKVTJPIO',
+        client_secret= 'oaFfYcPxBru8SpU3x7AuYQODNaw3zo5JYjxqYdkI',
+        host= 'api-783d0ac1.duosecurity.com',
+        redirect_uri= 'https://localhost:8000/duo-callback'   
+    )
+except DuoException as e:
+    print("*** Duo config error. Verify the values in duo.conf are correct ***")
+    raise e
+
+#duo_failmode = config['duo']['failmode']
+duo_failmode = 'closed'
+
 
 @user_bp.route('/v1/user', methods=['POST'])
 @expects_json(RegistrationSchema, check_formats=True)
@@ -65,22 +87,59 @@ def login():
         user = User.objects.get(contact = contact)
         if user.password != password_hash:
             return {"message" : "Incorrect login/password."}, 400
-        created_timestamp = datetime.now()
-        new_session = Session(
-                            token=create_access_token(identity=user.uid), \
-                            created_at=created_timestamp, \
-                            valid_until=created_timestamp + timedelta(seconds = VALIDITY))
-        new_session.save()
-        user.sessions.append(new_session)
-        user.update(add_to_set__sessions = [new_session])
-        return {
-            "token": new_session.token,
-            "name": user.name,
-            "color": user.color
-        }
+        
+
+        try:
+            duo_client.health_check()
+        except DuoException:
+            traceback.print_exc()
+        state = duo_client.generate_state()
+        session['state'] = state
+        session['username'] = user.contact.email
+        prompt_uri = duo_client.create_auth_url(user.contact.email, state)
+
+        return {"redirect_url": prompt_uri}
     except Exception as e:
         logging.exception(e)
         return {"message": "Invalid input"}, 400
+
+       
+
+@user_bp.route('/v1/user/login/duo-callback', methods=['POST'])
+def duo_callback(user_id):
+    state = request.args.get('state')
+
+    code = request.args.get('duo_code')
+
+    user = User.objects.get(user_id=user_id)
+
+    if 'state' in session and 'username' in session:
+        saved_state = session['state']
+        username = session['username']
+        
+        created_timestamp = datetime.now()
+  
+    else:
+       return {"message": "No saved state please login again"}, 400
+
+    if state != saved_state:
+        return {"message": "Duo state does not match saved state"}, 400
+    
+    decoded_token = duo_client.exchange_authorization_code_for_2fa_result(code, username)
+
+    new_session = Session(
+                            token=create_access_token(identity=user.uid), \
+                            created_at=created_timestamp, \
+                            valid_until=created_timestamp + timedelta(seconds = VALIDITY))
+    new_session.save()
+    user.sessions.append(new_session)
+    user.update(add_to_set__sessions = [new_session])
+    return {
+            "token": new_session.token,
+            "name": user.name,
+            "color": user.color,
+            "duo_decoded_token": decoded_token
+        }
 
 @user_bp.route('/v1/user/login/oauth', methods=['POST'])
 @expects_json(OAuthLoginRequestSchema, check_formats=True)
