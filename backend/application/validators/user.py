@@ -85,11 +85,3 @@ PasswordResetEmailFlowSchema = {
     },
     "required": ["token", "password"]
 }
-
-TwoFactorLoginSchema = {
-    "type": "object",
-    "properties": {
-        "OTP": {"type":"string"},
-    },
-    "required": ["OTP"]
-}
