@@ -1,4 +1,4 @@
-from flask import jsonify, make_response
+from flask import jsonify, make_response, current_app
 from application import create_app
 from dotenv import load_dotenv
 from flask_mongoengine import MongoEngine
@@ -8,6 +8,8 @@ import sys
 #from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 from raven.contrib.flask import Sentry
+from flask_security import Security, UserMixin, RoleMixin, auth_required
+from flask_mail import Mail
 from flask_dance.contrib.google import make_google_blueprint, google
 
 
@@ -29,8 +31,12 @@ app.config['MAIL_PASSWORD'] = 'Adrian@22'
 app.config["MAIL_DEBUG"] = True
 app.config["GOOGLE_OAUTH_CLIENT_ID"] = os.environ.get("828763430966-ul3g3g8qvnn0gvephbn15liov5rkrge6.apps.googleusercontent.com")
 app.config["GOOGLE_OAUTH_CLIENT_SECRET"] = os.environ.get("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")
+app.config['INTEGRATION_KEY'] = 'DI1EUC5LINTJS0AAXNJA'
+app.config['SECRET_KEY'] = 'IOE6YIyQCr4rjqHhHILIcFQ1qeqlHOvEDJeRwdvB'
+app.config['API_HOSTNAME'] = 'IOE6YIyQCr4rjqHhHILIcFQ1qeqlHOvEDJeRwdvB'
 db = MongoEngine(app)
 
+Security()
 #login_manager = LoginManager()
 #login_manager.init_app(app)
 
