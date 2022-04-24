@@ -79,6 +79,7 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
       getAssignments(course__)
       setCourseCardTapped(true)
     } else {
+      console.log("Gefsfgsdf")
       setCourse(course_)
       getAnnouncements(course_)
       getAssignments(course_)
@@ -123,15 +124,17 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
 
   const getAnnouncements = async (course_) => {
     let announcements_ = {}
-    const api = null
-    if (searchTapped) {
-       api = getAPI(true, course_.id)
-    } else {
-       api = getAPI(true, course_.uid)
-    }
+    // const api = ""
+    // if (searchTapped) {
+    //   const api = getAPI(true, course_.id)
+    // } else {
+    //    api = getAPI(true, course_.id)
+    // }
+    const api = getAPI(true, course_.id)
     await fetch(api[0], api[1])
       .then(response => response.json())
       .then(data_ => {
+        console.log(data_)
         if (data_.message != "CoursePermission matching query does not exist." || data_.message != "Unauthorized" || data_.message != "Not enough segments" ) {
           data_.announcements.forEach((announcement, index, data_) => {
             let header = announcement.text.split("EOL")
@@ -154,15 +157,17 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
 
   const getAssignments = async (course_) => {
     let assignments_ = {}
-    const api = null
-    if (searchTapped) {
-       api = getAPI(true, course_.id)
-    } else {
-       api = getAPI(true, course_.uid)
-    }
+    // const api = null
+    // if (searchTapped) {
+    //    api = getAPI(true, course_.id)
+    // } else {
+    //    api = getAPI(true, course_.id)
+    // }
+    const api = getAPI(false, course_.id)
     await fetch(api[0], api[1])
       .then(response => response.json())
       .then(data_ => {
+        console.log(data_)
         if (data_.message != "CoursePermission matching query does not exist." || data_.message != "Unauthorized" || data_.message != "Not enough segments") {
           data_.assignments.forEach((assignment, index, data_) => {
             var date = new Date(assignment.due_date);

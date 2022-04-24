@@ -30,7 +30,7 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
   const [viewGradesTapped, setViewGrades] = useState(false)
   const [grade, setGrade] = useState()
   const [maxGrade, setMaxGrade] = useState()
-  const [comments, setComments] = useState("Great Assignment")
+  const [comments, setComments] = useState("")
   
   const publishedIconTapped = async () => {
 
@@ -118,10 +118,12 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
         if (data.grades.length === 0) {
           setIsGraded(false)
         } else {
+          console.log(data.grades)
           data.grades.forEach(grade => {
             if (grade.assignment == assignment.uid) {
               setGrade(grade.score)
               setMaxGrade(grade.max_score)
+              setComments(grade.comment)
             }
           });
           setIsGraded(true)

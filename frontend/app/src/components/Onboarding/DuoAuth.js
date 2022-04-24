@@ -29,7 +29,7 @@ const DuoAuth = () => {
     const data = {
       email: email,
       state: state,
-      code: code
+      duo_code: code
     }
     console.log(data)
     let api = `${API}/v1/user/login/duo-callback`

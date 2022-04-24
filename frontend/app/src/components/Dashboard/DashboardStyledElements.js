@@ -67,6 +67,14 @@ export const HeaderLabel = styled.label`
     color: ${({ dark }) => !dark ? "black" : "white" };
     margin-left: 5%;
 `
+export const GradeLabel = styled.label`
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: green;
+    margin-right: 20px;
+    padding: 10px;
+`
+
 export const CreateAnnouncementButton = styled.div`
     background-color: #F28482;
     font-size: 0.9em;

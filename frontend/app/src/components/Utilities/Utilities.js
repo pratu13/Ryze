@@ -14,6 +14,36 @@ export function handleErrors(response) {
   return response;
 }
 
+export const getGrade = (scores) => {
+    const initialValue = 0; 
+    const cumulativeScore = scores.reduce(
+    (previousValue, currentValue) => previousValue + currentValue,
+    initialValue
+    );
+    const score = cumulativeScore / scores.length
+      
+  if (score >= 95) {
+    return "A+"
+  } else if (score >= 90 && score < 95) {
+    return "A"
+  } else if (score >= 85 && score < 90) {
+    return "A-"
+  } else if (score >= 80 && score < 84) {
+    return "B+"
+  } else if (score >= 75 && score < 80) {
+    return "B"
+  } else if (score >= 70 && score < 74) {
+    return "B-"
+  } else if (score >=65 && score < 70) {
+    return "C"
+  } else if (score >=60 && score < 64) {
+    return "C-"
+  } else {
+    return  "D"
+  }
+
+}
+
 export const SampleData = {
   "courses": [
       {
