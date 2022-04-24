@@ -2,24 +2,31 @@ from datetime import datetime, timedelta
 import hashlib
 import logging
 from uuid import uuid4
-from flask import Blueprint, g
+from flask import Blueprint, g, redirect, url_for, session, request
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models.session import VALIDITY, Session
 from flask_jwt_extended import create_access_token
-from ..models.user import User
+from ..models.user import DuoState, User
 from ..models.recovery_options import RecoveryOptions, defaultQuestions
 from ..models.contact import Contact
 from ..validators.user import ContactSchema, LoginRequestSchema, OAuthLoginRequestSchema, PassRecoverThroughEmailSchema, PasswordResetEmailFlowSchema, ProfileUpdateSchema, \
-    RegistrationSchema, VerifyRecoveryOptionsSchema
+    RegistrationSchema, VerifyRecoveryOptionsSchema, DuoCallbackSchema
 from mongoengine.errors import NotUniqueError
 from flask import request
 from flask_mail import Message, Mail
 from flask import current_app as app
 
+import os, hashlib, configparser, traceback
+
+from duo_universal.client import DuoException
+
 user_bp = Blueprint('user_bp', __name__)
 UNAUTHORIZED_TUPLE = ({"message":"Unauthorized"}, 401)
 INVALID_INPUT_TUPLE = ({"message": "Invalid Input"}, 400)
+DUO_STATE_VALIDITY = 900
+
+
 
 @user_bp.route('/v1/user', methods=['POST'])
 @expects_json(RegistrationSchema, check_formats=True)
@@ -65,22 +72,89 @@ def login():
         user = User.objects.get(contact = contact)
         if user.password != password_hash:
             return {"message" : "Incorrect login/password."}, 400
+
+        try:
+            app.duo_client.health_check()
+        except DuoException as de:
+            logging.exception(de)
+            return {"message": "Duo not reachable"}, 500
+        if not user.duo_state:
+            duo_state = DuoState(state = "", expiry = datetime.min)
+            duo_state.save()
+            user.update(duo_state = duo_state)
+            user.duo_state = duo_state
+        if len(user.duo_state.state) == 0 or user.duo_state.expiry < datetime.now():
+            logging.error("Generating new state")
+            state = app.duo_client.generate_state()
+            user.duo_state.update(state = state, created_at = datetime.now(), expiry = datetime.now() + timedelta(seconds = DUO_STATE_VALIDITY))
+            user.duo_state.state = state
+        redirect_url = app.duo_client.create_auth_url(user.contact.email, user.duo_state.state)
+
+        return {"redirect_url": redirect_url}
+    except Exception as e:
+        logging.exception(e)
+        return {"message": "Invalid input"}, 400
+
+
+@user_bp.route('/v1/user/devlogin', methods=['POST'])
+@expects_json(LoginRequestSchema, check_formats=True)
+def devlogin():
+    try:
+        hasher = hashlib.new('sha256')
+        hasher.update(g.data["password"].encode('ascii'))
+        password_hash = hasher.hexdigest()
+        contact = Contact.objects.get(email= g.data["email"])
+        user = User.objects.get(contact = contact)
+        if user.password != password_hash:
+            return {"message" : "Incorrect login/password."}, 400
+
         created_timestamp = datetime.now()
-        new_session = Session(
-                            token=create_access_token(identity=user.uid), \
-                            created_at=created_timestamp, \
-                            valid_until=created_timestamp + timedelta(seconds = VALIDITY))
+        new_session = Session(token=create_access_token(identity=user.uid), \
+                              created_at=created_timestamp, \
+                              valid_until=created_timestamp + timedelta(
+                                  seconds=VALIDITY))
+        new_session.save()
+        user.sessions.append(new_session)
+        user.update(add_to_set__sessions=[new_session])
+        return {
+            "token": new_session.token,
+            "name": user.name,
+            "color": user.color,
+        }
+
+    except Exception as e:
+        logging.exception(e)
+        return {"message": "Invalid input"}, 400
+
+       
+
+@user_bp.route('/v1/user/login/duo-callback', methods=['POST'])
+@expects_json(DuoCallbackSchema, check_formats=True)
+def duo_callback():
+    try:
+        email = g.data["email"]
+        state = g.data["state"]
+        code = g.data["duo_code"]
+        contact = Contact.objects.get(email = email)
+        user = User.objects.get(contact = contact)
+        if not user.duo_state or user.duo_state.state != state or user.duo_state.expiry < datetime.now():
+            return {"message": "Authentication failed, try again"}, 400
+        decoded_token = app.duo_client.exchange_authorization_code_for_2fa_result(code, email)
+        created_timestamp = datetime.now()
+        new_session = Session(token=create_access_token(identity=user.uid), \
+                              created_at=created_timestamp, \
+                              valid_until=created_timestamp + timedelta(seconds = VALIDITY))
         new_session.save()
         user.sessions.append(new_session)
         user.update(add_to_set__sessions = [new_session])
         return {
-            "token": new_session.token,
-            "name": user.name,
-            "color": user.color
-        }
+                "token": new_session.token,
+                "name": user.name,
+                "color": user.color,
+            }
     except Exception as e:
         logging.exception(e)
-        return {"message": "Invalid input"}, 400
+        return INVALID_INPUT_TUPLE
 
 @user_bp.route('/v1/user/login/oauth', methods=['POST'])
 @expects_json(OAuthLoginRequestSchema, check_formats=True)

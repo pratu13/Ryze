@@ -22,6 +22,8 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'whisker7864@gmail.com'
 app.config['MAIL_PASSWORD'] = 'Adrian@22'
 app.config["MAIL_DEBUG"] = True
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  #5MB
+
 db = MongoEngine(app)
 
 @app.route('/')

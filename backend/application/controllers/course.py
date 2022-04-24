@@ -2,7 +2,7 @@ import logging
 from typing import List
 from ..models.submission import Submission
 from ..validators.submission import SubmissionCreationSchema
-from flask import Blueprint, g, abort
+from flask import Blueprint, g, abort, request
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..validators.course import CourseCreationSchema
@@ -14,10 +14,20 @@ from ..models.user import User, UserType
 from ..models.announcement import Announcement
 from ..models.assignment import Assignment
 import datetime
+import boto3
+import os
 
 course_bp = Blueprint('course_bp', __name__)
 UNAUTHORIZED_TUPLE = ({"message":"Unauthorized"}, 401)
 INVALID_INPUT_TUPLE = ({"message": "Invalid Input"}, 400)
+
+
+ALLOWED_EXTENSIONS = {'pdf'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 @course_bp.route('/v1/courses', methods=['POST'])
 @expects_json(CourseCreationSchema, check_formats=True)
@@ -133,7 +143,7 @@ def get_members(course_id):
         for course_permission in CoursePermission.objects(course_id = course):
             course_permission: CoursePermission
             response.append({
-                "uid": str(course_permission.uid),
+                "id": str(course_permission.uid),
                 "user": course_permission.user_id.contact.email,
                 "role": course_permission.role.value,
                 "created_at": course_permission.created_at,
@@ -385,7 +395,6 @@ def view_assignments(course_id):
 
 
 @course_bp.route('/v1/courses/<course_id>/assignments/<assignment_id>/submission', methods=['POST'])
-@expects_json(SubmissionCreationSchema, check_formats=True)
 @jwt_required()
 def submission_creation(course_id, assignment_id):
     try:
@@ -393,9 +402,10 @@ def submission_creation(course_id, assignment_id):
         user = User.objects.get(uid=user_id)
         course = Course.objects.get(uid=course_id)
         assignment = Assignment.objects.get(uid=assignment_id)
-        
+
         if not assignment:
             abort(404, description="Assignment not found")
+
         if not course:
             abort(404, description="Course not found")
 
@@ -406,15 +416,42 @@ def submission_creation(course_id, assignment_id):
         if course_permission.role != Role.STUDENT:
             abort(401, description="Invalid course permissions")
 
-        if assignment.due_date < datetime.datetime.now() or  assignment.start_date > datetime.datetime.now():
+        if assignment.due_date < datetime.datetime.now() or assignment.start_date > datetime.datetime.now():
             abort(400, description="Cannot submit at this time")
+
+        file = request.files['files']
+        if file and allowed_file(file.filename):
+            content = file.read()
+            session = boto3.Session(
+                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
+            )
+
+            s3 = session.resource('s3')
+
+            s3object = s3.Object(
+                'submissions-1',
+                str(user.uid) + '/' + str(assignment.uid) + '/' + file.filename
+            )
+
+            result = s3object.put(
+                Body=content,
+                ACL='public-read'
+            )
 
         submission = Submission(
             course_id=course,
             user_id=user,
             assignment_id=assignment,
-            answer = g.data['answer'],
+            answer="None",
+            submission_link='https://{bkt}.s3.amazonaws.com/{uid}/{aid}/{fname}'.format(
+                bkt="submissions-1",
+                uid=str(user.uid),
+                aid=str(assignment.uid),
+                fname=file.filename
+            )
         )
+
         submission.save()
         return {
             "message": "Success",
@@ -437,7 +474,8 @@ def view_submissions(course_id,assignment_id):
                 "title": submission.assignment_id.title,
                 "user_response": submission.answer,
                 "due_date": submission.assignment_id.due_date,
-                "submission_date": submission.submission_date
+                "submission_date": submission.submission_date,
+                "submission_link": submission.submission_link
             } 
             for submission in submissions if submission.user_id == user
             ]
@@ -452,7 +490,8 @@ def view_submissions(course_id,assignment_id):
                 "title": submission.assignment_id.title,
                 "user_response": submission.answer,
                 "due_date": submission.assignment_id.due_date,
-                "submission_date": submission.submission_date
+                "submission_date": submission.submission_date,
+                "submission_link": submission.submission_link
             }
             for submission in submissions
             ]
@@ -478,7 +517,7 @@ def view_submissions(course_id,assignment_id):
         if len(course_permission) == 0 and user.type != UserType.ADMIN:
             return UNAUTHORIZED_TUPLE
         course_permission = course_permission[0]
-        submissions = Submission.objects(course_id = course)
+        submissions = Submission.objects(course_id = course, assignment_id = assignment)
         logging.info('Returning submissions')
         if course_permission.role == Role.STUDENT:
             return user_strategy(submissions, user)
@@ -500,7 +539,6 @@ def modify_submissions(course_id,assignment_id,submission_id):
         course = Course.objects.get(uid=course_id)
         assignment = Assignment.objects.get(uid=assignment_id)
         submission = Submission.objects.get(uid=submission_id)
-
 
         if not course:
             abort(404, description="Course not found")
