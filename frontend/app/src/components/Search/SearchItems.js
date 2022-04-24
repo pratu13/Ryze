@@ -79,6 +79,7 @@ const SearchItem = ({ type, courses, didTapCourseCard, dark }) => {
 }
 
 const SearchItems = ({ data, didTapCourseCard, dark }) => {
+    console.log(data)
     return (
         <>
             {
