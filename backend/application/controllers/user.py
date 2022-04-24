@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 import hashlib
 import logging
 from uuid import uuid4
-from flask import Blueprint, g, redirect, url_for, session
+from flask import Blueprint, g, redirect, url_for, session, request
 from flask_expects_json import expects_json
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models.session import VALIDITY, Session
@@ -72,7 +72,7 @@ def login():
         user = User.objects.get(contact = contact)
         if user.password != password_hash:
             return {"message" : "Incorrect login/password."}, 400
-        
+
         try:
             app.duo_client.health_check()
         except DuoException as de:
@@ -91,6 +91,37 @@ def login():
         redirect_url = app.duo_client.create_auth_url(user.contact.email, user.duo_state.state)
 
         return {"redirect_url": redirect_url}
+    except Exception as e:
+        logging.exception(e)
+        return {"message": "Invalid input"}, 400
+
+
+@user_bp.route('/v1/user/devlogin', methods=['POST'])
+@expects_json(LoginRequestSchema, check_formats=True)
+def devlogin():
+    try:
+        hasher = hashlib.new('sha256')
+        hasher.update(g.data["password"].encode('ascii'))
+        password_hash = hasher.hexdigest()
+        contact = Contact.objects.get(email= g.data["email"])
+        user = User.objects.get(contact = contact)
+        if user.password != password_hash:
+            return {"message" : "Incorrect login/password."}, 400
+
+        created_timestamp = datetime.now()
+        new_session = Session(token=create_access_token(identity=user.uid), \
+                              created_at=created_timestamp, \
+                              valid_until=created_timestamp + timedelta(
+                                  seconds=VALIDITY))
+        new_session.save()
+        user.sessions.append(new_session)
+        user.update(add_to_set__sessions=[new_session])
+        return {
+            "token": new_session.token,
+            "name": user.name,
+            "color": user.color,
+        }
+
     except Exception as e:
         logging.exception(e)
         return {"message": "Invalid input"}, 400
