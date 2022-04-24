@@ -4,10 +4,11 @@ export const  MainBoardContainer = styled.div`
     height: 100vh;
     width: 100vw;
     display: flex;
+    top: 0;
+    left: 0;
+    bottom: 0;
     justify-content: space-between;
     align-items: flex-start;
-    padding: 0;
-    margin: 0;
     background-color: ${({ dark }) => dark ? "black" : "white" };
 
     @media screen and (max-width: 1301px) {

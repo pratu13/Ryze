@@ -1,20 +1,44 @@
 import React, { useState, useEffect } from 'react'
-import { HeaderLabel, DashboardHeaderRight, CreateAnnouncementButton } from '../Dashboard/DashboardStyledElements'
+import { HeaderLabel, DashboardHeaderRight, CreateAnnouncementButton, GradeLabel } from '../Dashboard/DashboardStyledElements'
 import { CourseDetailHeader,BackIcon } from './CourseDetailStyledElements'
 import BackButton from '../../assets/BackIcon2.png'
 import BackButtonDark from '../../assets/backButtonDark.png'
 import CourseSegmentControl from './CourseSegmentControl'
-import { handleErrors, Segments, UserType } from '../Utilities/Utilities'
+import { getGrade, handleErrors, Segments, UserType } from '../Utilities/Utilities'
 import { AnnouncementItem } from '../Announcement/Announcement'
 import { Divider, EmptyCardTitle, EmptyCardTitleContainer } from '../Custom/GenericStyledElements'
 import { ItemsContainer } from '../Announcement/AnnouncementStyledElements'
 import TodoSectionItem from '../RightSideBar/TodoSection/TodoSectionItem'
 import Chat from '../Chat/Chat'
 import { API } from '../Onboarding/Login/LoginUtilities'
-import { ItemContainer } from '../RightSideBar/TodoSection/TodoSectionStyledElements'
-const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped, dark, email }) => {
+const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped, dark, email, setTappedAssignment, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse}) => {
   const [members, setMembers] = useState([])
   const [messageList, setMessageList] = useState([])
+  const [scores, setScores] = useState([])
+  const getGrades = async (assignment) => {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Connection' : 'keep-alive',
+        'Authorization' : `Bearer ${token}`
+      }
+    };
+    let api = `${API}/v1/grade/${assignment.uid}`
+   await fetch(`${api}`, requestOptions)
+      .then(response => handleErrors(response))
+      .then(response => response.json())
+      .then(data => callBack(data))
+      .catch(error => console.log(error)) 
+  }
+  const callBack = (data) => {
+    if (data.grades.length !== 0) {
+      const score = data.grades[0].score
+      setScores(scores => scores.concat(score))
+    }
+  }
+
+
   const getMembers = async () => {
     let api = `${API}/v1/course/members/${course.id}`
     const requestOptions = {
@@ -29,7 +53,6 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
         .then(response => handleErrors(response))
         .then(response => response.json())
         .then(data => {
-          console.log(data)
           setMembers(data.course_permissions)
         })
         .catch(error => console.log(error))
@@ -53,12 +76,15 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
           setMessageList(data.messages)
         })
       .catch(error => console.log(error))
-
   }
   
   useEffect(() => {
+    Object.values(assignments).forEach(assignment => {
+      getGrades(assignment)
+    })
     getMembers()
     getChats()
+    setAssignmentCourse(course)
     const timer = setInterval(getChats, 5000);
     return () => clearInterval(timer);
   }, [])
@@ -85,12 +111,14 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
       <>
           <CourseDetailHeader dark={dark}> 
               <BackIcon onClick={() => {didTapBackButton()}} src={ dark ? BackButtonDark : BackButton}></BackIcon>
-              <HeaderLabel dark={dark}>{course.title}</HeaderLabel>
+        <HeaderLabel dark={dark}>{course.title}</HeaderLabel>
+        
               <RenderHeaderButton
                 selectedSegment={selectedSegment}
-                buttonTapped={buttonTapped}
+          buttonTapped={buttonTapped}
           role={role}
           dark={dark}
+          scores={scores}
               />
           </CourseDetailHeader>
           <CourseSegmentControl
@@ -129,7 +157,7 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                 case Segments.SYLLABUS: 
                 return (
                     <>
-                           <div>This is Syllabus</div>
+                    <div>This is Syllabus</div>
                     </>
                   );
                 case Segments.ASSIGNMENTS: 
@@ -141,6 +169,10 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                       token={token}
                       role={role}
                       dark={dark}
+                      setTappedAssignment={setTappedAssignment}
+                      didTapAssignmentCard={didTapAssignmentCard}
+                      setAssignmentSubCourse={setAssignmentSubCourse}
+                      didTapViewGrading={didTapViewGrading}
                     />
                     
                     </>
@@ -171,36 +203,66 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
 
 export default CourseDetail
 
-const RenderHeaderButton = ({ selectedSegment, buttonTapped, role, dark}) => {
+const RenderHeaderButton = ({ selectedSegment, buttonTapped, role, dark, scores}) => {
+  
+  const [grade, setGrade] = useState("")
+  const [gradeTapped, setGradeTapped] = useState(false)
+
+  const didTapViewGrading = () => {
+    setGradeTapped(!gradeTapped)
+    scores = scores.map(score => parseInt(score));
+    console.log(scores)
+    setGrade(getGrade(scores))
+  }
+
+
   return (
     <>
       <DashboardHeaderRight dark ={dark}>
           {(() => {
-            switch (selectedSegment) {
-              case Segments.ANNOUNCEMENT:
-                return (
-                  <>
-                    {
-                      (role.title === UserType.TEACHER.title) &&
-                      <CreateAnnouncementButton onClick={() => { buttonTapped() }}>Create Announcement</CreateAnnouncementButton>
-                    }
-                    {
-                      (role.title === UserType.ADMIN.title) &&
-                      <CreateAnnouncementButton onClick={() => { buttonTapped() }} >Create Announcement</CreateAnnouncementButton>
-                     }
-                  </>
+          switch (selectedSegment) {
+            case Segments.ANNOUNCEMENT:
+              return (
+                <>
+                  {
+                    (role.title === UserType.TEACHER.title) &&
+                    <CreateAnnouncementButton onClick={() => { buttonTapped() }}>Create Announcement</CreateAnnouncementButton>
+                  }
+                  {
+                    (role.title === UserType.ADMIN.title) &&
+                    <CreateAnnouncementButton onClick={() => { buttonTapped() }} >Create Announcement</CreateAnnouncementButton>
+                  }
+                </>
               );
-              case Segments.ASSIGNMENTS:
-                return (
-                  <>
-                    {
-                      (role.title === UserType.TEACHER.title) &&
+            case Segments.ASSIGNMENTS:
+              return (
+                <>
+                  {
+                    (role.title === UserType.TEACHER.title) &&
+                    <>
                       <CreateAnnouncementButton onClick={() => { buttonTapped() }}>Create Assignment</CreateAnnouncementButton>
-                    }
-                    {
-                      (role.title === UserType.ADMIN.title) &&
-                      <CreateAnnouncementButton onClick={() => { buttonTapped() }} >Create Assignment</CreateAnnouncementButton>
-                     }
+                
+                    </>
+                  }
+                  {
+                    (role.title === UserType.ADMIN.title) &&
+                    <>
+                      <CreateAnnouncementButton onClick={() => { buttonTapped() }}>Create Assignment</CreateAnnouncementButton>
+                    </>
+                  }
+                  {
+                    (role.title === UserType.STUDENT.title) &&
+                      <>
+                          {
+                              gradeTapped && 
+                              <GradeLabel>{grade}</GradeLabel>
+                      }
+                      {
+                        !gradeTapped && 
+                        <CreateAnnouncementButton onClick={() => { didTapViewGrading() }}>View Grades</CreateAnnouncementButton>
+                      }
+                      </>
+                  }
                   </>
                 );
                 case Segments.FILES:
@@ -226,7 +288,7 @@ const RenderHeaderButton = ({ selectedSegment, buttonTapped, role, dark}) => {
 }
 
 
-const RenderAssignments = ({ assignments, course, token, role, dark }) => {
+const RenderAssignments = ({ assignments, course, token, role, dark, setTappedAssignment, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setGrade }) => {
 
 
   return (
@@ -243,6 +305,11 @@ const RenderAssignments = ({ assignments, course, token, role, dark }) => {
                 token={token}
                 role={role}
                 dark={dark}
+                didTapViewGrading={didTapViewGrading}
+                setTappedAssignment={setTappedAssignment}
+                // setTappedAssignemnt={setTappedAssignemnt}
+                didTapAssignmentCard={didTapAssignmentCard}
+                // setAssignmentSubCourse={setAssignmentSubCourse}
               />
             );
           }
@@ -256,6 +323,12 @@ const RenderAssignments = ({ assignments, course, token, role, dark }) => {
                   token={token}
                   role={role}
                   dark={dark}
+                  didTapViewGrading={didTapViewGrading}
+                  setTappedAssignment={setTappedAssignment}
+                  // setTappedAssignemnt={setTappedAssignemnt}
+                  didTapAssignmentCard={didTapAssignmentCard}
+            
+                  // setAssignmentSubCourse={setAssignmentSubCourse}
                 />
               );
             }
@@ -268,6 +341,10 @@ const RenderAssignments = ({ assignments, course, token, role, dark }) => {
                 token={token}
                 role={role}
                 dark={dark}
+                setTappedAssignment={setTappedAssignment}
+                didTapAssignmentCard={didTapAssignmentCard}
+                setAssignmentSubCourse={setAssignmentSubCourse}
+                setGrade={setGrade}
               />
             );
           }

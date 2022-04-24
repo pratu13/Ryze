@@ -5,6 +5,7 @@ import Unpublish from '../../assets/unpublished.png'
 import { UserType } from '../Utilities/Utilities'
 import { API } from '../Onboarding/Login/LoginUtilities'
 const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrictedTapCourse }) => { 
+  console.log(course)
     const [courseEnrolled, setcourseEnrolled] = useState(false)
     const [publishedIcon, setPublishedIcon] = useState(course.is_active)
     const courseCardClicked = () => {
@@ -56,8 +57,8 @@ const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrict
   return (
       <>
           <CourseCardWrapper>
-              <CourseCardContainer onClick={() => { (role.title === UserType.TEACHER.title || UserType.ADMIN.title) ? courseCardClicked() : console.log("")}} color={course.color}/>
-              <CourseCardTitle>{course.title}</CourseCardTitle>
+        <CourseCardContainer onClick={() => { (role.title === UserType.TEACHER.title || UserType.ADMIN.title) ? courseCardClicked() : console.log("") }} color={course.color}>{ course.title} </CourseCardContainer>
+              <CourseCardTitle>{course.created_by}</CourseCardTitle>
               {
                   canEnroll &&
                   <>

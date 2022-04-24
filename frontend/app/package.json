@@ -11,6 +11,7 @@
     "react-animated-css": "^1.2.1",
     "react-date-picker": "^8.4.0",
     "react-dom": "^17.0.2",
+    "react-drag-drop-files": "^2.3.5",
     "react-google-login": "^5.2.2",
     "react-horizontal-scroll": "^6.0.0",
     "react-horizontal-scrolling-menu": "^2.7.1",
@@ -23,7 +24,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "export HTTPS=true&&SSL_CRT_FILE=cert.pem&&SSL_KEY_FILE=key.pem react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
