@@ -22,18 +22,16 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
 
   const submitAssignment = async () => {
     // call the API
-    const data = {
-      answer: answer
-    }
-    console.log(data)
+  const data  = new FormData();
+  data.append("answer", answer)
   const requestOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         'Connection' : 'keep-alive',
         'Authorization' : `Bearer ${token}`
       },
-      body: JSON.stringify(data)
+      body: data
     };
     let api = `${API}/v1/courses/${course.id}/assignments/${assignment.uid}/submission`
     console.log(api)
