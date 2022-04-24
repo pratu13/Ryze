@@ -79,7 +79,6 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
       getAssignments(course__)
       setCourseCardTapped(true)
     } else {
-      console.log("Gefsfgsdf")
       setCourse(course_)
       getAnnouncements(course_)
       getAssignments(course_)
