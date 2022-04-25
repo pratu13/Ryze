@@ -419,7 +419,9 @@ def submission_creation(course_id, assignment_id):
         if assignment.due_date < datetime.datetime.now() or assignment.start_date > datetime.datetime.now():
             abort(400, description="Cannot submit at this time")
 
-        file = request.files['files']
+        file = request.files.get('files')
+        answer = request.form.get('answer')
+        submission_link = ""
         if file and allowed_file(file.filename):
             content = file.read()
             session = boto3.Session(
@@ -439,19 +441,20 @@ def submission_creation(course_id, assignment_id):
                 ACL='public-read'
             )
 
-        submission = Submission(
-            course_id=course,
-            user_id=user,
-            assignment_id=assignment,
-            answer="None",
-            submission_link='https://{bkt}.s3.amazonaws.com/{uid}/{aid}/{fname}'.format(
+            submission_link = 'https://{bkt}.s3.amazonaws.com/{uid}/{aid}/{fname}'.format(
                 bkt="submissions-1",
                 uid=str(user.uid),
                 aid=str(assignment.uid),
                 fname=file.filename
             )
-        )
 
+        submission = Submission(
+            course_id=course,
+            user_id=user,
+            assignment_id=assignment,
+            answer=answer if answer else "",
+            submission_link=submission_link if submission_link else ""
+        )
         submission.save()
         return {
             "message": "Success",

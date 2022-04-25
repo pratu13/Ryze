@@ -13,6 +13,6 @@ class Submission(Document):
     answer = StringField(max_length=1000)
     is_active = BooleanField(default=True)
     submission_date = DateTimeField(default=datetime.datetime.now)
-    submission_link = StringField(max_length=1000, required=True)
+    submission_link = StringField(max_length=200)
     created_at = DateTimeField(default=datetime.datetime.now)
     updated_at = DateTimeField(default=datetime.datetime.now)
