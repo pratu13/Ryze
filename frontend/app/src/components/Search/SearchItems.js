@@ -8,6 +8,7 @@ const SearchItemType =  {
 }
 
 const CourseItem = ({ course, didTapCourseCard, dark }) => {
+    
     return (
         <>
             <CourseItemContainer>
@@ -16,6 +17,7 @@ const CourseItem = ({ course, didTapCourseCard, dark }) => {
                     <CourseContentTitle dark={dark}>{course.name}</CourseContentTitle>
                     <CourseContentTitle dark={dark}>Created by: {course.created_by}</CourseContentTitle>
                     <CourseContentSubtitle>{course.description}</CourseContentSubtitle>
+                    <CourseContentSubtitle>{course.published_at}</CourseContentSubtitle>
                 </CourseContentContainer>
             </CourseItemContainer>
         </>

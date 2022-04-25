@@ -11,7 +11,8 @@ import {
     FooterGradesContainer,
     GradeText,
     FooterWrapper,
-    CommentText
+    CommentText,
+    GradeTextField
  } from './TodoSectionStyledElements'
 
 import { CardFooterImage } from '../../Courses/CoursesStyledElements'
@@ -21,6 +22,7 @@ import { handleErrors, UserType } from '../../Utilities/Utilities'
 import { API } from '../../Onboarding/Login/LoginUtilities'
 import { CreateAnnouncementButton } from '../../Dashboard/DashboardStyledElements'
 import { FormButton } from '../../Custom/GenericStyledElements'
+import { GradeInput } from '../Assignment/AssignmentStyledElements'
 
 
 const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssignment, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading}) => {
@@ -165,9 +167,10 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
                   <CreateAnnouncementButton isDisabled={!isGraded} onClick={() => { setViewGrades(!viewGradesTapped) }}> { isGraded ? (viewGradesTapped ? "Hide" : "View Grades") : "Not graded yet"}</CreateAnnouncementButton>
                   { viewGradesTapped &&
                     <FooterGradesContainer place={"flex-end"}>
-                      <GradeText>
-                        {grade} / { maxGrade}
-                      </GradeText>
+                     <GradeInput widthGiven={true} width={"40px"} color="white" type="text" name="grade" value={grade} onChange={e => setGrade(e.target.value)} required></GradeInput>
+                    <GradeText>
+                    / { maxGrade}
+                    </GradeText>
                     </FooterGradesContainer>
                 }
                  </>

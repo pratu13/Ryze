@@ -29,17 +29,19 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
   const [searchData, setSearchData] = useState()
   const [searchTapped, setSearchTapped] = useState(false)
 
-  const didTapSearch = (show, query) => {
-    setSearchTapped(show)
+  const didTapSearch = (show, query, sort) => {
     if (show) {
-      search(query)
+      search(query, sort, show)
+    } else {
+      setSearchTapped(show)
     }
   }
 
-  const search = async (query) => {
+  const search = async (query, sort, show) => {
       // call the API
     const data = {
-      query: query
+      query: query,
+      sortby: sort
     }
   const requestOptions = {
       method: 'POST',
@@ -59,6 +61,7 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
         setSearchData(data_)
         console.log(searchData)
         console.log(data_)
+        setSearchTapped(show)
       })
       .catch(error => console.log(error)) 
   }
