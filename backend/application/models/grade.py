@@ -17,4 +17,16 @@ class Grade(Document):
     created_at = DateTimeField(default=datetime.now)
     updated_at = DateTimeField(default=datetime.now)
 
+    def serialize(self):
+        return {
+            "uid": str(self.uid),
+            "assignment": str(self.assignment.uid),
+            "score": self.score,
+            "max_score": self.max_score,
+            "graded_by": self.graded_by.serialize(),
+            "user": self.user.serialize(),
+            "updated_at": self.updated_at,
+            "comment": self.comment
+        }
+
 

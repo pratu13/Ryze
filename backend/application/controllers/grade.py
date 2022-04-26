@@ -8,6 +8,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from ..models.grade import Grade
 from ..validators.grade import CreateGradeSchema, UpdateGradeSchema
 
+from ..models.course import Course
 from ..models.course_permission import CoursePermission, Role
 from ..models.user import User
 from ..models.assignment import Assignment
@@ -143,6 +144,60 @@ def view_grades(assignment_id):
             return teacher_strategy(assignment, user)
         else:
             return student_strategy(assignment, user)
+    except Exception as e:
+        logging.exception(e)
+        return INVALID_INPUT_TUPLE
+
+
+@grade_bp.route('/v1/grade/course/<course_id>', methods=['GET'])
+@jwt_required()
+def view_grades_by_course(course_id):
+    def teacher_strategy(course, user):
+        try: 
+            assignments = Assignment.objects(course_id = course)
+            grades = sorted(Grade.objects(assignemnt__in = assignments), key = lambda grade: grade.updated_at)
+            grades_response = {"grades": []}
+            for grade in grades:
+                grade: Grade
+                grades_response["grades"] += [
+                    {
+                        "uid": str(grade.uid),
+                        "assignment": str(grade.assignment.uid),
+                        "score": grade.score,
+                        "max_score": grade.max_score,
+                        "graded_by": grade.graded_by.serialize(),
+                        "user": grade.user.serialize(),
+                        "updated_at": grade.updated_at,
+                        "comment": grade.comment
+                    }
+                ]
+            return grades_response
+        except Exception as e:
+            logging.exception(e)
+            return INVALID_INPUT_TUPLE
+    def student_strategy(course, user):
+        try: 
+            assignments = Assignment.objects(course_id = course)
+            grades = sorted(Grade.objects(assignment__in = assignments, user = user), key = lambda grade: grade.updated_at)
+            grades_response = {"grades": []}
+            for grade in grades:
+                grade: Grade
+                grades_response["grades"] += [
+                    grade.serialize()
+                ]
+            return grades_response
+        except Exception as e:
+            logging.exception(e)
+            return INVALID_INPUT_TUPLE
+    try:
+        user = User.objects.get(uid = get_jwt_identity())
+        course = Course.objects.get(uid = course_id)
+
+        if CoursePermission.objects.get(course_id = course, \
+                                            user_id = user).role == Role.TEACHER:
+            return teacher_strategy(course, user)
+        else:
+            return student_strategy(course, user)
     except Exception as e:
         logging.exception(e)
         return INVALID_INPUT_TUPLE
