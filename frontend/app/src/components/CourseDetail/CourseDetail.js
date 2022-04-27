@@ -15,7 +15,8 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
   const [members, setMembers] = useState([])
   const [messageList, setMessageList] = useState([])
   const [scores, setScores] = useState([])
-  const getGrades = async (assignment) => {
+  
+  const viewGrades = async (course) => {
     const requestOptions = {
       method: 'GET',
       headers: {
@@ -24,20 +25,21 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
         'Authorization' : `Bearer ${token}`
       }
     };
-    let api = `${API}/v1/grade/${assignment.uid}`
-   await fetch(`${api}`, requestOptions)
+    let api = `${API}/v1/grade/course/${course.id}`
+
+  await fetch(`${api}`, requestOptions)
       .then(response => handleErrors(response))
       .then(response => response.json())
-      .then(data => callBack(data))
+    .then(data => {  
+          console.log(data)
+          const gradeScores = []
+          Object.keys(data.grades).map((key) => {
+              gradeScores.push(parseInt(data.grades[key].score))
+          })
+          setScores(gradeScores)
+      })
       .catch(error => console.log(error)) 
   }
-  const callBack = (data) => {
-    if (data.grades.length !== 0) {
-      const score = data.grades[0].score
-      setScores(scores => scores.concat(score))
-    }
-  }
-
 
   const getMembers = async () => {
     let api = `${API}/v1/course/members/${course.id}`
@@ -79,11 +81,9 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
   }
   
   useEffect(() => {
-    Object.values(assignments).forEach(assignment => {
-      getGrades(assignment)
-    })
     getMembers()
     getChats()
+    viewGrades(course)
     setAssignmentCourse(course)
     const timer = setInterval(getChats, 5000);
     return () => clearInterval(timer);
@@ -94,7 +94,6 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
   const didSelectMember = (user) => {
     setmemberSelected(user)
   }
-
 
   const buttonTapped = () => {
     switch (selectedSegment) {
@@ -119,6 +118,7 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
           role={role}
           dark={dark}
           scores={scores}
+          assignments={assignments}
               />
           </CourseDetailHeader>
           <CourseSegmentControl
@@ -172,7 +172,7 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                       setTappedAssignment={setTappedAssignment}
                       didTapAssignmentCard={didTapAssignmentCard}
                       setAssignmentSubCourse={setAssignmentSubCourse}
-                      didTapViewGrading={didTapViewGrading}
+                      didTapViewGrading={didTapViewGrading}    
                     />
                     
                     </>
@@ -208,13 +208,12 @@ const RenderHeaderButton = ({ selectedSegment, buttonTapped, role, dark, scores}
   const [grade, setGrade] = useState("")
   const [gradeTapped, setGradeTapped] = useState(false)
 
-  const didTapViewGrading = () => {
+  const didTapViewGrading = async () => {
+    console.log(scores)
     setGradeTapped(!gradeTapped)
     scores = scores.map(score => parseInt(score));
-    console.log(scores)
     setGrade(getGrade(scores))
   }
-
 
   return (
     <>
@@ -255,7 +254,7 @@ const RenderHeaderButton = ({ selectedSegment, buttonTapped, role, dark, scores}
                       <>
                           {
                               gradeTapped && 
-                              <GradeLabel>{grade}</GradeLabel>
+                              <GradeLabel onClick={() => { didTapViewGrading() }}>Course Grade: {grade}</GradeLabel>
                       }
                       {
                         !gradeTapped && 

@@ -27,6 +27,20 @@ export const SearchTextField = styled.input`
 
 `
 
+export const SortContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 64px;
+    margin-right: 10px;
+`
+
+export const SortName = styled.p`
+    font-size: 0.5em;
+    color: lightgray;
+`
+
 export const SearchIcon = styled.img`
     object-fit: contain;
     vertical-align: auto;
@@ -84,7 +98,7 @@ export const CourseContentContainer = styled.div`
 export const CourseContentTitle = styled.div`
    font-size: large;
    font-weight: bold;
-   color: black;
+   color: ${({dark}) => dark ? "white" : "black"};
 `
 export const CourseContentSubtitle = styled.div`
     font-size: small;

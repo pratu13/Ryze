@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { __esModule } from 'styled-components'
 import { SampleMessageList } from '../Utilities/Utilities'
 import ChatSideBar from './ChatSideBar'
-import { ChatContainer, ChatDisplayContainer, MessageText } from './ChatStyledElements'
+import { ChatContainer, ChatDisplayContainer, MessageText, MessageTextWrapper, MessageTitle } from './ChatStyledElements'
 import ChatView from './ChatView'
 
 const Chat = ({ members, dark, email, token, course_id, messageList, didSelectMember, memberSelected }) => {
@@ -44,7 +44,10 @@ const Chat = ({ members, dark, email, token, course_id, messageList, didSelectMe
              if (memberSelected == "") {
               return (
                 <>
-                    <MessageText dark={dark}> Select a member</MessageText>
+                  <MessageTextWrapper>
+                      <MessageTitle dark={dark}> Select a member</MessageTitle>
+                  </MessageTextWrapper>
+                   
                 </>
               );
              } else {

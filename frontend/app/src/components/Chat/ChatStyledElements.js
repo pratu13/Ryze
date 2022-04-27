@@ -8,6 +8,15 @@ export const PersonContainer = styled.div`
     background-color: ${({ dark }) => dark ? "#1B2327" : "white" };
     padding: 10px;
     border-radius: 20px;
+    cursor: pointer;
+    pointer-events: all;
+    transition: 0.2s all ease-in-out;
+
+    &:hover {
+        background-color: ${({ dark }) => dark ? "#1B2327" : "#F9D9EB" };
+        opacity: 0.5;
+        transition: 0.2s all ease-in-out;
+    }
 `
 
 export const PersonColor = styled.div`
@@ -37,6 +46,8 @@ export const ChatSideBarContainer = styled.div`
     justify-content: flex-start;
     align-items: flex-start;
     width: 40%;
+    /* background-color: red; */
+
 `
 
 export const ChatSideBarWrapper = styled.div`
@@ -58,12 +69,12 @@ export const ChatSideBarTitle = styled.div`
 `
 
 export const ChatContainer = styled.div`
-    width: 55vw;
+    width: 82vw;
     display: flex;
-    margin-top: 5%;
+    margin-top: 3%;
     justify-content: space-between;
     align-items: flex-start;
-    border: 0.1px solid white;
+    border: ${({ dark }) => dark ? "0.1px solid white" : "0.1px solid lightgray" } ;
     left: 0;
     bottom: 0;
     position: absolute;
@@ -73,7 +84,7 @@ export const ChatContainer = styled.div`
 `
 
 export const ChatDisplayContainer = styled.div`
-    width: 42vw;
+    width: 100%;
     height: 100%;
     display: flex;
     align-items: flex-start;
@@ -143,11 +154,29 @@ export const MessageTextContainer = styled.div`
     width: 100%;
 `
 
+export const MessageTextWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+`
+
 export const MessageText = styled.p`
     font-weight: bold;
     font-size: small;
     color: white;
     width: 100%;
+    text-align: center;
+`
+
+export const MessageTitle = styled.p`
+    font-weight: bold;
+    font-size: small;
+    color: ${({dark}) => dark ? "white" : "black"};
+    width: 100%;
+    text-align: center;
 `
 
 export const FromMessageText = styled.p`

@@ -7,7 +7,7 @@ import { AssigmentQuestionText, AssignmentSubHeader, AssignmentSubmissionContain
 import { API } from '../../Onboarding/Login/LoginUtilities'
 import { handleErrors } from '../../Utilities/Utilities'
 import { FileUploader } from "react-drag-drop-files";
-const fileTypes = ["JPG", "DOCX", "PDF"];
+const fileTypes = ["PDF"];
 const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) => {
   console.log(assignment)
   const [answer, setAnswer] = useState("")
@@ -16,18 +16,29 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
 
   const [file, setFile] = useState(null)
   const handleChange = (file_) => {
-    console.log(file_)
     setFile(file_)
+    // setFile(event.target.files[0])
   }
 
   const submitAssignment = async () => {
     // call the API
-  const data  = new FormData();
-  data.append("answer", answer)
+    var data = new FormData();
+    
+    // const data = {
+    //   files: file,
+    //   answer: answer
+    // }
+
+    console.log(file)
+    data.append("answer", answer)
+    data.append("files", file, file.name)
+   
+
+    console.log(data)
   const requestOptions = {
       method: 'POST',
       headers: {
-        'Content-Type': 'multipart/form-data',
+        // 'Content-Type': 'multipart/form-data',
         'Connection' : 'keep-alive',
         'Authorization' : `Bearer ${token}`
       },
@@ -40,6 +51,7 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
       .then(response => handleErrors(response))
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         setTimeout(() => {
           setMessage("Assignment Submitted")
           setTimeout(() => {
@@ -108,12 +120,13 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
                 </AssignmentSubHeader>
                 
                 <FormInputArea width="80%" color="white" type="text" name="answer" value={answer} onChange={e => setAnswer(e.target.value)} required></FormInputArea>
-                <FormButton isDisabled={answer === "" || isLate} onClick={() => { submitAssignment() }}>Submit</FormButton>
+                <FormButton isDisabled={ answer === "" || file == null || isLate  } onClick={() => { submitAssignment() }}>Submit</FormButton>
                 {
                     message != "" && <FormLabel color='green'>{message}</FormLabel>
                 }
                 <FileUploaderWrapper>
-                    <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+                  <FileUploader handleChange={handleChange} name="file" types={fileTypes} />
+                  {/* <input type="file" name="file" onChange={handleChange} /> */}
                 </FileUploaderWrapper>
               </SubmissionCWrapper>
              

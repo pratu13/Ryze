@@ -19,7 +19,8 @@ import Search from '../Search/Search'
 import { SearchContainer } from '../Search/SearchStyledComponents'
 import SearchItems from '../Search/SearchItems'
 
-const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
+const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement, onGoingCourses, createAnnounceTapped, createAssignmentTapped, toggle, dark, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse, setTappedAssignment, setHideRight }) => {
+  console.log(role)
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -29,17 +30,19 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
   const [searchData, setSearchData] = useState()
   const [searchTapped, setSearchTapped] = useState(false)
 
-  const didTapSearch = (show, query) => {
-    setSearchTapped(show)
+  const didTapSearch = (show, query, sort) => {
     if (show) {
-      search(query)
+      search(query, sort, show)
+    } else {
+      setSearchTapped(show)
     }
   }
 
-  const search = async (query) => {
+  const search = async (query, sort, show) => {
       // call the API
     const data = {
-      query: query
+      query: query,
+      sortby: sort
     }
   const requestOptions = {
       method: 'POST',
@@ -59,6 +62,7 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
         setSearchData(data_)
         console.log(searchData)
         console.log(data_)
+        setSearchTapped(show)
       })
       .catch(error => console.log(error)) 
   }
@@ -78,17 +82,20 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
       getAnnouncements(course__)
       getAssignments(course__)
       setCourseCardTapped(true)
+      setHideRight(true)
     } else {
       setCourse(course_)
       getAnnouncements(course_)
       getAssignments(course_)
       setCourseCardTapped(true)
+      setHideRight(true)
     }
   } 
 
   const didTapBackButton = () => {
-
+    setHideRight(false)
     setCourseCardTapped(false)
+   
   }
   
   useEffect(() => {
@@ -190,7 +197,7 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
   return (
     <>
       <DashboardMainContentWrapper dark={dark}>
-        <MainContentContainer width="55vw" dark={dark}>
+        <MainContentContainer width={!couseCardTap ?  "55vw" : "82vw"} dark={dark}>
           {
             !couseCardTap &&
             <RenderDashboard
@@ -236,7 +243,8 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
 }
 
 const RenderDashboard = ({ name, role, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled, dark, didTapSearch, searchTapped, searchData }) => {
-  
+    
+  var count = 0
   return (
     <>
        <DashboardHeader dark ={dark}>
@@ -257,27 +265,44 @@ const RenderDashboard = ({ name, role, onGoingCourses, didTapCourseCard, setIsEn
       {
         !searchTapped &&
         <>
-          
           {
         role.title == UserType.TEACHER.title &&
         <>
-          <CoursesTitle dark={dark} width="55vw">Your Published Courses</CoursesTitle>
-          {
-          Object.keys(onGoingCourses).length !== 0 &&
-          <CourseContainer dark={dark} width="55vw">
-            {
-              Object.keys(onGoingCourses).map((key, index) => {
-                if (onGoingCourses[key].created_by === name) {
-                  return <CourseCard role={role} canEnroll={false}  didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
-                }
-              })
-            }
-          </CourseContainer>
-          }
+            <CoursesTitle dark={dark} width="55vw">Your Published Courses</CoursesTitle>
+            
+              {
+                Object.keys(onGoingCourses).length !== 0 &&
+                <CourseContainer dark={dark} width="55vw">
+                    {
+                      <>
+                        {
+                          
+                          Object.keys(onGoingCourses).map((key, index) => {
+                            
+                            if (onGoingCourses[key].created_by === name) {
+                              return <CourseCard role={role} canEnroll={false} didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
+                            } else {
+                              count += 1
+                            }
+                          })
+                        }
+                        {
+                         count === Object.keys(onGoingCourses).length && 
+                         <>
+                         <EmptyCardTitleContainer dark={dark}>
+                           <NoCourseImage src={ NoCouseImg} />
+                             <EmptyCardTitle>No Published courses</EmptyCardTitle>
+                         </EmptyCardTitleContainer> 
+                        </>
+                        }
+                       
+                      </>
+                  }
+                </CourseContainer>
+              }
+          
         </>
       }
-
-
       <CoursesTitle dark={dark} width="55vw">On Going Courses</CoursesTitle>
       {
         Object.keys(onGoingCourses).length === 0 &&
@@ -288,14 +313,25 @@ const RenderDashboard = ({ name, role, onGoingCourses, didTapCourseCard, setIsEn
       }
       {
         Object.keys(onGoingCourses).length !== 0 &&
-        <CourseContainer dark={dark} width="55vw">
-        {
-          Object.keys(onGoingCourses).map((key, index) => {
-            if (onGoingCourses[key].is_enrolled) {
-              setIsEnrolled(true)
-              return <CourseCard role={role} canEnroll={false}  didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
-            }
-          })
+            <CourseContainer dark={dark} width="55vw">
+                
+                {
+                  <>
+                    {
+                      Object.keys(onGoingCourses).map((key, index) => {
+                        if (onGoingCourses[key].is_enrolled) {
+                          setIsEnrolled(true)
+                          return <CourseCard role={role} canEnroll={false}  didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
+                        }
+                      })
+                    }
+                    {/* <>
+                      <EmptyCardTitleContainer dark={dark}>
+                    <NoCourseImage src={ NoCouseImg} />
+                      <EmptyCardTitle>No Enrolled courses</EmptyCardTitle>
+                    </EmptyCardTitleContainer> 
+                      </> */}
+                  </>
             }
             {
               !isEnrolled &&

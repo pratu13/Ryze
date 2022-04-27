@@ -11,17 +11,20 @@ import {
     FooterGradesContainer,
     GradeText,
     FooterWrapper,
-    CommentText
+    CommentText,
+    GradeTextField
  } from './TodoSectionStyledElements'
 
 import { CardFooterImage } from '../../Courses/CoursesStyledElements'
 import Publish from '../../../assets/published.png'
 import Unpublish from '../../../assets/unpublished.png'
-import { handleErrors, UserType } from '../../Utilities/Utilities'
+import { getGrade, handleErrors, UserType } from '../../Utilities/Utilities'
 import { API } from '../../Onboarding/Login/LoginUtilities'
 import { CreateAnnouncementButton } from '../../Dashboard/DashboardStyledElements'
 import { FormButton } from '../../Custom/GenericStyledElements'
-
+import { GradeInput } from '../Assignment/AssignmentStyledElements'
+import PublishDark from '../../../assets/publishedDark.png'
+import UnpublishDark from '../../../assets/unpublishedDark.png'
 
 const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssignment, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading}) => {
   const [publishedIcon, setPublishedIcon] = useState(assignment.is_active)
@@ -29,8 +32,14 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
   const [isGraded, setIsGraded] = useState(false)
   const [viewGradesTapped, setViewGrades] = useState(false)
   const [grade, setGrade] = useState()
+  const [tempGrade, setTempGrade] = useState()
   const [maxGrade, setMaxGrade] = useState()
   const [comments, setComments] = useState("")
+
+  const [localScore, seTlocalScore] = useState()
+
+  const [showWhatIfGrade, setShowWhatIf] = useState(false)
+  const [whatIfGrade, setWhatIf] = useState("")
   
   const publishedIconTapped = async () => {
 
@@ -122,12 +131,50 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
           data.grades.forEach(grade => {
             if (grade.assignment == assignment.uid) {
               setGrade(grade.score)
+              setTempGrade(grade.score)
               setMaxGrade(grade.max_score)
               setComments(grade.comment)
             }
           });
           setIsGraded(true)
         }
+      })
+      .catch(error => console.log(error)) 
+  }
+
+  const gradeChanged = () => {
+    viewGrades()
+    setShowWhatIf(!showWhatIfGrade)
+    // scores = scores.map(score => parseInt(score));
+    // scores.push(parseInt(grade))
+  }
+
+  const viewGrades = async () => {
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Connection' : 'keep-alive',
+        'Authorization' : `Bearer ${token}`
+      }
+    };
+    let api = `${API}/v1/grade/course/${course.id}`
+
+  await fetch(`${api}`, requestOptions)
+      .then(response => handleErrors(response))
+      .then(response => response.json())
+    .then(data => {  
+        const gradeScores = []
+      Object.keys(data.grades).map((key) => {
+          if (data.grades[key].assignment != assignment.uid) {
+            gradeScores.push(parseInt(data.grades[key].score))
+          }
+        })
+      console.log(gradeScores)
+      gradeScores.push(parseInt(grade))
+      console.log(gradeScores)
+      setWhatIf(getGrade(gradeScores))
+      setGrade(tempGrade)
       })
       .catch(error => console.log(error)) 
   }
@@ -147,7 +194,7 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
           <ItemSubject dark={dark}>{course.title}</ItemSubject>
           {
             role.title === UserType.ADMIN.title &&
-            <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ publishedIcon ?  Publish : Unpublish} />
+            <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ !dark ? (publishedIcon ?  Publish : Unpublish) : (publishedIcon ?  PublishDark : UnpublishDark) } />
            }
         </TodoSectionItemWrapper>
         <ItemName dark={dark}>Description:</ItemName>
@@ -163,11 +210,20 @@ const TodoSectionItem = ({ assignment, course, token, role, dark, setTappedAssig
                   <>
                   <CreateAnnouncementButton>View My Submissions</CreateAnnouncementButton>
                   <CreateAnnouncementButton isDisabled={!isGraded} onClick={() => { setViewGrades(!viewGradesTapped) }}> { isGraded ? (viewGradesTapped ? "Hide" : "View Grades") : "Not graded yet"}</CreateAnnouncementButton>
-                  { viewGradesTapped &&
-                    <FooterGradesContainer place={"flex-end"}>
+                {viewGradesTapped &&
+                  
+                  <FooterGradesContainer place={"flex-end"}>
+                     <CreateAnnouncementButton isDisabled={!grade} onClick={() => { gradeChanged() }}> Grade Lookup </CreateAnnouncementButton>
+                     <GradeInput widthGiven={true} width={"40px"} color="white" type="text" name="grade" value={grade} onChange={e => setGrade(e.target.value)} required></GradeInput>
                       <GradeText>
-                        {grade} / { maxGrade}
+                      / { maxGrade}
+                    </GradeText>
+                    {
+                      showWhatIfGrade &&
+                      <GradeText>
+                      { whatIfGrade }
                       </GradeText>
+                    }
                     </FooterGradesContainer>
                 }
                  </>

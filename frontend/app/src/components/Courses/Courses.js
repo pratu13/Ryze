@@ -1,5 +1,5 @@
 import React, { useState} from 'react'
-import { MainContentContainer } from '../Custom/GenericStyledElements'
+import { EmptyCardTitle, EmptyCardTitleContainer, MainContentContainer, NoCourseImage } from '../Custom/GenericStyledElements'
 import {
   CourseContainer,
   DashboardHeader,
@@ -154,13 +154,13 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
                               }
                             </DashboardHeaderRight>
                         </DashboardHeader>
-                    <CourseContainer dark={dark} width="55vw">
+                    <CourseContainer dark={dark}  width="55vw">
               {
                 (role.title === UserType.TEACHER.title) &&
                 Object.keys(onGoingCourses).map((key, index) => {
                     if (onGoingCourses[key].is_active) {
                       return (
-                        <CourseCard restrictedTapCourse={restrictedTapCourse} token={token} role={role} canEnroll={true} didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
+                        <CourseCard  dark={dark}  restrictedTapCourse={restrictedTapCourse} token={token} role={role} canEnroll={true} didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
                       );
                     }
                   }) 
@@ -169,7 +169,7 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
               (role.title === UserType.ADMIN.title) &&
               Object.keys(onGoingCourses).map((key, index) => {
                 return (
-                  <CourseCard restrictedTapCourse={restrictedTapCourse} token={token} role={role} canEnroll={true} didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
+                  <CourseCard  dark={dark}  restrictedTapCourse={restrictedTapCourse} token={token} role={role} canEnroll={true} didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
                 );
                 }) 
               }
@@ -177,9 +177,16 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
                 (role.title === UserType.STUDENT.title ) &&
                 Object.keys(onGoingCourses).map((key, index) => (       
                   <>
-                    <CourseCard restrictedTapCourse={ restrictedTapCourse}token={token} role={role} canEnroll={true} didTapCourseCard={didTapCourseCard} key={key} course = {onGoingCourses[key]} />
+                    <CourseCard  dark={dark}  restrictedTapCourse={ restrictedTapCourse}token={token} role={role} canEnroll={true} didTapCourseCard={didTapCourseCard} key={key} course = {onGoingCourses[key]} />
                   </>           
                 ))      
+              }
+              {
+                Object.keys(onGoingCourses).length == 0 &&
+                  <EmptyCardTitleContainer dark={dark}>
+                       <NoCourseImage src={ NoCourseImage} />
+                        <EmptyCardTitle>No Listed courses</EmptyCardTitle>
+                  </EmptyCardTitleContainer> 
               }
              </CourseContainer>         
             </>

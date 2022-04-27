@@ -27,7 +27,7 @@ const MainBoard = ({ dark, toggle }) => {
   const location = useLocation();
   const { email, token, name, color, role, userFirstTimeLogin, isAuthSignedIn } = location.state;
   const [role_, setRole] = useState(role)
-  const [userInfo, setInfo] = useState({name: "", email: "", role: UserType.NOROLE.title, color: "", bgColor: "", userImage: Profile})
+  const [userInfo, setInfo] = useState({name: "", email: "", role: role.title, color: "", bgColor: "", userImage: Profile})
   const [settingModal, setSettingModal] = useState(userFirstTimeLogin)
   const [selectedPage, setSelectedPage] = useState(ENUM_STATES.Dashboard)
   const [announcementIsOpen, setAnnouncementIsOpen] = useState(false)
@@ -60,13 +60,15 @@ const MainBoard = ({ dark, toggle }) => {
     setSettingModal(false)
   }
 
-  const updateUserProfile = async (api, requestOptions, name_, role_, color_, userImage) => {
+  const [hideRight, setHideRight] = useState(false)
+
+  const updateUserProfile = async (api, requestOptions, name_, role__, color_, userImage) => {
     await fetch(`${api}`, requestOptions)
       .then(response => response.json())
       .then(data => {
         setInfo({
             name: name_,
-            role: role_.title,
+            role: role__,
             email: email,
             color: color_,
             bgColor: randomHex(),
@@ -75,6 +77,7 @@ const MainBoard = ({ dark, toggle }) => {
         )
       })
       .catch(error => console.log(error))
+    getCourses()
   }
 
   const switchRoles = (name_, role__, userImage) => {
@@ -86,11 +89,12 @@ const MainBoard = ({ dark, toggle }) => {
       bgColor: randomHex(),
       userImage: userImage
     })
-    getCourses()
     setRole(role__)
+    setRole(role__)
+    getCourses() 
   }
 
-  const updateUserInfo = (name_, role_, userImage) => {
+  const updateUserInfo = (name_, role__, userImage) => {
     const color = randomHex()
     const data = {
       name: name_,
@@ -106,13 +110,12 @@ const MainBoard = ({ dark, toggle }) => {
       body: JSON.stringify(data)
     };
     let api = ""
-    if (role_.title == UserType.STUDENT.title) {
+    if (role__ === UserType.STUDENT.title) {
       api = `${API}/v1/user`
     } else {
       api = `${API}/v1/teacher`
     }
-    getCourses()
-    updateUserProfile(api, requestOptions, name_, role_, userImage)
+    updateUserProfile(api, requestOptions, name_, role__, userImage)
   }
 
   const updateAnnouncement = (isOpen) => {
@@ -126,7 +129,6 @@ const MainBoard = ({ dark, toggle }) => {
   }
 
   useEffect(() => {
-    
     if (userFirstTimeLogin) {
       let role__ = UserType.STUDENT
       if (role_.title == UserType.STUDENT.title) {
@@ -336,6 +338,7 @@ const MainBoard = ({ dark, toggle }) => {
                         didTapViewGrading={didTapViewGrading}
                         setAssignmentCourse={setAssignmentCourse}
                         name={name}
+                        setHideRight={setHideRight}
                       />
                     </>
                   );
@@ -362,12 +365,15 @@ const MainBoard = ({ dark, toggle }) => {
                 <></>
             }
         })()}
-        <RideSideBar
-          switchRole={switchRoles}
-          userInfo={userInfo}
-          dark={dark}
-          // assignments={assignments}
-        />
+        {
+            !hideRight &&
+              <RideSideBar
+              switchRole={switchRoles}
+              userInfo={userInfo}
+              dark={dark}
+              // assignments={assignments}
+            />
+        }
         {
           settingModal  &&
           <SettingsModal updateSettingModal={updateSettingModal} updateUserInfo={updateUserInfo} />

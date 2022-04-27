@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Login from '../Login/Login'
 import { Animated } from 'react-animated-css';
-import { LoginWrapper } from './WelcomeStyledElements'
+import { BgImage, ContentContainer, LoginWrapper } from './WelcomeStyledElements'
 import RecoveryQuestion from '../Login/ForgotPassword/RecoveryQuestion';
 import ConfirmationPage from '../../Custom/ConfirmationPage';
 import Success from '../../../assets/login.png'
@@ -9,6 +9,8 @@ import Error from '../../../assets/error.png'
 import { useNavigate } from 'react-router';
 import ForgotPasswordEmail from '../Login/ForgotPassword/ForgotPasswordEmail';
 import { UserType } from '../../Utilities/Utilities';
+import MainImage from "../../../assets/mainImage.png"
+import { LoginFormTitle } from '../Login/LoginStyledElements';
 
 const Welcome = ({dark}) => {
 
@@ -63,11 +65,22 @@ const Welcome = ({dark}) => {
   return (
       <>
       <LoginWrapper>
+        
         { 
-           (!startForgotPasswordFlow && !startOFlow) && 
+          (!startForgotPasswordFlow && !startOFlow) && 
+          <>
+            {/* <>
+              <ContentContainer>
+                <LoginFormTitle>Together We will Ryze,</LoginFormTitle>
+              </ContentContainer>
+            
+            </> */}
+           {/* <BgImage src={ MainImage}/> */}
            <Animated animationIn="bounceInLeft" animationOut="bounceOutRight"> 
               <Login dark={dark} updatePasswordFlow={updatePasswordFlow} updateEmail={updateEmail} completeOauthSignIn={ completeOauthSignIn}/>
            </Animated>
+          </>
+         
         }
         { 
           startForgotPasswordFlow &&

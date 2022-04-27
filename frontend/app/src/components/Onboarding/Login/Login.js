@@ -157,12 +157,12 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
           .then(response => handleErrors(response))
           .then(response => response.json())
           .then(data => {
+            document.cookie = `email=${email}`;
+            document.cookie = `roleTitle=${role.title}`;
             setEmail("");
             setPassword("");
             setErrorMessage("")
-
-            document.cookie = `email=${email}`;
-            document.cookie = `roleTitle=${role.title}`;
+         
             // redirect the user to duo
             window.location.href = data.redirect_url
           

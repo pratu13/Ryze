@@ -70,6 +70,15 @@ export const GradeText = styled.p`
     background: green;
     border-radius: 10px;
     padding: 7px;
+    margin-left: 2px;
+`
+
+export const GradeTextField = styled.input`
+    font-weight: bold;
+    color: white;
+    background: green;
+    border-radius: 10px;
+    padding: 7px;
 `
 export const CommentText = styled.p`
     font-weight: 200;

@@ -118,7 +118,7 @@ const Grading = ({ token, course, assignment, didTapCloseIcon }) => {
 export default Grading
 
 const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) => {
-
+  console.log(submission)
   const [comment, setComment] = useState("")
   const [grade, setGrade] = useState("")
   const [message, setMessage] = useState("")
@@ -131,9 +131,8 @@ const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) 
       max_score: "100",
       comment: comment
     }
-
     const requestOptions = {
-      method: 'POST',
+      method: getRequestMethod(),
       headers: {
         'Content-Type': 'application/json',
         'Connection' : 'keep-alive',
@@ -141,6 +140,7 @@ const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) 
       },
       body: JSON.stringify(data)
     };
+
     let api = `${API}/v1/grade/${id}`
     await fetch(`${api}`, requestOptions)
         .then(response => handleErrors(response))
@@ -159,6 +159,15 @@ const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) 
   useEffect(() => {
     getGrades()
   }, [])
+
+  const getRequestMethod = () => {
+    if (alreadyGraded) {
+      return 'PATCH'
+    } else {
+      return 'POST'
+    }
+  }
+    
   
   const getGrades = async () => {
     const requestOptions = {
@@ -200,7 +209,11 @@ const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) 
         <SubmissionWrapper>
           <SubmissionContent>
             <TitleHeader>{submission.title} </TitleHeader>
-                {submission.user_response}
+            {submission.user_response}
+            {
+              submission.submission_link !== null &&
+                <a href = {submission.submission_link}> Download File </a>
+            }
             <FooterTitle> {submission.created_by.name} </FooterTitle>
             
           </SubmissionContent>
@@ -210,12 +223,13 @@ const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) 
             <InputWrapper>
               <GradeInput widthGiven={true} width={"40px"} color="white" type="text" name="grade" value={grade} onChange={e => setGrade(e.target.value)} required></GradeInput>
               <TextLabel color='white'>/100</TextLabel>
+
             </InputWrapper>
                
                 <TextLabel color='white'>Feedback</TextLabel>
             <FormInputArea color="white" type="text" name="comment" value={comment} onChange={e => setComment(e.target.value)} required></FormInputArea>
             
-            <FormButton onClick={() => { gradeSubmission() }} isDisabled={!grade || alreadyGraded}>{alreadyGraded ? "Already Graded" : "Grade"}</FormButton>
+            <FormButton onClick={() => { gradeSubmission() }} isDisabled={!grade}>{alreadyGraded ? "Update Grade" : "Grade"}</FormButton>
             {
                message != "" && <FormLabel color='green'>{message}</FormLabel>
             }

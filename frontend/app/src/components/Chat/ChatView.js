@@ -115,7 +115,7 @@ const ChatView = ({ memberSelected, messageList, dark, setMemberMessages, token,
          </ChatViewDisplay>  
               
           <ChatFooter>
-              <FormInput width="75%" widthGiven={true} value={messageToSend} onChange={e=> setmessageToSend(e.target.value)} placeholder='Type a message...' color="white" type="text" name='message' />
+              <FormInput color={ dark ? "white" : "lightgray" } width="75%" widthGiven={true} value={messageToSend} onChange={e=> setmessageToSend(e.target.value)} placeholder='Type a message...' type="text" name='message' />
               <SendButton src={Send} onClick={() => { sendMessage() }}/>
           </ChatFooter>
       </ChatViewWrapper>
