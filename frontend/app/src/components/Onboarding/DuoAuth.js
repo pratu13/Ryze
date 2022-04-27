@@ -66,7 +66,14 @@ const DuoAuth = () => {
   
   
   useEffect(() => {
-    const email = document.cookie.split(";")[0].split("=")[1]
+    const cookies = document.cookie.split(";")
+    var email = ""
+    cookies.forEach(cookie => {
+      if (cookie.includes("email")) {
+        email = cookie.split("=")[1]
+      }
+    })
+    
     console.log(email)
     const roleTitle = document.cookie.split(";")[1].split("=")[1]
     let searchParams = new URLSearchParams(window.location.href.split("?")[1]);
