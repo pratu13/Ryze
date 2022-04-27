@@ -68,14 +68,16 @@ const DuoAuth = () => {
   useEffect(() => {
     const cookies = document.cookie.split(";")
     var email = ""
+    var roleTitle = ""
     cookies.forEach(cookie => {
       if (cookie.includes("email")) {
         email = cookie.split("=")[1]
       }
+      if (cookie.includes("roleTitle")) {
+        roleTitle = cookie.split("=")[1]
+      }
     })
     
-    console.log(email)
-    const roleTitle = document.cookie.split(";")[1].split("=")[1]
     let searchParams = new URLSearchParams(window.location.href.split("?")[1]);
     const state = searchParams.get("state")
     const code = searchParams.get("duo_code")
