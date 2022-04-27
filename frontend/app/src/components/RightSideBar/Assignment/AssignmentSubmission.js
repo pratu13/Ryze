@@ -120,7 +120,7 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
                 </AssignmentSubHeader>
                 
                 <FormInputArea width="80%" color="white" type="text" name="answer" value={answer} onChange={e => setAnswer(e.target.value)} required></FormInputArea>
-                <FormButton isDisabled={ answer === "" || file == null || isLate  } onClick={() => { submitAssignment() }}>Submit</FormButton>
+                <FormButton isDisabled={ answer === "" || isLate  } onClick={() => { submitAssignment() }}>Submit</FormButton>
                 {
                     message != "" && <FormLabel color='green'>{message}</FormLabel>
                 }

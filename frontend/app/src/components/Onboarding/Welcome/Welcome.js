@@ -44,7 +44,7 @@ const Welcome = ({dark}) => {
                 token: response.token,
                 name:  response.name,
                 color: response.color,
-                role:  UserType.NOROLE,
+                role:  UserType.STUDENT,
                 userFirstTimeLogin: !response.name || !response.color ,
                 isAuthSignedIn: success
             }
