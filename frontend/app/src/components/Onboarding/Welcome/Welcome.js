@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Login from '../Login/Login'
 import { Animated } from 'react-animated-css';
-import { BgImage, ContentContainer, LoginWrapper } from './WelcomeStyledElements'
+import { BgImage, ContentDescription, ContentWrapper, LoginWrapper, MainTitle } from './WelcomeStyledElements'
 import RecoveryQuestion from '../Login/ForgotPassword/RecoveryQuestion';
 import ConfirmationPage from '../../Custom/ConfirmationPage';
 import Success from '../../../assets/login.png'
@@ -9,8 +9,11 @@ import Error from '../../../assets/error.png'
 import { useNavigate } from 'react-router';
 import ForgotPasswordEmail from '../Login/ForgotPassword/ForgotPasswordEmail';
 import { UserType } from '../../Utilities/Utilities';
-import MainImage from "../../../assets/mainImage.png"
+import MainImage from "../../../assets/abc.png"
+import MainImage2 from "../../../assets/books.png"
 import { LoginFormTitle } from '../Login/LoginStyledElements';
+import Main from "../../../assets/main.svg"
+
 
 const Welcome = ({dark}) => {
 
@@ -69,14 +72,20 @@ const Welcome = ({dark}) => {
         { 
           (!startForgotPasswordFlow && !startOFlow) && 
           <>
-            {/* <>
-              <ContentContainer>
-                <LoginFormTitle>Together We will Ryze,</LoginFormTitle>
-              </ContentContainer>
-            
-            </> */}
+           <>
+                <ContentWrapper>
+                <Animated animationIn="bounceInLeft" animationOut="bounceOutRight"> 
+                  <BgImage src = {Main}/>
+                  <MainTitle>Together we will Ryze</MainTitle>
+                  {/* <ContentDescription>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                  </ContentDescription> */}
+                </Animated> 
+                </ContentWrapper>
+
+            </> 
            {/* <BgImage src={ MainImage}/> */}
-           <Animated animationIn="bounceInLeft" animationOut="bounceOutRight"> 
+            <Animated animationIn="bounceInLeft" animationOut="bounceOutRight"> 
+            
               <Login dark={dark} updatePasswordFlow={updatePasswordFlow} updateEmail={updateEmail} completeOauthSignIn={ completeOauthSignIn}/>
            </Animated>
           </>

@@ -349,6 +349,7 @@ const MainBoard = ({ dark, toggle }) => {
                   didTapViewGrading={didTapViewGrading}
                   setAssignmentCourse={setAssignmentCourse}
                   setTappedAssignment={setTappedAssignment}
+                  setHideRight= {setHideRight}
                 />
               case ENUM_STATES.Settings:
                     // return <Settings/>

@@ -4,6 +4,7 @@ import TodoSectionItem from './TodoSectionItem'
 import { TodoSectionContainer, TodoSectionTitle } from './TodoSectionStyledElements'
 
 const TodoSection = ({ assignments }) => {
+  console.log(assignments)
   return (
     <>
         <TodoSectionContainer>
@@ -15,7 +16,7 @@ const TodoSection = ({ assignments }) => {
                 <>
                   <TodoSectionItem key={key} assignment = {assignments[key]} />
                 </>
-                          
+        
               ))      
           }
           {

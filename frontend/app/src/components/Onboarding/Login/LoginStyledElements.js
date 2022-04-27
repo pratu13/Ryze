@@ -7,6 +7,7 @@ export const LoginFormWrapper = styled.div`
     align-items: center;
     width: 100%;
     padding: 5%;
+    min-height: 60vh;
 `
 
 export const LoginFormTitle = styled.p`

@@ -44,3 +44,16 @@ export const SegmentText = styled.p`
     font-size: 1.2em;
 `
 
+
+export const HomeContentContainer = styled.div`
+    width: 90%;
+    height: 100vh;
+    margin-top: 5%;
+`
+
+export const HomeContent = styled.div`
+    font-size: medium;
+    text-align: justify;
+    letter-spacing: 2px;
+    line-height: 2.6em;
+`

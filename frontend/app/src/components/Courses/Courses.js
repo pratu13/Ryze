@@ -15,7 +15,7 @@ import { Segments } from '../Utilities/Utilities'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
 import NoCourseImg from '../../assets/courses.png'
 
-const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createAnnounceTapped, createAssignmentTapped, dark, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
+const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createAnnounceTapped, createAssignmentTapped, dark, didTapViewGrading, setAssignmentCourse, setTappedAssignment, setHideRight }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
   const [course, setCourse] = useState(null)
   const [assignments, setAssignments] = useState([])
@@ -50,12 +50,15 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
     setCourse(course_)
     getAnnouncements(course_)
     getAssignments(course_)
+    setHideRight(true)
+
   } 
 
   const didTapBackButton = () => {
     setAnnouncement([])
     setAssignments([])
     setCourseCardTapped(false)
+    setHideRight(false)
   }
 
   const [selectedSegment, setSelectedSegment] = useState(Segments.HOME)
@@ -138,7 +141,7 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
  
   return (
     <>
-      <MainContentContainer dark={dark} width="55vw"> 
+      <MainContentContainer dark={dark} width={!couseCardTap ?  "55vw" : "82vw"}> 
         {
           !couseCardTap &&
             <>

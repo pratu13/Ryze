@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { HeaderLabel, DashboardHeaderRight, CreateAnnouncementButton, GradeLabel } from '../Dashboard/DashboardStyledElements'
-import { CourseDetailHeader,BackIcon } from './CourseDetailStyledElements'
+import { CourseDetailHeader,BackIcon, HomeContentContainer, HomeContent } from './CourseDetailStyledElements'
 import BackButton from '../../assets/BackIcon2.png'
 import BackButtonDark from '../../assets/backButtonDark.png'
 import CourseSegmentControl from './CourseSegmentControl'
@@ -11,6 +11,7 @@ import { ItemsContainer } from '../Announcement/AnnouncementStyledElements'
 import TodoSectionItem from '../RightSideBar/TodoSection/TodoSectionItem'
 import Chat from '../Chat/Chat'
 import { API } from '../Onboarding/Login/LoginUtilities'
+import { ContentContainer } from '../Onboarding/Welcome/WelcomeStyledElements'
 const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, updateSelectedSegment, announcements, assignments, role, createAnnounceTapped, createAssignmentTapped, dark, email, setTappedAssignment, didTapAssignmentCard, setAssignmentSubCourse, didTapViewGrading, setAssignmentCourse}) => {
   const [members, setMembers] = useState([])
   const [messageList, setMessageList] = useState([])
@@ -130,8 +131,12 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
               switch (selectedSegment) {
                   case Segments.HOME:
                       return (
-                        <>
-                              <div>{ course.description}</div>
+                        <>  
+                          <HomeContentContainer>
+                            <HomeContent>
+                                { course.description}
+                              </HomeContent>
+                          </HomeContentContainer>
                         </>
                       );
                 case Segments.ANNOUNCEMENT: 

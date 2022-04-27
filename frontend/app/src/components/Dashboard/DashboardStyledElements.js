@@ -107,7 +107,8 @@ export const CourseContainer = styled.div`
     /* padding-left: 1%;
     margin: 1%; */
     background-color: ${({ dark }) => dark ? "" : "white" };
-    height: 100vh;
+    height: auto;
+    /* background-color: red; */
     /* background: none; */
     /* grid-template-rows: 0.5fr 0.5fr;
     grid-template-areas: "course course"; */

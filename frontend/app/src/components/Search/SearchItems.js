@@ -1,6 +1,7 @@
 import React from 'react'
+import { EmptyCardTitle, EmptyCardTitleContainer, NoCourseImage } from '../Custom/GenericStyledElements';
 import { CourseContentContainer, CourseContentSubtitle, CourseContentTitle, CourseItemBg, CourseItemContainer, SearchItemWrapper } from './SearchStyledComponents';
-
+import NoSearch from '../../assets/nosearch.png'
 const SearchItemType =  {
     COURSE: "course",
     ASSIGNMENT: "assigment",
@@ -16,7 +17,7 @@ const CourseItem = ({ course, didTapCourseCard, dark }) => {
                 <CourseContentContainer>
                     <CourseContentTitle dark={dark}>{course.name}</CourseContentTitle>
                     <CourseContentTitle dark={dark}>Created by: {course.created_by}</CourseContentTitle>
-                    <CourseContentSubtitle>{course.description}</CourseContentSubtitle>
+                    {/* <CourseContentSubtitle>{course.description}</CourseContentSubtitle> */}
                     <CourseContentSubtitle>{course.published_at}</CourseContentSubtitle>
                 </CourseContentContainer>
             </CourseItemContainer>
@@ -81,7 +82,6 @@ const SearchItem = ({ type, courses, didTapCourseCard, dark }) => {
 }
 
 const SearchItems = ({ data, didTapCourseCard, dark }) => {
-    console.log(data)
     return (
         <>
             {
@@ -92,6 +92,15 @@ const SearchItems = ({ data, didTapCourseCard, dark }) => {
                         return 
                     }
                 })()
+            }
+            {
+                data.courses.length === 0 &&
+                <>
+                     <EmptyCardTitleContainer dark={dark}>
+                     <NoCourseImage src={ NoSearch} />
+                        <EmptyCardTitle>No Results found</EmptyCardTitle>
+                    </EmptyCardTitleContainer> 
+                </>
             }
             
         </>

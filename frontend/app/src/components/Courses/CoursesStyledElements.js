@@ -24,7 +24,7 @@ export const CourseCardContainer = styled.div`
   margin-left: 20px;
   margin-right: 8px;
   margin-top: 20px;
-  width: 240px;
+  width: 250px;
   text-align: center;
   background-color: ${({color}) => color};
 `
