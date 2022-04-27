@@ -9,7 +9,7 @@ class Course(Document):
     color = StringField()
     user_id = ReferenceField('User')
     name = StringField(min_length=5)
-    description = StringField(max_length=1000)
+    description = StringField(max_length=20000)
     is_active = BooleanField(default=True)
     published_at = DateTimeField(default=datetime.datetime.now)
     created_at = DateTimeField(default=datetime.datetime.now)
