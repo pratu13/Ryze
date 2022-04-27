@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router';
 import ForgotPasswordEmail from '../Login/ForgotPassword/ForgotPasswordEmail';
 import { UserType } from '../../Utilities/Utilities';
 import MainImage from "../../../assets/abc.png"
-import MainImage2 from "../../../assets/books.png"
 import { LoginFormTitle } from '../Login/LoginStyledElements';
 import Main from "../../../assets/main.svg"
 
