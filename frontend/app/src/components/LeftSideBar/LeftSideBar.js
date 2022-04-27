@@ -7,7 +7,9 @@ import {
     SideBarItem, 
     SideBarItemWrapper, 
     SideBarWrapper, 
-    SideBarFooterItem } from './LeftSideBarStyledElements'
+    SideBarFooterItem, 
+    SwitchContainer,
+    SwitchTitle} from './LeftSideBarStyledElements'
 import DashboardIcon from '../../assets/dashboardIcon.png'
 import DashboardDark from '../../assets/darkboardDark.png'
 import CoursesIcon from '../../assets/coursesIcon.png'
@@ -45,7 +47,11 @@ const LeftSideBar = ({ updateSelectedPage, selectedPage, isAuthSignedIn, toggle,
                     </SideBarItem> */}
                 </SideBarItemWrapper>
                   <FooterItems>
-                        <ItemIcon src={!dark ? Dark : Light} onClick={() => {toggle()}} />
+                      <SwitchContainer dark={dark}>
+                          <SwitchTitle dark= {dark}> Switch </SwitchTitle>
+                         <ItemIcon src={!dark ? Dark : Light} onClick={() => {toggle()}} />
+                      </SwitchContainer>
+                        
                     <SideBarFooterItem to='/'>
                             <ItemIcon src={LogoutIcon} />
                             <ItemLabel dark={false}>logout</ItemLabel>

@@ -32,6 +32,11 @@ import Unpublish from '../../assets/unpublished.png'
 import { UserType } from '../Utilities/Utilities'
 import { API } from '../Onboarding/Login/LoginUtilities'
 
+import PublishDark from '../../assets/publishedDark.png'
+import UnpublishDark from '../../assets/unpublishedDark.png'
+
+
+
 export const AnnouncementItem = ({ token, announcement, course, role, dark }) => {
     const [publishedIcon, setPublishedIcon] = useState(announcement.is_active)
 
@@ -73,7 +78,7 @@ export const AnnouncementItem = ({ token, announcement, course, role, dark }) =>
                                 </SubjectTagContainer>
                                 {
                             role.title === UserType.ADMIN.title &&
-                            <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ !publishedIcon ?  Unpublish : Publish} />
+                            <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ !dark ? ( !publishedIcon ?  Unpublish : Publish ) : ( !publishedIcon ?  UnpublishDark : PublishDark )} />
                                   }
                             </AnnouncementHeaderInfoContainer>
                             <TimePublishedLabel dark={dark}>{ announcement.time}</TimePublishedLabel>

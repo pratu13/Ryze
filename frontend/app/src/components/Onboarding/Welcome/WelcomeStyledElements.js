@@ -8,3 +8,20 @@ export const LoginWrapper = styled.div`
     background-color: #EBF3F5;
     height: 100vh;
 `
+
+export const BgImage = styled.img`
+    
+    object-fit: contain;
+    vertical-align: auto;
+    
+`
+
+export const ContentContainer = styled.div`
+    height: 85vh;
+    border-radius: 20px;
+    width: 50vw;
+    background-color: red;
+    margin-left: 10%;
+    padding-left: 20px;
+
+`

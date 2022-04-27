@@ -98,7 +98,7 @@ export const CourseContentContainer = styled.div`
 export const CourseContentTitle = styled.div`
    font-size: large;
    font-weight: bold;
-   color: black;
+   color: ${({dark}) => dark ? "white" : "black"};
 `
 export const CourseContentSubtitle = styled.div`
     font-size: small;

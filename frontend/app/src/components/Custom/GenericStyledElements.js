@@ -62,7 +62,7 @@ export const Divider = styled.div`
 
 export const LoginContainer = styled.div`
     height: 100vh;  
-    width: 100vw;
+    width: 50vw;
     display: flex;
     flex-direction: column;
     justify-content: center;

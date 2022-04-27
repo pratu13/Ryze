@@ -2,10 +2,14 @@ import React, { useState } from 'react'
 import { CardFooterContainer, CardFooterImage, CardFooterMessageWrapper, CourseCardContainer, CourseCardTitle, CourseCardWrapper, CourseEnrolledMessage } from './CoursesStyledElements'
 import Publish from '../../assets/published.png'
 import Unpublish from '../../assets/unpublished.png'
+
+import PublishDark from '../../assets/publishedDark.png'
+import UnpublishDark from '../../assets/unpublishedDark.png'
+
+
 import { UserType } from '../Utilities/Utilities'
 import { API } from '../Onboarding/Login/LoginUtilities'
-const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrictedTapCourse }) => { 
-  console.log(course)
+const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrictedTapCourse, dark }) => { 
     const [courseEnrolled, setcourseEnrolled] = useState(false)
     const [publishedIcon, setPublishedIcon] = useState(course.is_active)
     const courseCardClicked = () => {
@@ -31,7 +35,8 @@ const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrict
         }
     }
 
-    const publishedIconTapped = async () => {
+  const publishedIconTapped = async () => {
+     
         const data = {
             entities: [course.id]
         }
@@ -48,8 +53,7 @@ const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrict
         await fetch(`${api}`, requestOptions)
           .then(response => response.json())
           .then(data => {
-              console.log(data)
-              setPublishedIcon(!publishedIcon)
+            setPublishedIcon(!publishedIcon)
           })
           .catch(error => console.log(error))
     }
@@ -65,7 +69,7 @@ const CourseCard = ({ course, didTapCourseCard, canEnroll, role, token, restrict
                     <CardFooterContainer>
                         {
                             role.title === UserType.ADMIN.title &&
-                            <CardFooterImage onClick={ () => { publishedIconTapped() } } src={ course.is_active ?  Publish : Unpublish} />
+                            <CardFooterImage onClick={ () => { publishedIconTapped() } } src={!dark ? (publishedIcon ?  Publish : Unpublish) : (publishedIcon ?  PublishDark : UnpublishDark)} />
                         }
                         <CardFooterMessageWrapper onClick={() => { courseCardClicked() }} color={course.is_enrolled ? "green" : "red"}>
                               <CourseEnrolledMessage>

@@ -30,6 +30,24 @@ export const SideBarItemWrapper = styled.div`
 
 `
 
+export const SwitchTitle = styled.p`
+    font-size: medium;
+    font-weight: 500;
+    color: ${({dark}) => dark ? "white" : "black"};
+`
+
+export const SwitchContainer = styled.div`
+    display: flex;
+    border-radius: 20px;
+    align-items: center;
+    flex-direction: column;
+    width: 200px;
+    height: 100px;
+    justify-content: space-around;
+    margin-left: 10px;
+    background-color: ${({ dark }) => dark ? "#1B2327" : "rgba(254, 199, 200, 0.7)" };
+`
+
 export const SideBarFooterItem =  styled(LinkR)`
     display: flex;
     justify-content: flex-start;
