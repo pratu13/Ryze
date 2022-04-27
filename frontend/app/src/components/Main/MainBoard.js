@@ -110,11 +110,11 @@ const MainBoard = ({ dark, toggle }) => {
       body: JSON.stringify(data)
     };
     let api = ""
-    if (role__ === UserType.STUDENT.title) {
-      api = `${API}/v1/user`
-    } else {
-      api = `${API}/v1/teacher`
-    }
+    // if (role__ === UserType.STUDENT.title) {
+    api = `${API}/v1/user`
+    // } else {
+      // api = `${API}/v1/teacher`
+    // }
     updateUserProfile(api, requestOptions, name_, role__, userImage)
   }
 
