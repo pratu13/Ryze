@@ -295,7 +295,7 @@ const Login = ({updatePasswordFlow, updateEmail, completeOauthSignIn}) => {
           <FooterButtonContainer>
             <GoogleLogin
               clientId='915523283178-st4hp6v16e3t7orm881iir2ipc1sifc5.apps.googleusercontent.com'
-              onSuccess={() => { handleOAuthSignIn() } }
+              onSuccess={(response) => { handleOAuthSignIn(response) } }
               onFailure={() => { handleOAuthSignIn() }  }
               cookiePolicy="single_host_origin"
             >Sign in with Google</GoogleLogin>
