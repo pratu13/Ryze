@@ -243,7 +243,7 @@ const Dashboard = ({ assignments_, name, email, token, role, updateAnnouncement,
 }
 
 const RenderDashboard = ({ name, role, onGoingCourses, didTapCourseCard, setIsEnrolled, isEnrolled, dark, didTapSearch, searchTapped, searchData }) => {
-    
+    console.log(onGoingCourses)
   var count = 0
   return (
     <>
@@ -276,9 +276,7 @@ const RenderDashboard = ({ name, role, onGoingCourses, didTapCourseCard, setIsEn
                     {
                       <>
                         {
-                          
                           Object.keys(onGoingCourses).map((key, index) => {
-                            
                             if (onGoingCourses[key].created_by === name) {
                               return <CourseCard role={role} canEnroll={false} didTapCourseCard={didTapCourseCard} key={key} course={onGoingCourses[key]} />
                             } else {
@@ -300,6 +298,15 @@ const RenderDashboard = ({ name, role, onGoingCourses, didTapCourseCard, setIsEn
                   }
                 </CourseContainer>
               }
+              {
+                Object.keys(onGoingCourses).length === 0 &&
+                <>
+                    <EmptyCardTitleContainer dark={dark}>
+                          <NoCourseImage src={ NoCouseImg} />
+                             <EmptyCardTitle>No Published courses</EmptyCardTitle>
+                         </EmptyCardTitleContainer> 
+                        </>
+              }
           
         </>
       }
@@ -307,7 +314,7 @@ const RenderDashboard = ({ name, role, onGoingCourses, didTapCourseCard, setIsEn
       {
         Object.keys(onGoingCourses).length === 0 &&
         <EmptyCardTitleContainer dark={dark}>
-            <NoCourseImage img={ NoCouseImg} />
+            <NoCourseImage src={ NoCouseImg } />
             <EmptyCardTitle>No On-going courses</EmptyCardTitle>
         </EmptyCardTitleContainer>
       }

@@ -13,6 +13,7 @@ import { API } from '../Onboarding/Login/LoginUtilities'
 import CourseDetail from '../CourseDetail/CourseDetail'
 import { Segments } from '../Utilities/Utilities'
 import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
+import NoCourseImg from '../../assets/courses.png'
 
 const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createAnnounceTapped, createAssignmentTapped, dark, didTapViewGrading, setAssignmentCourse, setTappedAssignment }) => {
   const [couseCardTap, setCourseCardTapped] = useState(false)
@@ -184,7 +185,7 @@ const Courses = ({ onGoingCourses, role, modalTapped, token, getCourses, createA
               {
                 Object.keys(onGoingCourses).length == 0 &&
                   <EmptyCardTitleContainer dark={dark}>
-                       <NoCourseImage src={ NoCourseImage} />
+                       <NoCourseImage src={ NoCourseImg} />
                         <EmptyCardTitle>No Listed courses</EmptyCardTitle>
                   </EmptyCardTitleContainer> 
               }

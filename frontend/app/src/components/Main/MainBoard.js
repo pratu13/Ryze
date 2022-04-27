@@ -62,19 +62,19 @@ const MainBoard = ({ dark, toggle }) => {
 
   const [hideRight, setHideRight] = useState(false)
 
-  const updateUserProfile = async (api, requestOptions, name_, role__, color_, userImage) => {
-    await fetch(`${api}`, requestOptions)
+  const updateUserProfile = async (requestOptions, name_, role__, color_, userImage) => {
+    await fetch(`${API}/v1/user`, requestOptions)
       .then(response => response.json())
       .then(data => {
-        setInfo({
-            name: name_,
-            role: role__,
-            email: email,
-            color: color_,
-            bgColor: randomHex(),
-            userImage: userImage
-          }
-        )
+        // setInfo({
+        //     name: name_,
+        //     role: role__,
+        //     email: email,
+        //     color: color_,
+        //     bgColor: randomHex(),
+        //     userImage: userImage
+        //   }
+        // )
       })
       .catch(error => console.log(error))
     getCourses()
@@ -109,13 +109,7 @@ const MainBoard = ({ dark, toggle }) => {
       },
       body: JSON.stringify(data)
     };
-    let api = ""
-    // if (role__ === UserType.STUDENT.title) {
-    api = `${API}/v1/user`
-    // } else {
-      // api = `${API}/v1/teacher`
-    // }
-    updateUserProfile(api, requestOptions, name_, role__, userImage)
+    updateUserProfile(requestOptions, name_, role__, userImage)
   }
 
   const updateAnnouncement = (isOpen) => {
