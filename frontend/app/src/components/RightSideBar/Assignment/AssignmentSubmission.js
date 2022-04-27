@@ -31,7 +31,9 @@ const AssignmentSubmission = ({ token, course, assignment, didTapCloseIcon }) =>
 
     console.log(file)
     data.append("answer", answer)
-    data.append("files", file, file.name)
+    if(file != null) {
+      data.append("files", file, file.name)
+    }
    
 
     console.log(data)
