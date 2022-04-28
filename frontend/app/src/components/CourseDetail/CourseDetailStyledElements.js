@@ -56,4 +56,5 @@ export const HomeContent = styled.div`
     text-align: justify;
     letter-spacing: 2px;
     line-height: 2.6em;
+    color: ${({ dark }) => !dark ? "black" : "white" };
 `

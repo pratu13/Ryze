@@ -148,9 +148,9 @@ const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) 
         .then(data => {
           setTimeout(() => {
             setMessage("Graded")
-            setTimeout(() => {
-              didTapCloseIcon(false)
-            }, 1500);
+            // setTimeout(() => {
+            //   didTapCloseIcon(false)
+            // }, 1500);
         }, 1000);
         })
         .catch(error => console.log(error)) 

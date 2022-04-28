@@ -12,7 +12,7 @@ export const SearchMainContainer = styled.div`
 
 export const SearchTextField = styled.input`
     width: 335px;
-    height: 34px;
+    height: 54px;
     padding: 12px 20px;
     margin: 8px 0;
     border: none;

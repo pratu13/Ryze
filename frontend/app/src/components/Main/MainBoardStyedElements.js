@@ -10,7 +10,7 @@ export const  MainBoardContainer = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     background-color: ${({ dark }) => dark ? "black" : "white" };
-
+    /* background-color: red; */
     @media screen and (max-width: 1301px) {
         width: 55vw;
     }

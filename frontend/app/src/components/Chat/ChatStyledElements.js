@@ -112,11 +112,10 @@ export const ChatViewDisplay = styled.div`
 export const ChatFooter = styled.div`
     width: 100%;
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
     z-index: 1000;
     margin-left: 10%;
-
 `       
 
 export const SendButton = styled.img`
@@ -125,8 +124,10 @@ export const SendButton = styled.img`
     height: 44px;
     vertical-align: auto;
     margin-right: 10%;
-    margin-top: 2%;
+    /* margin-top: 2%; */
     margin-left: 2%;
+    margin-bottom: 35px;
+    /* background-color: rebeccapurple; */
 `
 
 export const MessageContainer = styled.div`

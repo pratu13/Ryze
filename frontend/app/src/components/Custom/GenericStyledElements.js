@@ -72,7 +72,7 @@ export const LoginContainer = styled.div`
 
 export const FormInput = styled.input`
     width: ${({widthGiven, width})=> widthGiven ? width : "335px"};
-    height: 34px;
+    height: 54px;
     padding: 12px 20px;
     margin: 8px 0;
     border: none;
@@ -291,7 +291,7 @@ export const SucessModalContainer = styled.div`
 
 export const MenuContainer = styled.div`
     width: ${({width}) => width};
-    height: 34px;
+    height: 54px;
     padding: 12px 20px;
     margin: 8px 0;
     border: none;
@@ -363,32 +363,39 @@ export const DropMenuItem = styled.div`
 
 export const ModalBackgroundWrapper = styled(motion.div)`   
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
     background-color: rgba(0,0,0,0.9);
+    display: flex;
+    width: 100vw;
+    /* height: 100vh; */
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    max-height: 100%;
+    min-height: 100%;
 `
 
 export const ModalContentContainer = styled(motion.div)`
-    
     width: 50vw;
-    height: 100vh;
+    min-height: 50vh; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     background-color: #F28482;
-    margin: auto;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    padding: 50px;
     border-radius: 20px;
+    /* padding: 50px; */
 `
 
 export const ModalContent = styled(motion.div)`
     display: flex;
+    width: 70vw;
     flex-direction: column;
     align-items: center;
-    height: 100%;
+    justify-content: flex-start;
+    /* background-color: #F28482; */
+    border-radius: 20px;
+    padding: 10px;
+    /* height: 100%; */
 `
 
 export const CDatePicker = styled(DatePicker)`
@@ -400,6 +407,7 @@ export const CDatePicker = styled(DatePicker)`
     border-radius: 10px;
     background-color: ${({ color }) => color};
     margin-bottom: 40px;
+    padding: 10px;
     transition: all 0.2 ease-in-out;
     @media screen and (max-width: 1000px) {
         width: 225px;

@@ -10,12 +10,13 @@ export const AssignmentSubmissionContainer = styled.div`
 
 export const AssignmentSubContainer = styled.div`
     display: flex;
-    width: 80%;
+    width: 100%;
     border-radius: 20px;
     height: auto;
     flex-direction: column;
     background-color: #F3ACAA;
     margin: 1%;
+    /* height: 70vw; */
 `
 
 export const AssigmentQuestionText = styled.div`
@@ -36,14 +37,15 @@ export const SubmissionWrapper = styled.div`
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 5%;
+    /* padding: 2%; */
+    margin: 2%;
     width: 100%;
 `
 export const SubmissionCWrapper = styled.div`
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 5%;
     width: 100%;
 `
@@ -68,6 +70,7 @@ export const FooterTitle = styled.div`
     width: auto;
     height: auto;
     color: white;
+    margin-top: 70%;
 `
 export const GradeFeedbackWrapper = styled.div`
     display: flex;
@@ -89,7 +92,7 @@ export const SubmissionContent = styled.div`
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-
+    margin: 2%;
 `
 export const TextLabel = styled.label`
     font-size: ${({isError})  => isError ? 'small' : 'larger'};

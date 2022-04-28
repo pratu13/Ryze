@@ -301,7 +301,7 @@ const MainBoard = ({ dark, toggle }) => {
   }
   return (
     <>
-      <MainBoardContainer dark={dark}>
+      <MainBoardContainer changeBg= { viewGradingTapped || asssignmentTapped } dark={dark}>
         <LeftSideBar
           updateSelectedPage={updateSelectedPage}
           selectedPage={selectedPage}

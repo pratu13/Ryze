@@ -133,7 +133,7 @@ const CourseDetail = ({ token, course, didTapBackButton, selectedSegment, update
                       return (
                         <>  
                           <HomeContentContainer>
-                            <HomeContent>
+                            <HomeContent dark={dark}>
                                 { course.description}
                               </HomeContent>
                           </HomeContentContainer>
