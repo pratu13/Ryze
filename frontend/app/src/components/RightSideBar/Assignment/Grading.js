@@ -211,8 +211,8 @@ const SubmissionItem = ({ submission, id, token, didTapCloseIcon, assignment }) 
             <TitleHeader>{submission.title} </TitleHeader>
             {submission.user_response}
             {
-              submission.submission_link !== null &&
-                <a href = {submission.submission_link}> Download File </a>
+              submission.submission_link.length <= 5 &&
+                <a href = {submission.submission_link} target="_blank"> Download File </a>
             }
             <FooterTitle> {submission.created_by.name} </FooterTitle>
             
