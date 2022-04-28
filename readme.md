@@ -23,3 +23,7 @@ In the repo root:
 3. Setup done.    
 ### Frontend deployment:
 1. `git subtree push --prefix frontend/app/ heroku-frontend master`
+
+## Mongo Dump and Restore
+- Dump command `mongodump  --archive='ryze_stub' --uri="mongodb+srv://ryze:ryze@cluster0.nfe6y.mongodb.net/ryze_stub_restore_1?retryWrites=true&w=majority"`
+- Restore command `mongorestore  --archive=./assets/ryze_stub --uri="mongodb+srv://ryze:ryze@cluster0.nfe6y.mongodb.net/ryze_stub_restore_1?retryWrites=true&w=majority" --nsFrom="ryze_stub.*" --nsTo="ryze_stub_restore_1.*"`

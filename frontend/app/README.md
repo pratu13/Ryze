@@ -69,6 +69,3 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
-## Mongo Dump and Restore
-- Dump command `mongodump  --archive='ryze_stub' --uri="mongodb+srv://ryze:ryze@cluster0.nfe6y.mongodb.net/ryze_stub_restore_1?retryWrites=true&w=majority"`
-- Restore command `mongorestore  --archive=./assets/ryze_stub --uri="mongodb+srv://ryze:ryze@cluster0.nfe6y.mongodb.net/ryze_stub_restore_1?retryWrites=true&w=majority" --nsFrom="ryze_stub.*" --nsTo="ryze_stub_restore_1.*"`
